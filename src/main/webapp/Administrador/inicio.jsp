@@ -16,7 +16,7 @@
 <body>
 
 <!-- FORMULARIO PARA EL REGISTRO DE USUARIOS -->
-<div class="overlay" id="overlay" >
+<div class="overlay" id="overlay">
     <div class="pop-up" id="pop-up">
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
         <h2 class="equipo">Registro de estudiantes</h2>
@@ -24,17 +24,50 @@
             <input type="text" name="nombre" placeholder="Nombres" required="">
             <input type="text" name="apellido1" placeholder="Apellido paterno" required="">
             <input type="text" name="apellido2" placeholder="Apellido materno">
-            <input type="text" name="CURP" placeholder="CURP" required="">
-            <input type="email" name="correo" placeholder="correo@institucional" required="">
+            <input type="text" name="CURP" placeholder="CURP" required="" maxlength="18">
+            <input type="email" name="correo" placeholder="correo@institucional" required="" value="@utez.edu.mx">
             <label for="rol">Selecciona el rol del nuevo usuario:</label><br>
             <select name="rol" id="rol">
                 <option value="estudiante">Estudiante</option>
                 <option value="docente">Docente</option>
             </select>
-            <br><input type="submit" value="Agregar">
+            <br><input type="submit" value="Agregar" onclick="validarFormulario(event)">
         </form>
     </div>
 </div>
+
+<script>
+    function validarFormulario(event) {
+        // Obtener los valores de los campos
+        var curp = document.getElementsByName('CURP')[0].value.trim();
+        var correo = document.getElementsByName('correo')[0].value.trim();
+        var nombre = document.getElementsByName('nombre')[0].value.trim();
+
+        // Validar que CURP tenga 18 caracteres exactos
+        if (curp.length !== 18) {
+            event.preventDefault();
+            alert("El CURP debe tener exactamente 18 caracteres.");
+            return;
+        }
+
+        // Validar que el correo tenga un formato válido
+        if (!/^[\w.-]+@utez\.edu\.mx$/.test(correo)) {
+            event.preventDefault();
+            alert("El correo debe tener el formato correcto: correo@utez.edu.mx");
+            return;
+        }
+
+        // Validar que no se permita más de un espacio en el nombre
+        if (nombre.split(" ").length > 2) {
+            event.preventDefault();
+            alert("El nombre no puede contener más de un espacio.");
+            return;
+        }
+
+        // Si todas las validaciones son exitosas, se enviará el formulario
+    }
+</script>
+
 <!-- Termina el registro de usuarios -->
 
 <!-- Formulario para modificar un usuario -->
@@ -161,6 +194,41 @@
 </div>
 
 <script type="text/javascript" src="../assets/js/agregar.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function validarFormulario(event) {
+        var curp = document.getElementsByName('CURP')[0].value.trim();
+        var correo = document.getElementsByName('correo')[0].value.trim();
+        var nombre = document.getElementsByName('nombre')[0].value.trim();
+        if (nombre.split(" ").length > 2) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Colobora tu nombre que este escrito correctamente.',
+            })
+            return;
+        }
+        if (curp.length < 18 && curp.length > 5) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Comprueba tu CURP!',
+            })
+            return;
+        }
+        if (!/^[\w.-]+@utez\.edu\.mx$/.test(correo)) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Colobora tu correo XXXXXXXXX@utez.edu.mx',
+            })
+            return;
+        }
+    }
+</script>
 
 </body>
 </html>
