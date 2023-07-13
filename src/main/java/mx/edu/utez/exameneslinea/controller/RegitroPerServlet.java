@@ -46,7 +46,7 @@ public class RegitroPerServlet extends HttpServlet {
         }else{
             id_rol = 2;
              user = name+last1;
-             pass = name+last1;
+             pass = name+curp.substring(curp.length() - 3);
         }
 
         UsuarioDao dao = new UsuarioDao();

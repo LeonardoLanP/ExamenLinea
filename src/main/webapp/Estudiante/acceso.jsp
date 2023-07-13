@@ -1,3 +1,4 @@
+<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -33,7 +34,7 @@
 
   <div class="box">
  			<form action="../login-examen" method="post">
- 				<h2>¡Bienvenido estudiante!</h2>
+ 				<h2>¡Bienvenido/a <%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname()%>!</h2>
  				<h3>Ingresa el código de acceso al examen</h3>
  				<img src="../assets/img/docente.svg">
 				<div class="inputbox">

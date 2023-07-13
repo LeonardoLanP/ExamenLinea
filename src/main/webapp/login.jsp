@@ -73,7 +73,7 @@
         <div class="bg bg3"></div>
       </div>
       <div class="hero-text">
-      
+
          <!--FORMULARIO-->
         <div class="log">
 

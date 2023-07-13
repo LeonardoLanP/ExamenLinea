@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,11 +9,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="assets/css/index.css">
   <link rel="stylesheet" type="text/css" href="assets/css/estiloHeader/header.css">
+    <input type="hidden" id="mensaje" value="<%= request.getAttribute("mensaje") %>">
   <title>Sugel</title>
 </head>
-<style type="text/css">
 
-</style>
 <body>
   <div class="background">
   <header class="header">
@@ -90,6 +90,17 @@
         </footer>
 
   <script src="assets/css/js/bootstrap.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+          var mensaje = document.getElementById("mensaje").value;
+          if (mensaje === 'true') {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Sesión cerrada correctamente.'
+              });
+          }
+      });
+  </script>
 </body>
 </html>

@@ -52,17 +52,25 @@ public class UsuarioDao implements DaoRepository{
     }
 
     public Object findOne(String usuario,String contrasena, int idRol) {
-        Usuario usr = new Usuario();
+        Persona usr = new Persona();
         MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
         try {
-            Connection con = conector.connect();
-            PreparedStatement stmt =
-                    con.prepareStatement("select * from user where user = ? AND pass = ? AND rol_id = ?");
+            PreparedStatement stmt = con.prepareStatement(
+                    "select * from sugel.person inner join sugel.user on person.User_id = user.id_user " +
+                            "where user = ? AND pass = ? AND rol_id = ?");
             stmt.setString(1,usuario);
             stmt.setString(2,contrasena);
             stmt.setInt(3,idRol);
             ResultSet res = stmt.executeQuery();
             if(res.next()){
+                usr.setId_person(res.getInt("ID_person"));
+                usr.setFirstname(res.getString("firstname"));
+                usr.setSecondname(res.getString("secondname"));
+                usr.setLastname1(res.getString("lastname1"));
+                usr.setLastname2(res.getString("lastname2"));
+                usr.setCurp(res.getString("curp"));
+                usr.setUser_id(res.getInt("User_id"));
                 usr.setId_user(res.getInt("id_user"));
                 usr.setUser(res.getString("user"));
                 usr.setEmail(res.getString("email"));

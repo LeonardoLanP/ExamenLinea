@@ -1,23 +1,20 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Materias</title>
+	<title>Examenes</title>
 	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/docente/materias.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/docente/boton.css">
 </head>
-
 <body>
 
 	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
-            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
+            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
           
         <h2>Nombre <!--DEL USUARIO--></h2>
         <form action="" method="" id="formulario-modal">
@@ -66,12 +63,8 @@
   <div class="cont-menu">
 
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
-        <div>
-            <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname() %></h4>
-            <!-- <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname1() %></h4>
-            <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname2() %></h4> -->
-        </div>
-    </center>
+  		<h4>Nombre</h4></div></center>
+
     <nav> 	
       <div class="min-menA">
 			<a href="#" class="btn-abrir" id="btn-abrir">Editar perfil</a>
@@ -91,14 +84,22 @@
 <input type="checkbox" id="btn-modal">
     <div class="container-modal">
       <div class="content-modal">
-          <h2 class="equipo">Registro de materia</h2>
-            <form accept="" method="post" action="../reg-materia">
-              <input type="text" name="nombre" placeholder="Nombre de la materia" required="">
+          <h2 class="equipo">Registro de examen</h2>
+            <form accept="" method="">
+              <input type="text" name="nombre" placeholder="Nombre del examen" required=""><br>
+              <br><br>
               <div class="g">
-                <label for="grado">Grado:</label>
-              <input type="number" name="grado" id="grado"  required="">
-              <label for="grupo">Grupo:</label>
-              <input type="text" name="grupo" id="grupo" required="">
+
+              <label>Ingresa el tipo de preguntas de tu examen</label>
+              <label for="tipo">Opción Multiple:</label>
+              <input type="radio" name="tipo" >
+               <label for="tipo">Abiertas:</label>
+              <input type="radio" name="tipo" >
+              	<br>
+           		<br>
+           		<br>
+           		<label>Ingresa la cantidad de preguntas que debe tener cada examen:</label>
+           		<input type="number" name="cantidad" required="">
               </div>
               <br><input type="submit" name="" value="Agregar"> 
             </form>
@@ -116,30 +117,30 @@
 <!--Comienza el contenido principal-->
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
-                <c:forEach items="${subjectlista}" var="materia">
-                <div class="main">
-                    <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
-                    <div class="materia">
-                        <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
-                        <div class="img">
-                            <img src="../assets/img/class.png">
-                        </div>
-                        <div class="info">
-                            <h2>${materia.nombre_materia}</h2>
-                            <h3>${materia.grado} ° ${materia.gupo}</h3>
-                        </div>
-                    </div>
-     </c:forEach>
-                </div>
-                <!--2° MODIFICACIÓN-->
-                <div class="boton-modal">
-                    <label for="btn-modal">
-                        +
-                    </label>
-                </div>
-                <!-- ULTIMA-->
+        <div class="main">
+            <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
+      		    <div class="examenes">
+        <div class="imagen">
+                <img
+                    src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000">
+        </div>
+        <div class="pie">
+            <p><strong>EXAMEN UNIDAD 1</strong></p>
+            <p>Realizado por: </p>
+        </div>
+    </div>
+          
+        </div>
 
-            </div>
+                <!--2° MODIFICACIÓN-->
+                  <div class="boton-modal">
+                    <label for="btn-modal">
+                      +
+                    </label>
+                  </div>
+                <!-- ULTIMA-->
+				
+			</div>
 
 
 
@@ -148,8 +149,6 @@
 
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
-  <script type="text/javascript" src="../assets/js/eliminar.js"></script>
-
-
+	  <script type="text/javascript" src="../assets/js/eliminar.js"></script>
 </body>
 </html>

@@ -36,38 +36,6 @@
     </div>
 </div>
 
-<script>
-    function validarFormulario(event) {
-        // Obtener los valores de los campos
-        var curp = document.getElementsByName('CURP')[0].value.trim();
-        var correo = document.getElementsByName('correo')[0].value.trim();
-        var nombre = document.getElementsByName('nombre')[0].value.trim();
-
-        // Validar que CURP tenga 18 caracteres exactos
-        if (curp.length !== 18) {
-            event.preventDefault();
-            alert("El CURP debe tener exactamente 18 caracteres.");
-            return;
-        }
-
-        // Validar que el correo tenga un formato válido
-        if (!/^[\w.-]+@utez\.edu\.mx$/.test(correo)) {
-            event.preventDefault();
-            alert("El correo debe tener el formato correcto: correo@utez.edu.mx");
-            return;
-        }
-
-        // Validar que no se permita más de un espacio en el nombre
-        if (nombre.split(" ").length > 2) {
-            event.preventDefault();
-            alert("El nombre no puede contener más de un espacio.");
-            return;
-        }
-
-        // Si todas las validaciones son exitosas, se enviará el formulario
-    }
-</script>
-
 <!-- Termina el registro de usuarios -->
 
 <!-- Formulario para modificar un usuario -->

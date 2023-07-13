@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExamenDao implements DaoRepository{
@@ -13,17 +14,64 @@ public class ExamenDao implements DaoRepository{
     public List findAll() {
         return null;
     }
+    public List findAllMa(int id_user) {
+        List<Materia> lista = new ArrayList<>();
+        MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
+        try {
+            PreparedStatement stmt =
+                    con.prepareStatement("select * from subject inner join user_sub on id_sub = sub_id where user_id = ?");
+            stmt.setInt(1,id_user);
+            ResultSet res = stmt.executeQuery();
+            while(res.next()){
+                Materia m = new Materia();
+                m.setId_matera(res.getInt("id_sub"));
+                m.setGrado(res.getInt("grade"));
+                m.setGupo(res.getString("groupp"));
+                m.setNombre_materia(res.getString("subname"));
+                lista.add(m);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lista;
+    }
 
     @Override
     public Object findOne(int id) {
         return null;
     }
 
+    public Object findMateria(int grade,String group, String subname) {
+        Materia mater = new Materia();
+        MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
+        try {
+
+            PreparedStatement stmt =
+                    con.prepareStatement("select * from sugel.subject where grade = ? AND groupp = ? AND subname = ?");
+            stmt.setInt(1,grade);
+            stmt.setString(2,group);
+            stmt.setString(3,subname);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                mater.setId_matera(res.getInt("id_sub"));
+                mater.setGrado(res.getInt("grade"));
+                mater.setGupo(res.getString("groupp"));
+                mater.setNombre_materia(res.getString("subname"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return mater;
+    }
+
     public Object findOne(String codigo) {
         Examen exm = new Examen();
         MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
         try {
-            Connection con = conector.connect();
+
             PreparedStatement stmt =
                     con.prepareStatement("select * from exam where code = ?");
             stmt.setString(1,codigo);
@@ -50,4 +98,39 @@ public class ExamenDao implements DaoRepository{
     public boolean delete(int id) {
         return false;
     }
+
+
+    public boolean insertMateria(Materia mater) {
+        MysqlConector connection = new MysqlConector();
+        Connection con = connection.connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement("insert into sugel.subject(grade,groupp,subname) values(?,?,?)");
+            stmt.setInt(1, mater.getGrado());
+            stmt.setString(2,mater.getGupo());
+            stmt.setString(3,mater.getNombre_materia());
+            if(stmt.executeUpdate() > 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public boolean insertMateriaUsuario(int id_U, int id_M) {
+        MysqlConector connection = new MysqlConector();
+        Connection con = connection.connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement("insert into sugel.user_sub(user_id,sub_id) values(?,?)");
+            stmt.setInt(1, id_U);
+            stmt.setInt(2,id_M);
+            if(stmt.executeUpdate() > 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
 }
