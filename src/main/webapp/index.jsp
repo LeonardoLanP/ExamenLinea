@@ -92,15 +92,16 @@
   <script src="assets/css/js/bootstrap.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="text/javascript">
-      document.addEventListener('DOMContentLoaded', function() {
-          var mensaje = document.getElementById("mensaje").value;
-          if (mensaje === 'true') {
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Sesión cerrada correctamente.'
-              });
-          }
+    const urlParams = new URLSearchParams(window.location.search);
+    const sesionCerrada = urlParams.get('sesion');
+
+    // Verificar si se ha cerrado la sesión y mostrar la alerta correspondiente
+    if (sesionCerrada) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Sesión cerrada correctamente.'
       });
+    }
   </script>
 </body>
 </html>

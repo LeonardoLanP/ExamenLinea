@@ -51,6 +51,33 @@ public class UsuarioDao implements DaoRepository{
         return null;
     }
 
+    public Object findOneUSU(String usuario,String contrasena, int idRol) {
+        Usuario usr = new Usuario();
+        MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "select * from sugel.user  " +
+                            "where user = ? AND pass = ? AND rol_id = ?");
+            stmt.setString(1,usuario);
+            stmt.setString(2,contrasena);
+            stmt.setInt(3,idRol);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                usr.setId_user(res.getInt("id_user"));
+                usr.setUser(res.getString("user"));
+                usr.setEmail(res.getString("email"));
+                usr.setPass(res.getString("pass"));
+                usr.setRol_id(res.getInt("rol_id"));
+                usr.setStatus(res.getInt("status"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return usr;
+    }
+
+
     public Object findOne(String usuario,String contrasena, int idRol) {
         Persona usr = new Persona();
         MysqlConector conector = new MysqlConector();

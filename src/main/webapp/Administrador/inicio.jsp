@@ -121,7 +121,7 @@
                 <a href="#" class="btn-abrir" id="btn-abrir">Agregar usuario</a>
             </div>
             <div class="salir">
-                <a href="">Salir</a>
+                <a href="../login?sesion=salir">Salir</a>
             </div>
         </nav>
         <label for="btn-menu"><i class="bi bi-x-lg"></i></label>

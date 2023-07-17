@@ -24,12 +24,11 @@ public class UsuarioServlet extends HttpServlet {
             System.out.println(rol + "doGet");
             req.getSession().setAttribute("rol", rol);
             resp.sendRedirect("./login.jsp?rol=" + rol);
-        } /*else {
+        } else {
             HttpSession session = req.getSession();
             session.invalidate();
-            req.setAttribute("mensaje", "true");
-            req.getRequestDispatcher("./index.jsp").forward(req, resp);
-        }*/
+            resp.sendRedirect("./index.jsp?sesion=true");
+        }
     }
 
 

@@ -63,13 +63,13 @@
   <div class="cont-menu">
 
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
-  		<h4>Nombre</h4></div></center>
+  		<h4><%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname() %></h4></div></center>
 
     <nav> 	
       <div class="min-menA">
 			<a href="#" class="btn-abrir" id="btn-abrir">Editar perfil</a>
 		</div>
-      <div class="salir"><a href="">Salir</a></div>
+      <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
       
     </nav>
     <label for="btn-menu"><i class="bi bi-x-lg"></i></label>

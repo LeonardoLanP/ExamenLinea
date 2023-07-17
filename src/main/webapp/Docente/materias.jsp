@@ -76,7 +76,7 @@
       <div class="min-menA">
 			<a href="#" class="btn-abrir" id="btn-abrir">Editar perfil</a>
 		</div>
-      <div class="salir"><a href="">Salir</a></div>
+      <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
       
     </nav>
     <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
@@ -116,8 +116,8 @@
 <!--Comienza el contenido principal-->
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
-                <c:forEach items="${subjectlista}" var="materia">
                 <div class="main">
+                <c:forEach items="${subjectlista}" var="materia">
                     <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
                     <div class="materia">
                         <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
@@ -129,7 +129,7 @@
                             <h3>${materia.grado} ° ${materia.gupo}</h3>
                         </div>
                     </div>
-     </c:forEach>
+                 </c:forEach>
                 </div>
                 <!--2° MODIFICACIÓN-->
                 <div class="boton-modal">

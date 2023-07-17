@@ -15,7 +15,7 @@
 	<header class="header">
     <div class="container">
     	<div class="btn-menu">
-      		<label ><i class="bi bi-box-arrow-left"></i></label>
+      		<label ><i class="bi bi-box-arrow-left" href="../login?sesion=salir"></i></label>
     	</div>
       <div class="logo">
       </div>
@@ -25,7 +25,7 @@
       </div>
     </div>
   </header>
-
+	../login?sesion=salir
 
 	<div class="hexagon-container">
     <div class="hexagon hexagon-top-left"></div>
@@ -34,7 +34,7 @@
 
   <div class="box">
  			<form action="../login-examen" method="post">
- 				<h2>¡Bienvenido/a <%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname()%>!</h2>
+ 				<h2>¡Hola <%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname()%>!</h2>
  				<h3>Ingresa el código de acceso al examen</h3>
  				<img src="../assets/img/docente.svg">
 				<div class="inputbox">
