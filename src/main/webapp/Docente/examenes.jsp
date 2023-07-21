@@ -1,3 +1,4 @@
+<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -91,9 +92,9 @@
               <div class="g">
 
               <label>Ingresa el tipo de preguntas de tu examen</label>
-              <label for="tipo">Opción Multiple:</label>
+              <label>Opción Multiple:</label>
               <input type="radio" name="tipo" >
-               <label for="tipo">Abiertas:</label>
+               <label>Abiertas:</label>
               <input type="radio" name="tipo" >
               	<br>
            		<br>
@@ -118,18 +119,24 @@
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
         <div class="main">
+
             <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
+<c:forEach items="${exam}" var="examen">
       		    <div class="examenes">
         <div class="imagen">
                 <img
                     src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000">
         </div>
         <div class="pie">
+            <p><strong>Codigo: ${examen.code}</strong></p>
             <p><strong>EXAMEN UNIDAD 1</strong></p>
+            <p>${examen.status}</p>
             <p>Realizado por: </p>
         </div>
     </div>
-          
+</c:forEach>
+          --
+
         </div>
 
                 <!--2° MODIFICACIÓN-->

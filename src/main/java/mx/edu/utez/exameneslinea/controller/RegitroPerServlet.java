@@ -22,6 +22,7 @@ public class RegitroPerServlet extends HttpServlet {
         String curp = req.getParameter("CURP");
         String email = req.getParameter("correo");
         String rol = req.getParameter("rol");
+        String matricula = req.getParameter("matricula");
 
         
         String[] nombres = name.split(" ");
@@ -35,13 +36,12 @@ public class RegitroPerServlet extends HttpServlet {
             firstname = nombres[0];
         }
 
-        String[] userpass = email.toLowerCase().split("@");
         String user = "";
         String pass = "";
         int id_rol = 0;
         if(rol.equals("estudiante")){
             id_rol = 3;
-             user = userpass[0];
+             user = matricula;
              pass = curp.substring(curp.length() - 3);;
         }else{
             id_rol = 2;

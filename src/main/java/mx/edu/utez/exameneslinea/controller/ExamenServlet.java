@@ -3,7 +3,6 @@ package mx.edu.utez.exameneslinea.controller;
 import mx.edu.utez.exameneslinea.model.Examen;
 import mx.edu.utez.exameneslinea.model.ExamenDao;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "ExamenServlet", value = "/login-examen")
+
 public class ExamenServlet extends HttpServlet {
 
     @Override

@@ -18,24 +18,25 @@
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-          
-        <h2>Nombre <!--DEL USUARIO--></h2>
-        <form action="" method="" id="formulario-modal">
 
-          <label>Nombre:</label>
-          <input type="text" name="nombre">
+            <h2 id="nombreuser">Nombre:</h2>
+        <form action="../up-doce" method="POST" id="formulario-modal">
+           <input type="hidden" name="id_user" id="id_user" value="">
+
+            <label>Nombre:</label>
+          <input type="text" name="nombre" id="nombre">
 
           <label>Apellido paterno:</label>
-          <input type="text" name="ap1">
+          <input type="text" name="ap1" id="ap1">
 
           <label>Apellido materno:</label>
-          <input type="text" name="ape2">
+          <input type="text" name="ape2" id="ape2">
 
           <label>CURP:</label>
-          <input type="text" name="curp">
+          <input type="text" name="CURP" id="curp">
 
           <label>Contraseña:</label>
-          <input type="text" name="pass">
+          <input type="text" name="pass" id="pass">
               <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center> 
 
         </form>
@@ -71,10 +72,11 @@
             <!-- <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname1() %></h4>
             <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname2() %></h4> -->
         </div>
+    </div>
     </center>
     <nav> 	
       <div class="min-menA">
-			<a href="#" class="btn-abrir" id="btn-abrir">Editar perfil</a>
+			<a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Persona) request.getSession().getAttribute("sesion")).getUser_id() %>)">Editar perfil</a>
 		</div>
       <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
       
@@ -117,19 +119,21 @@
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
                 <div class="main">
-                <c:forEach items="${subjectlista}" var="materia">
-                    <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
-                    <div class="materia">
-                        <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
-                        <div class="img">
-                            <img src="../assets/img/class.png">
+                    <c:forEach items="${subjectlista}" var="materia">
+                        <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
+                        <div class="materia">
+                            <a href="../ser-mater?materiaId=${materia.id_matera}">
+                                <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
+                                <div class="img">
+                                    <img src="https://images.vexels.com/media/users/3/205869/isolated/lists/5ca1ba0091cc0cfac18a230ab6ef2ba7-un-garabato-de-examen-plus.png">
+                                </div>
+                                <div class="info">
+                                    <h2>${materia.nombre_materia}</h2>
+                                    <h3>${materia.grado} ° ${materia.gupo}</h3>
+                                </div>
+                            </a>
                         </div>
-                        <div class="info">
-                            <h2>${materia.nombre_materia}</h2>
-                            <h3>${materia.grado} ° ${materia.gupo}</h3>
-                        </div>
-                    </div>
-                 </c:forEach>
+                    </c:forEach>
                 </div>
                 <!--2° MODIFICACIÓN-->
                 <div class="boton-modal">
@@ -149,6 +153,44 @@
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
   <script type="text/javascript" src="../assets/js/eliminar.js"></script>
+    <script>
+        function cargarDatosUsuario(userId) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var responseText = xhr.responseText;
+
+                    var datosUsuario = responseText.split('\n');
+                    var usuario = {
+                        first: datosUsuario[0],
+                        second: datosUsuario[1],
+                        lastname1: datosUsuario[2],
+                        lastname2: datosUsuario[3],
+                        curp: datosUsuario[4],
+                        pass: datosUsuario[7],
+                        id: datosUsuario[9],
+                    };
+
+                    document.getElementById("id_user").value = usuario.id.trim();
+                    document.getElementById("nombreuser").value = usuario.first;
+                    document.getElementById("nombre").value = usuario.first + " " +usuario.second;
+                    document.getElementById("ap1").value = usuario.lastname1;
+                    document.getElementById("ape2").value = usuario.lastname2;
+                    document.getElementById("curp").value = usuario.curp;
+                    document.getElementById("pass").value = usuario.pass;
+
+
+                    document.getElementById("overlay").checked = true;
+                }
+            };
+
+
+            xhr.open("POST", "../BuscarServlet", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("userId=" + userId);
+        }
+    </script>
+
 
 
 </body>

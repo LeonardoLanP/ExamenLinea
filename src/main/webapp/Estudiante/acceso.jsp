@@ -15,7 +15,7 @@
 	<header class="header">
     <div class="container">
     	<div class="btn-menu">
-      		<label ><i class="bi bi-box-arrow-left" href="../login?sesion=salir"></i></label>
+      		<a href="../login?sesion=salir"><label><i class="bi bi-box-arrow-left"></i></label></a>
     	</div>
       <div class="logo">
       </div>
@@ -25,7 +25,6 @@
       </div>
     </div>
   </header>
-	../login?sesion=salir
 
 	<div class="hexagon-container">
     <div class="hexagon hexagon-top-left"></div>
@@ -38,12 +37,11 @@
  				<h3>Ingresa el código de acceso al examen</h3>
  				<img src="../assets/img/docente.svg">
 				<div class="inputbox">
-					<input type="text" name="codigo" id="codigo" required>
+					<input type="text" name="codigo" id="codigo" required="">
 					<span>Código</span>
 					<i></i>
 				</div>
 				<input type="submit" name="acceso" id="acceso" value="Acceder">
-				 				
  			</form>
   </div>
 

@@ -11,17 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ExamenServlet", value = "/all-subjets")
-public class ALLServlet extends HttpServlet {
+@WebServlet(name = "MateriasServlet", value = "/ser-mater")
+public class MateriasServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Persona per =(Persona) req.getSession().getAttribute("sesion");
+        int materiaId = Integer.parseInt(req.getParameter("materiaId"));
         ExamenDao dao = new ExamenDao();
 
         List<Persona> lista;
-        lista = dao.findAllMa(per.getId_user());
-        req.getSession().setAttribute("subjectlista", lista);
-        resp.sendRedirect("./Docente/materias.jsp");
-    }
+        lista = dao.findAllExam(materiaId);
+        req.getSession().setAttribute("exam", lista);
+        resp.sendRedirect("./Docente/examenes.jsp");
 
+    }
 }

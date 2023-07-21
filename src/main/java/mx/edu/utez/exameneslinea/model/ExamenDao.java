@@ -14,6 +14,33 @@ public class ExamenDao implements DaoRepository{
     public List findAll() {
         return null;
     }
+
+    public List findAllExam(int id) {
+        List<Examen> lista = new ArrayList<>();
+        MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
+        try {
+            PreparedStatement stmt =
+                    con.prepareStatement("select * from sugel.exam inner join user_sub on user_sub_id = id_user_sub\n" +
+                            "inner join subject on sub_id = id_sub where id_sub=?;");
+            stmt.setInt(1,id);
+            ResultSet res = stmt.executeQuery();
+            while(res.next()){
+                Examen exam = new Examen();
+                exam.setCode(res.getString("code"));
+                exam.setGrade(res.getString("grade"));
+                exam.setStatus(res.getString("status"));
+                exam.setId_exam(res.getInt("id_exam"));
+                exam.setDateex(res.getString("dateex"));
+                exam.setUser_sub_id(res.getInt("user_sub_id"));
+                lista.add(exam);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lista;
+    }
+
     public List findAllMa(int id_user) {
         List<Materia> lista = new ArrayList<>();
         MysqlConector conector = new MysqlConector();

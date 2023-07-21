@@ -90,7 +90,7 @@
                 <i></i>  
               </div>
               <div class="inputbox">
-                <input type="password" name="contrasena" required="" id="contrasena">
+                <input type="password" name="contrasena" required="" id="contrasena" >
                 <span>Contraseña</span> 
                 <i></i>
                   <input type="hidden" name="rol" value="<%= request.getAttribute("rol") %>">

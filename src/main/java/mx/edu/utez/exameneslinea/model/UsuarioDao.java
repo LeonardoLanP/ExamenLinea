@@ -18,7 +18,7 @@ public class UsuarioDao implements DaoRepository{
         MysqlConector conn = new MysqlConector();
         Connection con = conn.connect();
         try {
-            PreparedStatement stmt = con.prepareStatement("select * from sugel.person inner join sugel.user on person.User_id = user.id_user where rol_id = ?");
+            PreparedStatement stmt = con.prepareStatement("select * from sugel.person inner join sugel.user on person.User_id = user.id_user where rol_id = ?  ORDER BY lastname1 ASC");
             stmt.setInt(1,idRol);
             ResultSet res = stmt.executeQuery();
             while(res.next()){
@@ -47,8 +47,35 @@ public class UsuarioDao implements DaoRepository{
     }
 
     @Override
-    public Object findOne(int id) {
-        return null;
+    public Object findOne(int idRol) {
+        Persona usr = new Persona();
+        MysqlConector conector = new MysqlConector();
+        Connection con = conector.connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "select * from sugel.person inner join sugel.user on person.User_id = user.id_user " +
+                            "where ID_person = ?");
+            stmt.setInt(1,idRol);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                usr.setId_person(res.getInt("ID_person"));
+                usr.setFirstname(res.getString("firstname"));
+                usr.setSecondname(res.getString("secondname"));
+                usr.setLastname1(res.getString("lastname1"));
+                usr.setLastname2(res.getString("lastname2"));
+                usr.setCurp(res.getString("curp"));
+                usr.setUser_id(res.getInt("User_id"));
+                usr.setId_user(res.getInt("id_user"));
+                usr.setUser(res.getString("user"));
+                usr.setEmail(res.getString("email"));
+                usr.setPass(res.getString("pass"));
+                usr.setRol_id(res.getInt("rol_id"));
+                usr.setStatus(res.getInt("status"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return usr;
     }
 
     public Object findOneUSU(String usuario,String contrasena, int idRol) {
@@ -111,10 +138,76 @@ public class UsuarioDao implements DaoRepository{
         return usr;
     }
 
+
+
     @Override
     public boolean update(int id, Object object) {
         return false;
     }
+
+    public boolean updateUser(int id, Persona usr) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "update sugel.user set user = ?, email = ?," +
+                            " pass = ? " +
+                            "where id_user = ?"
+            );
+            stmt.setString(1,usr.getUser());
+            stmt.setString(2,usr.getEmail());
+            stmt.setString(3,usr.getPass());
+            stmt.setInt(4,id);
+            estado = stmt.executeUpdate() > 0 ? true:false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+    public boolean updatePerson(int id, Persona usr) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "update person set firstname = ?," +
+                            " secondname = ?," +
+                            " lastname1 = ?," +
+                            " lastname2 = ?," +
+                            " curp = ?"+
+                            "where ID_person = ?"
+            );
+            stmt.setString(1,usr.getFirstname());
+            stmt.setString(2,usr.getSecondname());
+            stmt.setString(3,usr.getLastname1());
+            stmt.setString(4,usr.getLastname2());
+            stmt.setString(5,usr.getCurp());
+            stmt.setInt(6,id);
+            estado = stmt.executeUpdate() > 0 ? true:false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+    public boolean updatepass(int id, String pass) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "update sugel.user set pass = ? " +
+                            "where id_user = ?"
+            );
+            stmt.setString(1,pass);
+            stmt.setInt(2,id);
+
+            estado = stmt.executeUpdate() > 0 ? true:false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
 
     @Override
     public boolean delete(int id) {
