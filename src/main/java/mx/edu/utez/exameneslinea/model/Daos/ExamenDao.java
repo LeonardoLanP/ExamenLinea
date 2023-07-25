@@ -1,5 +1,7 @@
-package mx.edu.utez.exameneslinea.model;
+package mx.edu.utez.exameneslinea.model.Daos;
 
+import mx.edu.utez.exameneslinea.model.Exam;
+import mx.edu.utez.exameneslinea.model.Subject;
 import mx.edu.utez.exameneslinea.utils.MysqlConector;
 
 import java.sql.Connection;
@@ -16,7 +18,7 @@ public class ExamenDao implements DaoRepository{
     }
 
     public List findAllExam(int id) {
-        List<Examen> lista = new ArrayList<>();
+        List<Exam> lista = new ArrayList<>();
         MysqlConector conector = new MysqlConector();
         Connection con = conector.connect();
         try {
@@ -26,10 +28,10 @@ public class ExamenDao implements DaoRepository{
             stmt.setInt(1,id);
             ResultSet res = stmt.executeQuery();
             while(res.next()){
-                Examen exam = new Examen();
+                Exam exam = new Exam();
                 exam.setCode(res.getString("code"));
                 exam.setGrade(res.getString("grade"));
-                exam.setStatus(res.getString("status"));
+                exam.setStatusex(res.getString("status"));
                 exam.setId_exam(res.getInt("id_exam"));
                 exam.setDateex(res.getString("dateex"));
                 exam.setUser_sub_id(res.getInt("user_sub_id"));
@@ -42,7 +44,7 @@ public class ExamenDao implements DaoRepository{
     }
 
     public List findAllMa(int id_user) {
-        List<Materia> lista = new ArrayList<>();
+        List<Subject> lista = new ArrayList<>();
         MysqlConector conector = new MysqlConector();
         Connection con = conector.connect();
         try {
@@ -51,11 +53,12 @@ public class ExamenDao implements DaoRepository{
             stmt.setInt(1,id_user);
             ResultSet res = stmt.executeQuery();
             while(res.next()){
-                Materia m = new Materia();
-                m.setId_matera(res.getInt("id_sub"));
-                m.setGrado(res.getInt("grade"));
-                m.setGupo(res.getString("groupp"));
-                m.setNombre_materia(res.getString("subname"));
+                Subject m = new Subject();
+                m.setId_sub(res.getInt("id_sub"));
+                m.setGrade(res.getInt("grade"));
+                m.setGrouSub(res.getString("groupSub"));
+                m.setSubname(res.getString("subname"));
+                m.setStatusub(res.getInt("statusub"));
                 lista.add(m);
             }
         } catch (SQLException e) {
@@ -70,22 +73,23 @@ public class ExamenDao implements DaoRepository{
     }
 
     public Object findMateria(int grade,String group, String subname) {
-        Materia mater = new Materia();
+        Subject mater = new Subject();
         MysqlConector conector = new MysqlConector();
         Connection con = conector.connect();
         try {
 
             PreparedStatement stmt =
-                    con.prepareStatement("select * from sugel.subject where grade = ? AND groupp = ? AND subname = ?");
+                    con.prepareStatement("select * from sugel.subject where grade = ? AND groupSub = ? AND subname = ?");
             stmt.setInt(1,grade);
             stmt.setString(2,group);
             stmt.setString(3,subname);
             ResultSet res = stmt.executeQuery();
             if(res.next()){
-                mater.setId_matera(res.getInt("id_sub"));
-                mater.setGrado(res.getInt("grade"));
-                mater.setGupo(res.getString("groupp"));
-                mater.setNombre_materia(res.getString("subname"));
+                mater.setId_sub(res.getInt("id_sub"));
+                mater.setGrade(res.getInt("grade"));
+                mater.setGrouSub(res.getString("groupSub"));
+                mater.setSubname(res.getString("subname"));
+                mater.setStatusub(res.getInt("statusub"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -94,7 +98,7 @@ public class ExamenDao implements DaoRepository{
     }
 
     public Object findOne(String codigo) {
-        Examen exm = new Examen();
+        Exam exm = new Exam();
         MysqlConector conector = new MysqlConector();
         Connection con = conector.connect();
         try {
@@ -107,7 +111,7 @@ public class ExamenDao implements DaoRepository{
                 exm.setId_exam(res.getInt("id_exam"));
                 exm.setCode(res.getString("code"));
                 exm.setGrade(res.getString("grade"));
-                exm.setStatus(res.getString("status"));
+                exm.setStatusex(res.getString("statusex"));
                 exm.setDateex(res.getString("dateex"));
                 exm.setUser_sub_id(res.getInt("user_sub_id"));
             }
@@ -127,14 +131,14 @@ public class ExamenDao implements DaoRepository{
     }
 
 
-    public boolean insertMateria(Materia mater) {
+    public boolean insertMateria(Subject mater) {
         MysqlConector connection = new MysqlConector();
         Connection con = connection.connect();
         try {
-            PreparedStatement stmt = con.prepareStatement("insert into sugel.subject(grade,groupp,subname) values(?,?,?)");
-            stmt.setInt(1, mater.getGrado());
-            stmt.setString(2,mater.getGupo());
-            stmt.setString(3,mater.getNombre_materia());
+            PreparedStatement stmt = con.prepareStatement("insert into sugel.subject(grade,groupSub,subname,statusub) values(?,?,?,'1')");
+            stmt.setInt(1, mater.getGrade());
+            stmt.setString(2,mater.getGrouSub());
+            stmt.setString(3,mater.getSubname());
             if(stmt.executeUpdate() > 0){
                 return true;
             }

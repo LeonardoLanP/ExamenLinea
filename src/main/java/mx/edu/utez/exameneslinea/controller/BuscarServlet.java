@@ -1,8 +1,7 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import com.google.gson.Gson;
-import mx.edu.utez.exameneslinea.model.Persona;
-import mx.edu.utez.exameneslinea.model.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Person;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,21 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+
 @WebServlet(name = "BuscarServlet", value = "/BuscarServlet")
 @MultipartConfig
 public class BuscarServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String ROL = request.getParameter("userId");
         int idRol = Integer.parseInt(ROL);
 
-
         UsuarioDao dao = new UsuarioDao();
-        Persona usr = (Persona) dao.findOne(idRol);
+        Person usr = (Person) dao.findOne(idRol);
 
-
+        System.out.println("Rol del usuario a modificar" + idRol);
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");

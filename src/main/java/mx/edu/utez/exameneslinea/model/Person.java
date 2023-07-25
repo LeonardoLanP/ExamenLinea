@@ -1,29 +1,29 @@
 package mx.edu.utez.exameneslinea.model;
 
-public class Persona extends Usuario{
+public class Person extends User {
     private int id_person;
     private String firstname;
     private String secondname;
     private String lastname1;
     private String lastname2;
     private String curp;
-    private int user_id;
+    private int User_id;
 
-    public Persona() {
+    public Person() {
     }
 
-    public Persona(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int user_id) {
+    public Person(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int User_id) {
         this.id_person = id_person;
         this.firstname = firstname;
         this.secondname = secondname;
         this.lastname1 = lastname1;
         this.lastname2 = lastname2;
         this.curp = curp;
-        this.user_id = user_id;
+        this.User_id = User_id;
     }
 
-    public Persona(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int user_id,
-                   int id_user, String user, String email, String pass, int rol_id, int status) {
+    public Person(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int user_id,
+                  int id_user, String user, String email, String pass, int rol_id, int status) {
         super(id_user, user, email, pass, rol_id, status);
         this.id_person = id_person;
         this.firstname = firstname;
@@ -31,7 +31,7 @@ public class Persona extends Usuario{
         this.lastname1 = lastname1;
         this.lastname2 = lastname2;
         this.curp = curp;
-        this.user_id = user_id;
+        this.User_id = User_id;
     }
 
     public int getId_person() {
@@ -83,10 +83,10 @@ public class Persona extends Usuario{
     }
 
     public int getUser_id() {
-        return user_id;
+        return User_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_id(int User_id) {
+        this.User_id = User_id;
     }
 }

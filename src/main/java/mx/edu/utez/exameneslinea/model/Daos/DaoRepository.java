@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.model;
+package mx.edu.utez.exameneslinea.model.Daos;
 
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.Persona;
-import mx.edu.utez.exameneslinea.model.Usuario;
-import mx.edu.utez.exameneslinea.model.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Person;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +22,7 @@ public class UpdateUsuarioServlet extends HttpServlet {
         String usuario = req.getParameter("usuario");
         String pass = req.getParameter("pass");
         int userid = Integer.parseInt(req.getParameter("id_user").trim());
-        System.out.println("id del usuario update"+userid);
+        System.out.println("Contraseña" + pass);
 
         String[] names = name.split(" ");
         String firstname = "";
@@ -37,8 +36,8 @@ public class UpdateUsuarioServlet extends HttpServlet {
         }
         System.out.println("int del user id" + userid);
         UsuarioDao dao = new UsuarioDao();
-        Persona usr = new Persona();
-        Persona user1 = (Persona) dao.findOne(userid);
+        Person usr = new Person();
+        Person user1 = (Person) dao.findOne(userid);
 
 
         usr.setFirstname(firstname);
@@ -48,11 +47,16 @@ public class UpdateUsuarioServlet extends HttpServlet {
         usr.setLastname1(last1);
         usr.setLastname2(last2);
         usr.setEmail(email);
-        usr.setPass(pass);
+
+        if(!pass.equals("")){
+            System.out.println("Se va actualizar la contraseña del usuario " + user1.getRol_id());
+            dao.updatepass(user1.getID_user(),pass,user1.getRol_id());
+        }else {
+            System.out.println("Contraseña vacia no se actualiza");
+        }
 
         dao.updateUser(user1.getUser_id(),usr);
         dao.updatePerson(userid,usr);
-        System.out.println("Rol del Ususario Redirec" + user1.getRol_id());
         if(user1.getRol_id()==3){
             req.getSession().setAttribute("personType", "estudiante");
             resp.sendRedirect(req.getContextPath() + "/person?id=estudiante");

@@ -1,4 +1,4 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
+<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -23,17 +23,17 @@
         <form action="../up-doce" method="POST" id="formulario-modal">
            <input type="hidden" name="id_user" id="id_user" value="">
 
-            <label>Nombre:</label>
-          <input type="text" name="nombre" id="nombre">
+            <label>Nombre/s*:</label>
+          <input type="text" name="nombre" id="nombre" maxlength="45">
 
-          <label>Apellido paterno:</label>
-          <input type="text" name="ap1" id="ap1">
+          <label>Apellido paterno*:</label>
+          <input type="text" name="ap1" id="ap1" maxlength="30">
 
-          <label>Apellido materno:</label>
-          <input type="text" name="ape2" id="ape2">
+          <label>Apellido materno*:</label>
+          <input type="text" name="ape2" id="ape2" maxlength="30">
 
-          <label>CURP:</label>
-          <input type="text" name="CURP" id="curp">
+          <label>CURP*:</label>
+          <input type="text" name="CURP" id="curp" maxlength="18">
 
           <label>Contraseña:</label>
           <input type="text" name="pass" id="pass">
@@ -68,15 +68,15 @@
 
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
         <div>
-            <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname() %></h4>
-            <!-- <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname1() %></h4>
-            <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getLastname2() %></h4> -->
+            <h4><%= ((Person) request.getSession().getAttribute("sesion")).getFirstname() %></h4>
+            <!-- <h4><%= ((Person) request.getSession().getAttribute("sesion")).getLastname1() %></h4>
+            <h4><%= ((Person) request.getSession().getAttribute("sesion")).getLastname2() %></h4> -->
         </div>
     </div>
     </center>
     <nav> 	
       <div class="min-menA">
-			<a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Persona) request.getSession().getAttribute("sesion")).getUser_id() %>)">Editar perfil</a>
+			<a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
 		</div>
       <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
       
@@ -95,11 +95,11 @@
       <div class="content-modal">
           <h2 class="equipo">Registro de materia</h2>
             <form accept="" method="post" action="../reg-materia">
-              <input type="text" name="nombre" placeholder="Nombre de la materia" required="">
+              <input type="text" name="nombre" placeholder="Nombre de la materia*" required="">
               <div class="g">
-                <label for="grado">Grado:</label>
+                <label for="grado">Grado*:</label>
               <input type="number" name="grado" id="grado"  required="">
-              <label for="grupo">Grupo:</label>
+              <label for="grupo">Grupo*:</label>
               <input type="text" name="grupo" id="grupo" required="">
               </div>
               <br><input type="submit" name="" value="Agregar"> 
@@ -122,14 +122,14 @@
                     <c:forEach items="${subjectlista}" var="materia">
                         <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
                         <div class="materia">
-                            <a href="../ser-mater?materiaId=${materia.id_matera}">
+                            <a href="../ser-mater?materiaId=${materia.id_sub}">
                                 <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
                                 <div class="img">
                                     <img src="https://images.vexels.com/media/users/3/205869/isolated/lists/5ca1ba0091cc0cfac18a230ab6ef2ba7-un-garabato-de-examen-plus.png">
                                 </div>
                                 <div class="info">
-                                    <h2>${materia.nombre_materia}</h2>
-                                    <h3>${materia.grado} ° ${materia.gupo}</h3>
+                                    <h2>${materia.subname}</h2>
+                                    <h3>${materia.grade} ° ${materia.grouSub}</h3>
                                 </div>
                             </a>
                         </div>
@@ -144,11 +144,6 @@
                 <!-- ULTIMA-->
 
             </div>
-
-
-
-
-
 
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
@@ -167,18 +162,19 @@
                         lastname1: datosUsuario[2],
                         lastname2: datosUsuario[3],
                         curp: datosUsuario[4],
-                        pass: datosUsuario[7],
                         id: datosUsuario[9],
                     };
 
                     document.getElementById("id_user").value = usuario.id.trim();
                     document.getElementById("nombreuser").value = usuario.first;
-                    document.getElementById("nombre").value = usuario.first + " " +usuario.second;
+                    if(usuario.second.trim() != null){
+                        document.getElementById("nombre").value = usuario.first + " " +usuario.second;
+                    }else{
+                        document.getElementById("nombre").value = usuario.first;
+                    }
                     document.getElementById("ap1").value = usuario.lastname1;
                     document.getElementById("ape2").value = usuario.lastname2;
                     document.getElementById("curp").value = usuario.curp;
-                    document.getElementById("pass").value = usuario.pass;
-
 
                     document.getElementById("overlay").checked = true;
                 }

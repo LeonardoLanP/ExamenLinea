@@ -1,10 +1,8 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.Persona;
-import mx.edu.utez.exameneslinea.model.Usuario;
-import mx.edu.utez.exameneslinea.model.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Person;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,16 +45,16 @@ public class UsuarioServlet extends HttpServlet {
             idRol = 3;
         }
         UsuarioDao dao  = new UsuarioDao();
-        Persona usr = (Persona) dao.findOne(usuario,contrasena,idRol);
+        Person usr = (Person) dao.findOne(usuario,contrasena,idRol);
 
-        if (usr.getId_user() != 0 && usr.getRol_id() == idRol) {
-            if (usr.getRol_id() == 1 && usr.getStatus() == 1) {
+        if (usr.getID_user() != 0 && usr.getRol_id() == idRol) {
+            if (usr.getRol_id() == 1 && usr.getUser_status() == 1) {
                 req.getSession().setAttribute("sesion", usr);
                 resp.sendRedirect("./Administrador/inicio.jsp");
-            } else if (usr.getRol_id() == 2 && usr.getStatus() == 1) {
+            } else if (usr.getRol_id() == 2 && usr.getUser_status() == 1) {
                 req.getSession().setAttribute("sesion", usr);
                 resp.sendRedirect("./all-subjets");
-            } else if (usr.getRol_id() == 3 && usr.getStatus() == 1) {
+            } else if (usr.getRol_id() == 3 && usr.getUser_status() == 1) {
                 req.getSession().setAttribute("sesion", usr);
                 resp.sendRedirect("./Estudiante/acceso.jsp");
             } else {

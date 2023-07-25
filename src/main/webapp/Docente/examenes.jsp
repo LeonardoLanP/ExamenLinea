@@ -1,4 +1,4 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
+<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -64,7 +64,7 @@
   <div class="cont-menu">
 
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
-  		<h4><%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname() %></h4></div></center>
+  		<h4><%= ((Person) request.getSession().getAttribute("sesion")).getFirstname() %></h4></div></center>
 
     <nav> 	
       <div class="min-menA">
@@ -135,7 +135,6 @@
         </div>
     </div>
 </c:forEach>
-          --
 
         </div>
 

@@ -1,4 +1,4 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Persona" %>
+<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -24,15 +24,15 @@
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
         <h2 class="equipo">Registro de usuarios</h2>
         <form accept="" method="post" action="../reg-person">
-            <input type="text" name="nombre" placeholder="Nombres" required="">
-            <input type="text" name="apellido1" placeholder="Apellido paterno" required="">
-            <input type="text" name="apellido2" placeholder="Apellido materno">
-            <input type="text" name="CURP" placeholder="CURP" required="" maxlength="18"  onkeyup="convertirMayusculas(this)">
-            <input type="email" name="correo" placeholder="correo@institucional" required="" value="@utez.edu.mx">
-            <input type="text" name="matricula" placeholder="Matricula" required="">
+            <input type="text" name="nombre" placeholder="Nombres*" required="" maxlength="45">
+            <input type="text" name="apellido1" placeholder="Apellido paterno*" required="" maxlength="30">
+            <input type="text" name="apellido2" placeholder="Apellido materno" maxlength="30">
+            <input type="text" name="CURP" placeholder="CURP*" required="" maxlength="18"  onkeyup="convertirMayusculas(this)">
+            <input type="email" name="correo" placeholder="correo@institucional*" required="" value="@utez.edu.mx" maxlength="45">
+            <input type="text" name="matricula" placeholder="Matricula*" required="" maxlength="15">
             <label for="rol">Selecciona el rol del nuevo usuario:</label><br>
             <select name="rol" id="rol" onchange="mostrarOcultarMatricula()">
-                <option value="">Seleccione un Rol</option>
+                <option value="">Seleccione un Rol*</option>
                 <option value="estudiante">Estudiante</option>
                 <option value="docente">Docente</option>
             </select>
@@ -51,26 +51,25 @@
         <form action="../up-usr" method="POST" id="formulario-modal">
             <input type="hidden" name="id_user" id="id_user" value="">
 
-            <label>Nombre/s:</label>
-            <input type="text" name="nombre" id="nombre">
+            <label>Nombre/s*:</label>
+            <input type="text" name="nombre" id="nombre" maxlength="45">
 
-            <label>Apellido paterno:</label>
-            <input type="text" name="ap1" id="ap1">
+            <label>Apellido paterno*:</label>
+            <input type="text" name="ap1" id="ap1" maxlength="30">
 
             <label>Apellido materno:</label>
-            <input type="text" name="ape2" id="ape2">
+            <input type="text" name="ape2" id="ape2" maxlength="30">
 
-            <label>CURP:</label>
-            <input type="text" name="CURP" id="curp">
+            <label>CURP*:</label>
+            <input type="text" name="CURP" id="curp" maxlength="18">
 
-            <label>Correo:</label>
-            <input type="email" name="correo" placeholder="correo@institucional" required="" id="email">
+            <label>Correo*:</label>
+            <input type="email" name="correo" placeholder="correo@institucional" required="" id="email" maxlength="45">
 
-            <label for="user">Usuario:</label>
-            <input type="text" name="usuario" id="user">
-
-            <label>Contraseña:</label>
-            <input type="text" name="pass" id="pass">
+            <label for="user">Usuario*:</label>
+            <input type="text" name="usuario" id="user" maxlength="30">
+            <label>Actualizar contraseña:</label>
+            <input type="text" name="pass" id="pass" value="">
 
             <br><input type="submit" name="" value="Modificar" id="btn-enviar">
 
@@ -105,13 +104,13 @@
             <div class="perfil">
                 <i class="bi bi-person-circle"></i><br>
                 <h4>Admin</h4>
-                <h4><%= ((Persona) request.getSession().getAttribute("sesion")).getFirstname() %>
-                    <%= ((Persona) request.getSession().getAttribute("sesion")).getSecondname() %></h4>
+                <h4><%= ((Person) request.getSession().getAttribute("sesion")).getFirstname() %>
+                    <%= ((Person) request.getSession().getAttribute("sesion")).getSecondname() %></h4>
             </div>
         </center>
 
         <nav>
-            <a href="#btn-modal"  class="editar-usuario" id="btn-abre" onclick="cargarDatosUsuario(<%= ((Persona) request.getSession().getAttribute("sesion")).getUser_id() %>)">Editar Perfil</a>
+            <a href="#btn-modal"  class="editar-usuario" id="btn-abre" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getID_user() %>)">Editar Perfil</a>
             <c:choose>
                 <c:when test="${personType == 'docente'}">
                     <a href="../person?id=docente"><strong>Gestionar docentes</strong></a>
@@ -159,8 +158,9 @@
                 <tr>
                     <td>
                         <label class="switchBtn">
-                            <input type="checkbox" id="toggleSwitch_${person.id_person}" data-estado="${person.status}" ${person.status == 1 ? 'checked' : 'focus'}>
-                            <div class="slide round" id="toggleText_${person.id_person}">${person.status == 1 ? 'Activado' : 'Desactivado'}</div>
+                            <input type="checkbox" id="toggleSwitch_${person.id_person}" ${person.user_status == 1 ? 'checked' : ''} onChange="updateUserStatus(${person.id_person})">
+                            <div class="slide round" id="toggleText_${person.id_person}">
+                            </div>
                         </label>
                     </td>
                     <td colspan="2">${person.lastname1} ${person.lastname2} ${person.firstname} ${person.secondname}</td>
@@ -185,12 +185,15 @@
         var curp = document.getElementsByName('CURP')[0].value.trim();
         var correo = document.getElementsByName('correo')[0].value.trim();
         var nombre = document.getElementsByName('nombre')[0].value.trim();
+        var rol = document.getElementById("rol").value;
+
         if (nombre.split(" ").length > 2) {
             event.preventDefault();
             Swal.fire({
                 icon: 'warning',
                 title: 'Alerta',
                 text: 'Colobora tu nombre que este escrito correctamente.',
+                timer: 3000,
             })
             return;
         }
@@ -200,6 +203,7 @@
                 icon: 'warning',
                 title: 'Alerta',
                 text: 'Comprueba tu CURP!',
+                timer: 3000,
             })
             return;
         }
@@ -209,9 +213,21 @@
                 icon: 'warning',
                 title: 'Alerta',
                 text: 'Colobora tu correo XXXXXXXXX@utez.edu.mx',
+                timer: 3000,
             })
             return;
         }
+
+            if (rol === "") {
+                event.preventDefault(); // Evitar que el formulario se envíe
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Alerta',
+                    text: 'Por favor, seleccione un rol antes de registrar.',
+                    timer: 3000,
+                })
+            }
+
     }
 </script>
 
@@ -224,33 +240,36 @@
 
                 var datosUsuario = responseText.split('\n');
                 var usuario = {
-                    first: datosUsuario[0],
-                    second: datosUsuario[1],
-                    lastname1: datosUsuario[2],
+                    first: datosUsuario[0].trim(),
+                    second: datosUsuario[1].trim(),
+                    lastname1: datosUsuario[2].trim(),
                     lastname2: datosUsuario[3],
-                    curp: datosUsuario[4],
-                    email: datosUsuario[5],
+                    curp: datosUsuario[4].trim(),
+                    email: datosUsuario[5].trim(),
                     user: datosUsuario[6],
-                    pass: datosUsuario[7],
+
                     rol: datosUsuario[8],
                     id: datosUsuario[9],
                 };
 
                 document.getElementById("id_user").value = usuario.id.trim();
                 document.getElementById("nombreuser").value = usuario.first;
-                document.getElementById("nombre").value = usuario.first + " " +usuario.second;
+                if(usuario.second.trim() != null){
+                    document.getElementById("nombre").value = usuario.first + " " +usuario.second;
+                }else{
+                    document.getElementById("nombre").value = usuario.first;
+                }
                 document.getElementById("ap1").value = usuario.lastname1;
                 document.getElementById("ape2").value = usuario.lastname2;
                 document.getElementById("curp").value = usuario.curp;
                 document.getElementById("email").value = usuario.email;
                 document.getElementById("user").value = usuario.user;
-                document.getElementById("pass").value = usuario.pass;
 
                 var userLabel = document.querySelector('label[for="user"]');
                 if (usuario.rol.trim() === "3") {
-                    userLabel.textContent = "Usuario/Matricula:";
+                    userLabel.textContent = "Usuario/Matricula*:";
                 } else {
-                    userLabel.textContent = "Usuario:";
+                    userLabel.textContent = "Usuario*:";
                 }
                 document.getElementById("btn-modal").checked = true;
 
@@ -270,8 +289,11 @@
         var matriculaInput = document.getElementsByName("matricula")[0];
         if (rol === "estudiante") {
             matriculaInput.style.display = "block";
+            matriculaInput.required = true;
         } else {
             matriculaInput.style.display = "none";
+            matriculaInput.required = false;
+            matriculaInput.value = "";
         }
     }
 
@@ -281,37 +303,42 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var toggleSwitches = document.querySelectorAll(".switchBtn input");
+    function updateUserStatus(personId) {
+        var checkbox = document.getElementById("toggleSwitch_" + personId);
+        var estado = checkbox.checked ? 1 : 0;
+        var action = estado === 0 ? 'Desactivar' : 'Activar';
 
-        toggleSwitches.forEach(function(switchBtn) {
-            switchBtn.addEventListener("click", function() {
-                var estadoActual = this.checked ? 1 : 0;
-                var estadoNuevo = estadoActual = 0 ? 0 : 1;
-                var mensaje = estadoNuevo === 0 ? "desactivar" : "activar";
-                var toggleText = this.nextElementSibling;
-                Swal.fire({
-                    icon: 'warning',
-                    title: '¿Estás seguro de ' + mensaje + ' este usuario?',
-                    showCancelButton: true,
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancelar',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
+        Swal.fire({
+            icon: 'warning',
+            title: '¿Estás seguro de '+ action + ' este usuario?',
+            text: 'Esta acción '+ action + 'á al usuario',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "../UpdateStatusServlet", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Update realizado con éxito',
+                            title: 'Cambios guardados',
+                            showConfirmButton: false,
+                            timer: 1500,
                         });
-                        toggleText.textContent = estadoNuevo === 1 ? 'Activado' : 'Desactivado';
-                    } else {
-                        toggleText.textContent = estadoActual === 1 ? 'Activado' : 'Desactivado';
-                        this.checked = estadoActual;
                     }
-                });
-            });
+                };
+                xhr.send("personId=" + personId + "&estado=" + estado);
+            } else {
+                checkbox.checked = !estado;
+            }
         });
-    });
+    }
 </script>
+
+
 </body>
 </html>

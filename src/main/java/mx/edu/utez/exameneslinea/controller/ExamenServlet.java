@@ -1,7 +1,7 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.Examen;
-import mx.edu.utez.exameneslinea.model.ExamenDao;
+import mx.edu.utez.exameneslinea.model.Exam;
+import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,10 +19,10 @@ public class ExamenServlet extends HttpServlet {
         String codigo = req.getParameter("codigo");
 
         ExamenDao dao = new ExamenDao();
-        Examen exm = (Examen) dao.findOne(codigo);
+        Exam exm = (Exam) dao.findOne(codigo);
 
         if (exm.getId_exam() != 0) {
-            if (exm.getStatus().equals("activo")) {
+            if (exm.getStatusex().equals("activo")) {
                 resp.sendRedirect("./Estudiante/examen.jsp");
             } else {
                 resp.sendRedirect("./Estudiante/acceso.jsp?"+"status=desactivado");

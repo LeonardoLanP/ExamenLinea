@@ -1,7 +1,7 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.ExamenDao;
-import mx.edu.utez.exameneslinea.model.Persona;
+import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
+import mx.edu.utez.exameneslinea.model.Person;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,11 +15,11 @@ import java.util.List;
 public class ALLServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Persona per =(Persona) req.getSession().getAttribute("sesion");
+        Person per =(Person) req.getSession().getAttribute("sesion");
         ExamenDao dao = new ExamenDao();
 
-        List<Persona> lista;
-        lista = dao.findAllMa(per.getId_user());
+        List<Person> lista;
+        lista = dao.findAllMa(per.getID_user());
         req.getSession().setAttribute("subjectlista", lista);
         resp.sendRedirect("./Docente/materias.jsp");
     }

@@ -2,14 +2,14 @@ package mx.edu.utez.exameneslinea.model;
 
 public class Rol {
     private int id_rol;
-    private String tipo_usuario;
+    private String type_user;
 
     public Rol() {
     }
 
-    public Rol(int id_rol, String tipo_usuario) {
+    public Rol(int id_rol, String type_user) {
         this.id_rol = id_rol;
-        this.tipo_usuario = tipo_usuario;
+        this.type_user = type_user;
     }
 
     public int getId_rol() {
@@ -20,11 +20,11 @@ public class Rol {
         this.id_rol = id_rol;
     }
 
-    public String getTipo_usuario() {
-        return tipo_usuario;
+    public String getType_user() {
+        return type_user;
     }
 
-    public void setTipo_usuario(String tipo_usuario) {
-        this.tipo_usuario = tipo_usuario;
+    public void setType_user(String type_user) {
+        this.type_user = type_user;
     }
 }

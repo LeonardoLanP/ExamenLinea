@@ -1,7 +1,8 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.Persona;
-import mx.edu.utez.exameneslinea.model.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Person;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +33,7 @@ public class PersonServlet extends HttpServlet {
         }
 
         UsuarioDao dao = new UsuarioDao();
-        List<Persona> lista;
+        List<Person> lista;
 
         if (idRol > 0) {
             lista = dao.findAll(idRol); // Obtener la lista de usuarios por ID de rol

@@ -1,8 +1,8 @@
 package mx.edu.utez.exameneslinea.controller;
 
-import mx.edu.utez.exameneslinea.model.Persona;
-import mx.edu.utez.exameneslinea.model.Usuario;
-import mx.edu.utez.exameneslinea.model.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Person;
+import mx.edu.utez.exameneslinea.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,10 +30,10 @@ public class RegitroPerServlet extends HttpServlet {
         String secondname = null;
 
         if (nombres.length >= 2) {
-            firstname = nombres[0];
-            secondname = nombres[1];
+            firstname = nombres[0].trim();
+            secondname = nombres[1].trim();
         } else if (nombres.length == 1) {
-            firstname = nombres[0];
+            firstname = nombres[0].trim();
         }
 
         String user = "";
@@ -45,15 +45,15 @@ public class RegitroPerServlet extends HttpServlet {
              pass = curp.substring(curp.length() - 3);;
         }else{
             id_rol = 2;
-             user = name+last1;
-             pass = name+curp.substring(curp.length() - 3);
+             user = firstname+"_"+last1;
+             pass = firstname+curp.substring(curp.length() - 3);
         }
 
         UsuarioDao dao = new UsuarioDao();
-        dao.insertu(new Usuario(0,user,email.toLowerCase(),pass,id_rol,1));
-        Usuario usr = (Usuario) dao.findOneUSU(user,pass,id_rol);
-        System.out.println(usr.getId_user());
-        dao.insertp(new Persona(0,firstname,secondname,last1,last2,curp,usr.getId_user()));
+        dao.insertu(new User(0,user,email.toLowerCase(),pass,1,id_rol));
+        User usr = (User) dao.findOneUSU(user,email,id_rol,pass);
+        System.out.println(usr.getID_user());
+        dao.insertp(new Person(0,firstname,secondname,last1,last2,curp,usr.getID_user()));
 
         if(id_rol==3){
             req.getSession().setAttribute("personType", "estudiante");

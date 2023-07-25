@@ -1,23 +1,26 @@
 package mx.edu.utez.exameneslinea.model;
 
-public class Examen {
+public class Exam {
     private int id_exam;
     private String code;
     private String grade;
-    private String status;
+    private String statusex;
     private String dateex;
     private int user_sub_id;
 
-    public Examen() {
+    private String namex;
+
+    public Exam() {
     }
 
-    public Examen(int id_exam, String code, String grade, String status, String dateex, int user_sub_id) {
+    public Exam(int id_exam, String code, String grade, String statusex, String dateex, int user_sub_id, String namex) {
         this.id_exam = id_exam;
         this.code = code;
         this.grade = grade;
-        this.status = status;
+        this.statusex = statusex;
         this.dateex = dateex;
         this.user_sub_id = user_sub_id;
+        this.namex = namex;
     }
 
     public int getId_exam() {
@@ -44,12 +47,12 @@ public class Examen {
         this.grade = grade;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusex() {
+        return statusex;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusex(String statusex) {
+        this.statusex = statusex;
     }
 
     public String getDateex() {
@@ -67,6 +70,12 @@ public class Examen {
     public void setUser_sub_id(int user_sub_id) {
         this.user_sub_id = user_sub_id;
     }
+
+    public String getNamex() {
+        return namex;
+    }
+
+    public void setNamex(String namex) {
+        this.namex = namex;
+    }
 }
-
-

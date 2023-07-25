@@ -1,6 +1,7 @@
 package mx.edu.utez.exameneslinea.controller;
 
 import mx.edu.utez.exameneslinea.model.*;
+import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,15 +23,15 @@ public class RegistroMateriaServlet extends HttpServlet {
         System.out.println(name + grade + group);
 
         ExamenDao dao = new ExamenDao();
-        dao.insertMateria(new Materia(0,gradeValue,group,name));
-        Materia mater = (Materia) dao.findMateria(gradeValue,group,name);
+        dao.insertMateria(new Subject(0,gradeValue,group,name,1));
+        Subject mater = (Subject) dao.findMateria(gradeValue,group,name);
 
 
 
-        Persona per =(Persona) req.getSession().getAttribute("sesion");
+        Person per =(Person) req.getSession().getAttribute("sesion");
         System.out.println(per.getFirstname());
 
-        dao.insertMateriaUsuario(per.getId_user(),mater.getId_matera());
+        dao.insertMateriaUsuario(per.getID_user(),mater.getId_sub());
 
             req.getSession().setAttribute("materias", mater);
             resp.sendRedirect(req.getContextPath() + "/all-subjets");
