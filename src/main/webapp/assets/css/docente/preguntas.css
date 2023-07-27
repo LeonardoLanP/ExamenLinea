@@ -1,8 +1,8 @@
 @media (min-width: 1024px){
 .mai form{
 	width: 90%;
-	margin: auto;
-	background: #F1FCF9;
+	margin: 10px auto;
+	background: #D6EAF8;
 	justify-content: center;
 	align-items: center;
 	display: flex;
@@ -36,8 +36,8 @@
 }
 .mai{
 	display: flex;
-	padding: 120px;
-	margin: 0px;
+	padding: 40px;
+	margin-bottom: 20px;
 	width: 100%;
 }
         /*Boton-Modal*/
@@ -74,14 +74,14 @@
 }
 
 
-@media (min-width: 320px) and (max-width: 1023px){
-	*/{
+@media (min-width: 100px) and (max-width: 1023px){
+	body{
 	margin: 0
 	}
 .mai form{
-	width: 100%;
-	margin: 20px 0px;
-	background: #F1FCF9;
+	width: 90%;
+	margin: 10px 0px;
+	background: #D6EAF8;
 	justify-content: center;
 	align-items: center;
 	display: flex;
@@ -109,7 +109,7 @@
 .mai{
 	display: flex;
 	width: 100%;
-	margin: 60px 0;
+	margin: 10px 0;
 }
         /*Boton-Modal*/
 .boton-opcion {
@@ -143,7 +143,7 @@
 }
 .mai form input[type="submit"]{
 	width: 45%;
-	height: 30px;
+	height: 40px;
 	border-radius: 20px;
 	background: #001256;
 	border:none;

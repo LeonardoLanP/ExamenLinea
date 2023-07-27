@@ -1,7 +1,9 @@
+<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Preguntas</title>
 	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
@@ -110,62 +112,46 @@
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
         <div class="mai">
-          <form>
-             <h2>Nombre del examen</h2>
-            <div class="abierta">
-              <textarea placeholder="Ingresa la pregunta del examen"></textarea>
-            </div>
+            <form id="examenForm">
+                <h2>Nombre del examen</h2>
 
-
-            <div class="multiple">
-              <textarea placeholder="Ingresa la pregunta del examen"></textarea>
-
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-
-               <div class="boton-opcion">
-                    <label for="btn-opcion" onclick="agregarInput(this)">
-                      +
-                    </label>
-                  </div>
-            </div>
- <div class="multiple">
-              <textarea placeholder="Ingresa la pregunta del examen"></textarea>
-
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-
-               <div class="boton-opcion">
-                    <label for="btn-opcion" onclick="agregarInput(this)">
-                      +
-                    </label>
-                  </div>
-            </div>
-
-             <div class="multiple">
-              <textarea placeholder="Ingresa la pregunta del examen"></textarea>
-
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-              <input type="text" name="opcion" placeholder="Ingresa la opción">
-
-               <div class="boton-opcion">
-                    <label for="btn-opcion" onclick="agregarInput(this)">
-                      +
-                    </label>
-                  </div>
-            </div>
-
-
-
-
-
-
-            <input type="submit" name="">
-            
-          </form>
+                <c:forEach items="${questions}" var="question">
+                    <c:choose>
+                        <c:when test="${question.answer_id == 1 && question.ques_id == 1}">
+                            <div class="abierta">
+                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen"></textarea>
+                            </div>
+                        </c:when>
+                        <c:when test="${question.answer_id == 1 && question.ques_id != 1}">
+                            <div class="abierta">
+                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
+                            </div>
+                        </c:when>
+                        <c:when test="${question.answer_id == 2 && question.ques_id == 1}">
+                            <div class="multiple">
+                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen"></textarea>
+                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
+                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
+                                <div class="boton-opcion" id="btn-opcionSD">
+                                    <label for="btn-opcionSD" onclick="agregarInput(this)">+</label>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:when test="${question.answer_id > 2 && question.ques_id != 1}">
+                            <div class="multiple">
+                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
+                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
+                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
+                                <div class="boton-opcion" id="btn-opcionCD">
+                                    <label for="btn-opcionCD" onclick="agregarInput(this)">+</label>
+                                </div>
+                            </div>
+                        </c:when>
+                    </c:choose>
+                </c:forEach>
+            </form>
         </div>
-				
-			</div>
+            </div>
 
   <script type="text/javascript" src="../assets/js/agregar.js"></script>
 
@@ -184,6 +170,66 @@
       divMultiple.insertBefore(nuevoInput, ultimoInput.nextSibling);
     }
   </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            class InputData {
+                constructor(originalId, newId) {
+                    this.originalId = originalId;
+                    this.newId = newId;
+                }
+            }
+
+            var inputDataMap = {};
+
+            function sendDataToServer(id, value) {
+                var dataToSend = {
+                    "id": id,
+                    "value": value
+                };
+
+                $.ajax({
+                    url: "../RegistrarQuestionServlet",
+                    method: "POST",
+                    data: JSON.stringify(dataToSend),
+                    contentType: "application/json",
+                    success: function(data) {
+                        console.log("Datos enviados satisfactoriamente");
+                        var originalId = id;
+                        var newId = data.newId;
+                        var inputData = new InputData(originalId, newId);
+                        inputDataMap[originalId] = inputData;
+                        $("textarea[data-id='" + originalId + "']").data("id", newId);
+                        $("input[data-id='" + originalId + "']").data("id", newId);
+                        refreshForm();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", status, error);
+                    }
+                });
+            }
+
+            $("textarea.pregunta, input.opcion").on("input", function() {
+                var id = $(this).data("id");
+                var value = $(this).val();
+                sendDataToServer(id, value);
+            });
+
+            function refreshForm() {
+                $("textarea.pregunta, input.opcion").each(function() {
+                    var id = $(this).data("id");
+                    if (inputDataMap.hasOwnProperty(id)) {
+                        var newId = inputDataMap[id].newId;
+                        $(this).data("id", newId);
+                    }
+                });
+            }
+        });
+    </script>
+
+
 
 
 </body>

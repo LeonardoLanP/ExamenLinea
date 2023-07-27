@@ -1,8 +1,7 @@
-package mx.edu.utez.exameneslinea.controller;
+package mx.edu.utez.exameneslinea.controller.Updates;
 
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 import mx.edu.utez.exameneslinea.model.Person;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

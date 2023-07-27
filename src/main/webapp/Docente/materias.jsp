@@ -68,9 +68,7 @@
 
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
         <div>
-            <h4><%= ((Person) request.getSession().getAttribute("sesion")).getFirstname() %></h4>
-            <!-- <h4><%= ((Person) request.getSession().getAttribute("sesion")).getLastname1() %></h4>
-            <h4><%= ((Person) request.getSession().getAttribute("sesion")).getLastname2() %></h4> -->
+            <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
         </div>
     </div>
     </center>
@@ -100,11 +98,10 @@
                 <label for="grado">Grado*:</label>
               <input type="number" name="grado" id="grado"  required="">
               <label for="grupo">Grupo*:</label>
-              <input type="text" name="grupo" id="grupo" required="">
+              <input type="text" name="grupo" id="grupo" required="" >
               </div>
-              <br><input type="submit" name="" value="Agregar"> 
+              <br><input type="submit" name="" value="Agregar">
             </form>
-
         <div class="btn-cerrar">
           <label for="btn-modal">
             Cancelar
@@ -125,7 +122,7 @@
                             <a href="../ser-mater?materiaId=${materia.id_sub}">
                                 <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
                                 <div class="img">
-                                    <img src="https://images.vexels.com/media/users/3/205869/isolated/lists/5ca1ba0091cc0cfac18a230ab6ef2ba7-un-garabato-de-examen-plus.png">
+                                    <img src="./../assets/img/class.svg">
                                 </div>
                                 <div class="info">
                                     <h2>${materia.subname}</h2>
@@ -157,21 +154,16 @@
 
                     var datosUsuario = responseText.split('\n');
                     var usuario = {
-                        first: datosUsuario[0],
-                        second: datosUsuario[1],
-                        lastname1: datosUsuario[2],
-                        lastname2: datosUsuario[3],
-                        curp: datosUsuario[4],
-                        id: datosUsuario[9],
+                        name: datosUsuario[0],
+                        lastname1: datosUsuario[1],
+                        lastname2: datosUsuario[2],
+                        curp: datosUsuario[3],
+                        id: datosUsuario[7],
                     };
 
                     document.getElementById("id_user").value = usuario.id.trim();
-                    document.getElementById("nombreuser").value = usuario.first;
-                    if(usuario.second.trim() != null){
-                        document.getElementById("nombre").value = usuario.first + " " +usuario.second;
-                    }else{
-                        document.getElementById("nombre").value = usuario.first;
-                    }
+                    document.getElementById("nombreuser").value = usuario.name;
+                    document.getElementById("nombre").value = usuario.name;
                     document.getElementById("ap1").value = usuario.lastname1;
                     document.getElementById("ape2").value = usuario.lastname2;
                     document.getElementById("curp").value = usuario.curp;

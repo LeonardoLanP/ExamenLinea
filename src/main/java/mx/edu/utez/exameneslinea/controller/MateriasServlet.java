@@ -16,11 +16,15 @@ public class MateriasServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int materiaId = Integer.parseInt(req.getParameter("materiaId"));
+        Person per =(Person) req.getSession().getAttribute("sesion");
         ExamenDao dao = new ExamenDao();
 
         List<Person> lista;
-        lista = dao.findAllExam(materiaId);
+        lista = dao.findAllExam(materiaId,per.getID_user());
+
+
         req.getSession().setAttribute("exam", lista);
+        req.getSession().setAttribute("idsub",materiaId);
         resp.sendRedirect("./Docente/examenes.jsp");
 
     }

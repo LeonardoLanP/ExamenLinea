@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller;
+package mx.edu.utez.exameneslinea.controller.Updates;
 
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 import mx.edu.utez.exameneslinea.model.Person;
@@ -16,8 +16,10 @@ public class UsuarioServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         String rol = req.getParameter("rol");
         String sesion = req.getParameter("sesion");
+
         if (rol != null && sesion == null) {
             System.out.println(rol + "doGet");
             req.getSession().setAttribute("rol", rol);
@@ -32,6 +34,7 @@ public class UsuarioServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         String usuario = req.getParameter("usuario");
         String contrasena = req.getParameter("contrasena");
         String rol =(String) req.getSession().getAttribute("rol");

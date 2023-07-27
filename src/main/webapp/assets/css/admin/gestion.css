@@ -1,21 +1,6 @@
  @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
 
 
-.contenedor::-webkit-scrollbar {
-  width: 10px; 
-}
-.contenedor::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
-
-.contenedor::-webkit-scrollbar-thumb {
-  background: #001256;
-  border-radius: 20px; 
-}
-
-.contenedor::-webkit-scrollbar-thumb:hover {
-  background: #03BB85; 
-}
 
 
 body{
@@ -83,16 +68,40 @@ body {
       margin: auto;
       position: absolute;
       margin-left: 0%;
-      top: 60px;
+      top: 40px;
       z-index: 1;
       display: flex;
       flex-direction: column; /* Agregado */
       align-items: center; /* Agregado */
       overflow: auto;
       padding: 20px;
+      text-align: center;
+    }
+     .acciones table{
+        width: 100%;
+    }
+    .acciones{
+        width: 100%;
     }
 }
-@media (min-width: 1024px) and (max-width: 2560px){
+@media (min-width: 769px) and (max-width: 2560px){
+    .contenedor::-webkit-scrollbar {
+  width: 10px; 
+}
+.contenedor::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+.contenedor::-webkit-scrollbar-thumb {
+  background: #91B8A5;
+  border-radius: 20px; 
+}
+
+.contenedor::-webkit-scrollbar-thumb:hover {
+  background: #03BB85; 
+}
+
+
     .contenedor {
       background: #ffffff;
       width: 85%;
@@ -101,26 +110,28 @@ body {
       margin: auto;
       position: absolute;
       margin-left: 15%;
-      top: 80px;
+      top: 60px;
       z-index: 1;
       display: flex;
       flex-direction: column; /* Agregado */
       align-items: center; /* Agregado */
       overflow: auto;
       padding: 20px;
+      text-align: center;
+    }
+    .acciones table{
+    width: 90%;
+    margin: 25px auto;
+    }
+    .acciones{
+        width: 100%;
     }
 
+
 }
 
 
-.acciones {
-  background-color: #ffffff;
-  width: 100%;
-  text-align: center;
-  flex-grow: 1; /* Agregado */
-  padding: 20px; /* Ajusta el padding según sea necesario */
-  box-sizing: border-box; /* Agregado */
-}
+
 
 /* Resto de tus estilos */
 
@@ -128,10 +139,7 @@ body {
 .acciones h1{
     color: #001256;
 }
-.acciones table{
-    width: 90%;
-    margin: 10px auto;
-}
+
 .acciones thead{
     font-size: 20px;
     font-weight: 700;
@@ -140,12 +148,14 @@ body {
 }
 .acciones table tr{
         width: 100%;
-}
-.acciones table td{
-    width: 33.33%;
+    border:2px solid #03BB85;
+
+
 }
 .acciones table tbody td{
-    padding: 0.5% 0%;
+    width: 33.33%;
+    border-bottom:2px solid #E8EAE9;
+
 }
 .acciones table a{
     text-decoration: none;
@@ -177,7 +187,6 @@ body {
             box-shadow: 1px 5px 0px rgba(0, 0, 0, 0.3);
             border-radius: 10px;
             width: 500px;
-            height: 500px;
             padding: 10px;
             color: #001256;
             z-index: 6; 
@@ -186,14 +195,14 @@ body {
         }
         .pop-up form{
             margin-top: 17px;
-            display: flex-end;
+            display: flex;
             flex-direction: column;
 
         }
         .pop-up form label{
             text-align: left;
-            margin-left: 0px;
-            font-weight: 700px;
+            margin:auto;
+            font-weight: 700;
             color: #03BB85;
         }
         .pop-up input{
@@ -217,7 +226,7 @@ body {
             text-align: center;
             background-color: #F1FCF9;
             height: 35px;
-            margin-bottom: 10px;
+            margin: auto;
         }
         .pop-up input[type="submit"]{
             width: 50%;
@@ -253,11 +262,11 @@ body {
 
 /*Boton-Modal*/
 .boton-modal{
-    padding: 40px;
+    padding: 25px;
     background-color: #fff;
 }
 .boton-modal label{
-    padding: 10px 15px;
+    padding: 5px 15px;
     background-color: #001256;
     color: #fff;
     border-radius: 4px;
@@ -305,7 +314,7 @@ body {
     width: 100%;
 }
 .content-modal form input{
-     width: 90%;
+     width: 100%;
      height: 33px;
      margin: 5px auto;
      border:none;
@@ -372,8 +381,12 @@ body {
     }
 }
 /*Fin Ventana Modal*/
+
+
+
+
  .slide.round {
-     border-radius: 34px;
+     border-radius: 24px;
  }
  .slide.round:before {
      border-radius: 50%;
@@ -382,8 +395,8 @@ body {
  .switchBtn {
      position: relative;
      display: inline-block;
-     width: 110px;
-     height: 34px;
+     width: 80px;
+     height: 24px;
  }
  .switchBtn input {display:none;}
  .slide {
@@ -396,26 +409,26 @@ body {
      background-color: #ccc;
      -webkit-transition: .4s;
      transition: .4s;
-     padding: 8px;
+     padding: 2px;
      color: #fff;
  }
  .slide:before {
      position: absolute;
      content: "";
-     height: 26px;
-     width: 26px;
-     left: 78px;
-     bottom: 4px;
-     background-color: #03BB85;
+     height: 20px;
+     width: 20px;
+     left: 55px;
+     bottom: 2px;
+     background-color: #fff;
      -webkit-transition: .4s;
      transition: .4s;
  }
  input:checked + .slide {
-     background-color: #8CE196;
+     background-color: #001256;
      padding-left: 40px;
  }
  input:focus + .slide {
-     box-shadow: 0 0 1px #01aeed;
+     box-shadow: 0 0 1px #001256;
  }
  input:checked + .slide:before {
      -webkit-transform: translateX(26px);

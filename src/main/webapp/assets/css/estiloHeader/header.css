@@ -130,34 +130,34 @@
 		cursor: pointer;
 		font-size: 18px;
 	}
-	@media (min-width: 320px) and (max-width: 768px) {
+	@media (min-width: 200px) and (max-width: 768px) {
 		header{
-			height: 50px;
+			height: 40px;
+		}
+		.container .menu img{
+			width: 30px;
+			height: 30px;
+		}
+			.container .btn-menu{
+			line-height: 40px;
+		}
+		.container .menu{
+			line-height: 40px;
+		}
+	}
+	@media (min-width: 769px) and (max-width: 2560px) {
+		header{
+			height: 60px;
 		}
 		.container .menu img{
 			width: 40px;
 			height: 40px;
 		}
-		.container .btn-menu{
-			line-height: 60px;
-		}
 		.container .menu{
 			line-height: 60px;
 		}
-	}
-	@media (min-width: 1024px) and (max-width: 2560px) {
-		header{
-			height: 80px;
-		}
-		.container .menu img{
-			width: 60px;
-			height: 60px;
-		}
-		.container .menu{
-			line-height: 80px;
-		}
 		.container .btn-menu{
-			line-height: 80px;
+			line-height:60px;
 		}
 
 	}

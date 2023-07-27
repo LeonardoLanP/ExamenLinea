@@ -1,13 +1,12 @@
 <%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/admin.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/estiloHeader/admin.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/admin/gestion.css">
 </head>
@@ -51,7 +50,7 @@
         <form action="../up-usr" method="POST" id="formulario-modal">
             <input type="hidden" name="id_user" id="id_user" value="">
 
-            <label>Nombre/s*:</label>
+            <label>Nombres*:</label>
             <input type="text" name="nombre" id="nombre" maxlength="45">
 
             <label>Apellido paterno*:</label>
@@ -104,8 +103,7 @@
             <div class="perfil">
                 <i class="bi bi-person-circle"></i><br>
                 <h4>Admin</h4>
-                <h4><%= ((Person) request.getSession().getAttribute("sesion")).getFirstname() %>
-                    <%= ((Person) request.getSession().getAttribute("sesion")).getSecondname() %></h4>
+                <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
             </div>
         </center>
 
@@ -163,7 +161,7 @@
                             </div>
                         </label>
                     </td>
-                    <td colspan="2">${person.lastname1} ${person.lastname2} ${person.firstname} ${person.secondname}</td>
+                    <td colspan="2">${person.lastname1} ${person.lastname2} ${person.name}</td>
                     <td>
                         <div class="boton-modal">
                             <label for="btn-modal" class="editar-usuario" onclick="cargarDatosUsuario(${person.id_person})">
@@ -240,25 +238,19 @@
 
                 var datosUsuario = responseText.split('\n');
                 var usuario = {
-                    first: datosUsuario[0].trim(),
-                    second: datosUsuario[1].trim(),
-                    lastname1: datosUsuario[2].trim(),
-                    lastname2: datosUsuario[3],
-                    curp: datosUsuario[4].trim(),
-                    email: datosUsuario[5].trim(),
-                    user: datosUsuario[6],
-
-                    rol: datosUsuario[8],
-                    id: datosUsuario[9],
+                    name: datosUsuario[0].trim(),
+                    lastname1: datosUsuario[1].trim(),
+                    lastname2: datosUsuario[2],
+                    curp: datosUsuario[3].trim(),
+                    email: datosUsuario[4].trim(),
+                    user: datosUsuario[5],
+                    rol: datosUsuario[6],
+                    id: datosUsuario[7],
                 };
 
                 document.getElementById("id_user").value = usuario.id.trim();
-                document.getElementById("nombreuser").value = usuario.first;
-                if(usuario.second.trim() != null){
-                    document.getElementById("nombre").value = usuario.first + " " +usuario.second;
-                }else{
-                    document.getElementById("nombre").value = usuario.first;
-                }
+                document.getElementById("nombreuser").value = usuario.name;
+                    document.getElementById("nombre").value = usuario.name;
                 document.getElementById("ap1").value = usuario.lastname1;
                 document.getElementById("ape2").value = usuario.lastname2;
                 document.getElementById("curp").value = usuario.curp;

@@ -1,6 +1,6 @@
 package mx.edu.utez.exameneslinea.model;
 
-public class Exam_Question_Answer {
+public class Exam_Question_Answer extends Answer{
     private int id_exam_question;
     private int exam_id;
     private int ques_id;
@@ -12,6 +12,15 @@ public class Exam_Question_Answer {
     }
 
     public Exam_Question_Answer(int id_exam_question, int exam_id, int ques_id, int answer_id, String open_Answer) {
+        this.id_exam_question = id_exam_question;
+        this.exam_id = exam_id;
+        this.ques_id = ques_id;
+        this.answer_id = answer_id;
+        this.open_Answer = open_Answer;
+    }
+
+    public Exam_Question_Answer(int id_answer, String answer, int id_exam_question, int exam_id, int ques_id, int answer_id, String open_Answer) {
+        super(id_answer, answer);
         this.id_exam_question = id_exam_question;
         this.exam_id = exam_id;
         this.ques_id = ques_id;

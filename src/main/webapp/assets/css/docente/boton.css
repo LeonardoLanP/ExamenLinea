@@ -1,12 +1,9 @@
         /*Boton-Modal*/
 .boton-modal {
-  padding: 40px;
-  background-color: #fff;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 4
-  ;
+  padding: 6px;
+  bottom: 6px;
+  right: 10px;
+  z-index: 4;
 }
 
 .boton-modal label {
@@ -24,7 +21,7 @@
     background-color: #03BB85;
 }
 .boton-modal label::after {
-  content: "Agregar exámen";
+  content: "Agregar examen";
   position: absolute;
   top: 50%;
   right: 100%;

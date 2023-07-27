@@ -26,8 +26,7 @@ public class UsuarioDao implements DaoRepository{
             while(res.next()){
                 Person usr = new Person();
                 usr.setId_person(res.getInt("ID_person"));
-                usr.setFirstname(res.getString("firstname"));
-                usr.setSecondname(res.getString("secondname"));
+                usr.setName(res.getString("name"));
                 usr.setLastname1(res.getString("lastname1"));
                 usr.setLastname2(res.getString("lastname2"));
                 usr.setCurp(res.getString("curp"));
@@ -49,7 +48,7 @@ public class UsuarioDao implements DaoRepository{
     }
 
     @Override
-    public Object findOne(int idRol) {
+    public Object findOne(int idPerson) {
         Person usr = new Person();
         MysqlConector conector = new MysqlConector();
         Connection con = conector.connect();
@@ -57,12 +56,11 @@ public class UsuarioDao implements DaoRepository{
             PreparedStatement stmt = con.prepareStatement(
                     "select * from sugel.person inner join sugel.user on person.User_id = user.id_user " +
                             "where  ID_person = ?");
-            stmt.setInt(1,idRol);
+            stmt.setInt(1,idPerson);
             ResultSet res = stmt.executeQuery();
             if(res.next()){
                 usr.setId_person(res.getInt("ID_person"));
-                usr.setFirstname(res.getString("firstname"));
-                usr.setSecondname(res.getString("secondname"));
+                usr.setName(res.getString("name"));
                 usr.setLastname1(res.getString("lastname1"));
                 usr.setLastname2(res.getString("lastname2"));
                 usr.setCurp(res.getString("curp"));
@@ -123,8 +121,7 @@ public class UsuarioDao implements DaoRepository{
             ResultSet res = stmt.executeQuery();
             if(res.next()){
                 usr.setId_person(res.getInt("ID_person"));
-                usr.setFirstname(res.getString("firstname"));
-                usr.setSecondname(res.getString("secondname"));
+                usr.setName(res.getString("name"));
                 usr.setLastname1(res.getString("lastname1"));
                 usr.setLastname2(res.getString("lastname2"));
                 usr.setCurp(res.getString("curp"));
@@ -172,19 +169,17 @@ public class UsuarioDao implements DaoRepository{
         Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
-                    "update person set firstname = ?," +
-                            " secondname = ?," +
+                    "update person set name = ?," +
                             " lastname1 = ?," +
                             " lastname2 = ?," +
                             " curp = ?"+
                             "where ID_person = ?"
             );
-            stmt.setString(1,usr.getFirstname());
-            stmt.setString(2,usr.getSecondname());
-            stmt.setString(3,usr.getLastname1());
-            stmt.setString(4,usr.getLastname2());
-            stmt.setString(5,usr.getCurp());
-            stmt.setInt(6,id);
+            stmt.setString(1,usr.getName());
+            stmt.setString(2,usr.getLastname1());
+            stmt.setString(3,usr.getLastname2());
+            stmt.setString(4,usr.getCurp());
+            stmt.setInt(5,id);
             estado = stmt.executeUpdate() > 0 ? true:false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -240,15 +235,14 @@ public class UsuarioDao implements DaoRepository{
         Connection con = connection.connect();
             try {
                 PreparedStatement stmt = con.prepareStatement(
-                        "insert into person(firstname, secondname, lastname1, lastname2, curp, User_id) " +
-                                "values(?,?,?,?,?,?)"
+                        "insert into person(name, lastname1, lastname2, curp, User_id) " +
+                                "values(?,?,?,?,?)"
                 );
-                stmt.setString(1,person.getFirstname());
-                stmt.setString(2,person.getSecondname());
-                stmt.setString(3,person.getLastname1());
-                stmt.setString(4,person.getLastname2());
-                stmt.setString(5,person.getCurp());
-                stmt.setInt(6,person.getUser_id());
+                stmt.setString(1,person.getName());
+                stmt.setString(2,person.getLastname1());
+                stmt.setString(3,person.getLastname2());
+                stmt.setString(4,person.getCurp());
+                stmt.setInt(5,person.getUser_id());
                 if(stmt.executeUpdate() > 0){
                     return true;
                 }

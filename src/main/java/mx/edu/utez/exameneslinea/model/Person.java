@@ -2,8 +2,7 @@ package mx.edu.utez.exameneslinea.model;
 
 public class Person extends User {
     private int id_person;
-    private String firstname;
-    private String secondname;
+    private String name;
     private String lastname1;
     private String lastname2;
     private String curp;
@@ -12,26 +11,23 @@ public class Person extends User {
     public Person() {
     }
 
-    public Person(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int User_id) {
+    public Person(int ID_user, String user, String email, String pass, int user_status, int rol_id, int id_person, String name, String lastname1, String lastname2, String curp, int user_id) {
+        super(ID_user, user, email, pass, user_status, rol_id);
         this.id_person = id_person;
-        this.firstname = firstname;
-        this.secondname = secondname;
+        this.name = name;
         this.lastname1 = lastname1;
         this.lastname2 = lastname2;
         this.curp = curp;
-        this.User_id = User_id;
+        User_id = user_id;
     }
 
-    public Person(int id_person, String firstname, String secondname, String lastname1, String lastname2, String curp, int user_id,
-                  int id_user, String user, String email, String pass, int rol_id, int status) {
-        super(id_user, user, email, pass, rol_id, status);
+    public Person(int id_person, String name, String lastname1, String lastname2, String curp, int user_id) {
         this.id_person = id_person;
-        this.firstname = firstname;
-        this.secondname = secondname;
+        this.name = name;
         this.lastname1 = lastname1;
         this.lastname2 = lastname2;
         this.curp = curp;
-        this.User_id = User_id;
+        User_id = user_id;
     }
 
     public int getId_person() {
@@ -42,20 +38,12 @@ public class Person extends User {
         this.id_person = id_person;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getSecondname() {
-        return secondname;
-    }
-
-    public void setSecondname(String secondname) {
-        this.secondname = secondname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLastname1() {
@@ -86,7 +74,7 @@ public class Person extends User {
         return User_id;
     }
 
-    public void setUser_id(int User_id) {
-        this.User_id = User_id;
+    public void setUser_id(int user_id) {
+        User_id = user_id;
     }
 }

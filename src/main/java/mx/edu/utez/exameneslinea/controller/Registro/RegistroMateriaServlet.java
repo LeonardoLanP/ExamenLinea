@@ -1,7 +1,8 @@
-package mx.edu.utez.exameneslinea.controller;
+package mx.edu.utez.exameneslinea.controller.Registro;
 
 import mx.edu.utez.exameneslinea.model.*;
 import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
+import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,21 +17,13 @@ public class RegistroMateriaServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("nombre");
-        String grade = req.getParameter("grado");
+        int grade = Integer.parseInt(req.getParameter("grado"));
         String group = req.getParameter("grupo");
-        int gradeValue = Integer.parseInt(grade);
-
-        System.out.println(name + grade + group);
+        Person per =(Person) req.getSession().getAttribute("sesion");
 
         ExamenDao dao = new ExamenDao();
-        dao.insertMateria(new Subject(0,gradeValue,group,name,1));
-        Subject mater = (Subject) dao.findMateria(gradeValue,group,name);
-
-
-
-        Person per =(Person) req.getSession().getAttribute("sesion");
-        System.out.println(per.getFirstname());
-
+        dao.insertMateria(new Subject(0,grade,group,name,1));
+        Subject mater = (Subject) dao.findMateria(grade,group,name);
         dao.insertMateriaUsuario(per.getID_user(),mater.getId_sub());
 
             req.getSession().setAttribute("materias", mater);

@@ -1,15 +1,4 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Examen Opción multiple</title>
-	 <link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
-</head>
-<style type="text/css">
- @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
 
 body{
     font-family: 'Urbanist', sans-serif;
@@ -112,9 +101,10 @@ form {
     margin-top: 25px;
 }
 .respuesta-radio {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+
 }
 .respuesta-radio label{
 	padding: 4px;
@@ -127,7 +117,8 @@ form {
 .respuesta-radio label:hover{
 	background-color: rgba(3, 187, 133, 0.1)
 }
-.respuesta-radio label:before{
+
+.respuesta-radio label:before {
 	content: "";
 	width: 14px;
 	height: 14px;
@@ -135,17 +126,19 @@ form {
 	background-color: none;
 	border-radius: 50%;
 	margin-right: 10px;
-	border:2px solid#03BB85;
-	top: 7px:;
-}
-.respuesta-radio input[type="radio"]:checked ~	label{
-
+	border: 2px solid #03BB85;
+	top: 7px;
 }
 .respuesta-radio input[type="radio"] {
-    margin-right: 5px;
-    display: none;
-
+	margin-right: 5px;
+	display: none;
 }
+.respuesta-radio input[type="radio"]:checked ~ label:before {
+	background-color: #03bb85;
+}
+
+
+
 
 .respuesta-text {
     display: flex;
@@ -158,7 +151,7 @@ form {
 	margin: auto;
 	width: 98%;
 	resize: none;
-	background-color: #F1FCF9;
+	background-color: #D6EAF8;
 	border:0;
 	padding: 5px;
 	height: 70px;
@@ -183,43 +176,3 @@ input[type="submit"]{
 input[type="submit"]:hover{
 	background-color: #001256;
 }
-
-</style>
-<body>
-	
-	<div class="background">
-	</div>
-		<header class="header">
-    <div class="container">
-      <div class="logo">
-      </div>
-      
-      <div class="menu">
-        <img src="../assets/img/sugel.png" alt="Logo">
-      </div>
-    </div>
-  </header>
-
-
-			<div class="contenedor">
-    			<h1>Nombre del exámen</h1>
-				<form action="">
-					<c:forEach items="${quests}" var="pregunta">
-						<div class="pregunta">
-							<label>Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
-							<div class="respuesta-text">
-                <textarea name="respuesta-t" cols="30" rows="5">
-
-                </textarea>
-							</div>
-						</div>
-					</c:forEach>
-					<center><input type="submit" name="" value="Finalizar examen"></center>
-				</form>
-</div>
-
-
-
-	
-</body>
-</html>
