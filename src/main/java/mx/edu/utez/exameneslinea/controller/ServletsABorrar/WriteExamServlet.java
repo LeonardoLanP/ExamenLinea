@@ -1,7 +1,8 @@
-package mx.edu.utez.exameneslinea.controller;
+package mx.edu.utez.exameneslinea.controller.ServletsABorrar;
 
 import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 import mx.edu.utez.exameneslinea.model.Person;
+import mx.edu.utez.exameneslinea.model.Question;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,17 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ExamenServlet", value = "/all-subjets")
-public class ALLServlet extends HttpServlet {
+public class WriteExamServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Person per =(Person) req.getSession().getAttribute("sesion");
+        int idexam = Integer.parseInt(req.getParameter("examenid"));
+        int id = idexam;
         ExamenDao dao = new ExamenDao();
-
-        List<Person> lista;
-        lista = dao.findAllMa(per.getID_user());
-        req.getSession().setAttribute("subjectlista", lista);
-        resp.sendRedirect("./Docente/materias.jsp");
+        List<Question> lista;
+        lista = dao.findQuestion(idexam);
+        req.getSession().setAttribute("questions", lista);
+        req.getSession().setAttribute("examenidques", id);
+        resp.sendRedirect("/Docente/preguntas.jsp");
     }
-
 }

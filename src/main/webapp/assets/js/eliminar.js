@@ -1,84 +1,79 @@
-  // Obtén todas las clases de materia
-    var materias = document.getElementsByClassName('materia');
+document.addEventListener('DOMContentLoaded', () => {
+  // Obtener todos los elementos con la clase 'materia'
+  const materias = document.querySelectorAll('.materia');
 
-    // Recorre todas las clases de materia
-    for (var i = 0; i < materias.length; i++) {
-      // Agrega el evento de doble clic a cada clase de materia
-      materias[i].addEventListener('dblclick', function() {
-        var materia = this;
+  // Lista de las imágenes disponibles
+  const imagenesDisponibles = [
+    'class.svg',
+    'estudiantes.svg',
+    'profesores.svg',
+    'usD.svg',
+    'usE.svg',
+    'docente.svg'
+  ];
 
-        // Crea la ventana emergente de confirmación
-        var confirmOverlay = document.createElement('div');
-        confirmOverlay.classList.add('confirm-overlay');
+  // Función para obtener un índice aleatorio entre 0 y el número de imágenes disponibles
+  function getRandomIndex() {
+    return Math.floor(Math.random() * imagenesDisponibles.length);
+  }
 
-        var confirmModal = document.createElement('div');
-        confirmModal.classList.add('confirm-modal');
-        confirmModal.innerHTML = `
-          <h2>¿Estás seguro de que quieres eliminar esta materia?</h2>
-          <button id="confirm-yes">Sí</button>
-          <button id="confirm-no">No</button>
-        `;
+  // Función para cambiar la imagen y los estilos cuando el checkbox cambia de estado
+  function updateImageAndStyles(event) {
+    const checkbox = event.target;
+    const materiaDiv = checkbox.closest('.materia');
+    const materiaImg = materiaDiv.querySelector('.materiaImg');
 
-        confirmOverlay.appendChild(confirmModal);
-        document.body.appendChild(confirmOverlay);
-
-        // Agrega el evento de clic al botón "Sí" de la ventana emergente
-        var confirmYesBtn = document.getElementById('confirm-yes');
-        confirmYesBtn.addEventListener('click', function() {
-          // Elimina la materia si el usuario confirma
-          materia.parentNode.removeChild(materia);
-          confirmOverlay.remove();
-        });
-
-        // Agrega el evento de clic al botón "No" de la ventana emergente
-        var confirmNoBtn = document.getElementById('confirm-no');
-        confirmNoBtn.addEventListener('click', function() {
-          // Cierra la ventana emergente si el usuario cancela
-          confirmOverlay.remove();
-        });
-      });
+    if (checkbox.checked) {
+      // Si el checkbox está marcado, quitar la clase 'disabled' y restaurar una imagen aleatoria
+      materiaDiv.classList.remove('disabled');
+      const randomIndex = getRandomIndex();
+      materiaImg.src = `../img/${imagenesDisponibles[randomIndex]}`;
+    } else {
+      // Si el checkbox no está marcado, añadir la clase 'disabled' y establecer la imagen desactivada
+      materiaDiv.classList.add('disabled');
+      materiaImg.src = '../img/desactivada.svg';
     }
+  }
+
+  // Añadir un listener al evento 'change' del checkbox para cada div .materia
+  materias.forEach((materia) => {
+    const checkbox = materia.querySelector('input[type="checkbox"]');
+    checkbox.addEventListener('change', updateImageAndStyles);
+    updateImageAndStyles({ target: checkbox }); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+  });
+});
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Obtener todos los elementos con la clase 'examenes'
+  const examenes = document.querySelectorAll('.examenes');
 
-      // Obtén todas las clases de examen
-    var examen = document.getElementsByClassName('examenes');
+  // Función para cambiar la imagen y los estilos cuando el checkbox cambia de estado
+  function updateImageAndStyles(event) {
+    const checkbox = event.target;
+    const examenDiv = checkbox.closest('.examenes');
+    const imagen = examenDiv.querySelector('.imagen img');
 
-    // Recorre todas las clases de examen
-    for (var i = 0; i < examen.length; i++) {
-      // Agrega el evento de doble clic a cada clase de materia
-      examen[i].addEventListener('dblclick', function() {
-        var examen = this;
-
-        // Crea la ventana emergente de confirmación
-        var confirmOver = document.createElement('div');
-        confirmOver.classList.add('confirm-over');
-
-        var confirmMod = document.createElement('div');
-        confirmMod.classList.add('confirm-mod');
-        confirmMod.innerHTML = `
-          <h2>¿Estás seguro de que quieres eliminar esta examen?</h2>
-          <button id="confirm">Sí</button>
-          <button id="no">No</button>
-        `;
-
-        confirmOver.appendChild(confirmMod);
-        document.body.appendChild(confirmOver);
-
-        // Agrega el evento de clic al botón "Sí" de la ventana emergente
-        var confirmYes = document.getElementById('confirm');
-        confirmYes.addEventListener('click', function() {
-          // Elimina el examen si el usuario confirma
-          examen.parentNode.removeChild(examen);
-          confirmOver.remove();
-        });
-
-        // Agrega el evento de clic al botón "No" de la ventana emergente
-        var confirmNo = document.getElementById('no');
-        confirmNo.addEventListener('click', function() {
-          // Cierra la ventana emergente si el usuario cancela
-          confirmOver.remove();
-        });
-      });
+    if (checkbox.checked) {
+      // Si el checkbox está marcado, quitar la clase 'disabled' y restaurar la imagen normal
+      examenDiv.classList.remove('disabled');
+      imagen.src = 'https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000';
+    } else {
+      // Si el checkbox no está marcado, añadir la clase 'disabled' y establecer la imagen desactivada
+      examenDiv.classList.add('disabled');
+      imagen.src = '../img/desactivada.svg';
     }
+  }
+
+  // Añadir un listener al evento 'change' del checkbox para cada div .examenes
+  examenes.forEach((examen) => {
+    const checkbox = examen.querySelector('input[type="checkbox"]');
+    checkbox.addEventListener('change', updateImageAndStyles);
+    updateImageAndStyles({ target: checkbox }); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+  });
+});
+
+
+
+

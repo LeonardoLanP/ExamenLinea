@@ -1,6 +1,6 @@
-<%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -18,7 +18,6 @@ body{
 body {
 	margin: 0;
 	padding: 0;
-	
 }
 
 .background {
@@ -132,11 +131,11 @@ form {
 	width: 14px;
 	height: 14px;
 	display: inline-block;
-	background-color: none;
+	background-color: transparent;
 	border-radius: 50%;
 	margin-right: 10px;
 	border:2px solid#03BB85;
-	top: 7px:;
+	top: 7px;
 }
 .respuesta-radio input[type="radio"]:checked ~	label{
 
@@ -200,24 +199,67 @@ input[type="submit"]:hover{
     </div>
   </header>
 
-
-			<div class="contenedor">
-    			<h1>Nombre del exámen</h1>
-				<form action="">
-					<c:forEach items="${quests}" var="pregunta">
+	<div class="contenedor">
+		<h1>Nombre del exámen</h1>
+		<form action="../examen/enviar-Respuesta">
+			<c:forEach items="${quests}" var="pregunta">
+				<c:choose>
+					<c:when test="${pregunta.answer_id == 1}">
 						<div class="pregunta">
-							<label>Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
+							<label id="${pregunta.ques_id}" class="${pregunta.open_answer}">Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
 							<div class="respuesta-text">
-                <textarea name="respuesta-t" cols="30" rows="5">
-
-                </textarea>
+                        <textarea name="respuesta-t" cols="30" rows="5" class="pregunta" data-id="${pregunta.ques_id}"
+								  data-answer-id="${pregunta.id_exam_question}" placeholder="Ingresa la pregunta del examen">${pregunta.open_Answer}</textarea>
 							</div>
 						</div>
-					</c:forEach>
-					<center><input type="submit" name="" value="Finalizar examen"></center>
-				</form>
-</div>
+					</c:when>
+					<c:when test="${pregunta.answer_id == 2}">
+						<div class="pregunta">
+							<label id="${pregunta.ques_id}" class="${pregunta.open_Answer}" >Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
+							<c:forEach items="${pregunta.answers}" var="answer">
+								<div class="respuesta-radio" for="${pregunta.ques_id}">
+									<input type="radio" name="opcion" data-id="${pregunta.id_exam_question}" data-answer-id="${pregunta.answer_id}" class="respuesta">
+									<label for="${pregunta.answer_id}">${answer.answer}</label>
+								</div>
+							</c:forEach>
+						</div>
+					</c:when>
+				</c:choose>
+			</c:forEach>
+			<center><input type="submit" name="" value="Finalizar examen"></center>
+		</form>
+			</div>
 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			function sendDataToServer(id, answerId, value, element) {
+				var dataToSend = {
+					"ques_id": id,
+					"answer_id": answerId,
+					"open_Answer": value
+				};
+				$.ajax({
+					url: "../examen/Registrar-Respuestas",
+					method: "POST",
+					data: JSON.stringify(dataToSend),
+					contentType: "application/json",
+					success: function(data) {
+					},
+					error: function(xhr, status, error) {
+						console.error("Error en la solicitud AJAX:", status, error);
+					}
+				});
+			}
+			$(document).on("change", "textarea.pregunta, input.opcion", function() {
+				var id = $(this).data("id");
+				var answerId = $(this).data("answer-id"); // Obtenemos el answer_id
+				var value = $(this).val();
+				sendDataToServer(id, answerId, value, this);
+			});
+		});
+	</script>
 
 
 	

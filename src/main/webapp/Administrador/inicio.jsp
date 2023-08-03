@@ -15,6 +15,16 @@
         display: none;
     }
 </style>
+
+<!-- ... Código HTML existente ... -->
+
+<style>
+    /* Agregar el siguiente estilo para resaltar el campo con error */
+    input.error {
+        background-color: #f54021;
+    }
+</style>
+
 <body>
 
 <!-- FORMULARIO PARA EL REGISTRO DE USUARIOS -->
@@ -22,19 +32,19 @@
     <div class="pop-up" id="pop-up">
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
         <h2 class="equipo">Registro de usuarios</h2>
-        <form accept="" method="post" action="../reg-person">
+        <form accept="" method="post" action="../admin/registro-user">
             <input type="text" name="nombre" placeholder="Nombres*" required="" maxlength="45">
             <input type="text" name="apellido1" placeholder="Apellido paterno*" required="" maxlength="30">
             <input type="text" name="apellido2" placeholder="Apellido materno" maxlength="30">
-            <input type="text" name="CURP" placeholder="CURP*" required="" maxlength="18"  onkeyup="convertirMayusculas(this)">
+            <input type="text" name="CURP" placeholder="CURP*" required="" maxlength="18" onkeyup="convertirMayusculas(this)">
             <input type="email" name="correo" placeholder="correo@institucional*" required="" value="@utez.edu.mx" maxlength="45">
-            <input type="text" name="matricula" placeholder="Matricula*" required="" maxlength="15">
             <label for="rol">Selecciona el rol del nuevo usuario:</label><br>
             <select name="rol" id="rol" onchange="mostrarOcultarMatricula()">
                 <option value="">Seleccione un Rol*</option>
                 <option value="estudiante">Estudiante</option>
                 <option value="docente">Docente</option>
             </select>
+            <input type="text" name="matricula" placeholder="Matricula*" required="" maxlength="15">
             <br><input type="submit" value="Agregar" onclick="validarFormulario(event)">
         </form>
     </div>
@@ -47,7 +57,8 @@
 <div class="container-modal">
     <div class="content-modal">
         <h2 id="nombreuser">Nombre:</h2>
-        <form action="../up-usr" method="POST" id="formulario-modal">
+        <form action="../admin/actualizar-user" method="POST" id="formulario-modal">
+
             <input type="hidden" name="id_user" id="id_user" value="">
 
             <label>Nombres*:</label>
@@ -111,22 +122,22 @@
             <a href="#btn-modal"  class="editar-usuario" id="btn-abre" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getID_user() %>)">Editar Perfil</a>
             <c:choose>
                 <c:when test="${personType == 'docente'}">
-                    <a href="../person?id=docente"><strong>Gestionar docentes</strong></a>
+                    <a href="../admin/gestion-docente-alumno?id=docente"><strong>Gestionar docentes</strong></a>
                 </c:when>
                 <c:otherwise>
-                    <a href="../person?id=docente">Gestionar docentes</a>
+                    <a href="../admin/gestion-docente-alumno?id=docente">Gestionar docentes</a>
                 </c:otherwise>
             </c:choose>
             <c:choose>
                 <c:when test="${personType == 'estudiante'}">
-                    <a href="../person?id=estudiante"><strong>Gestionar estudiante</strong></a>
+                    <a href="../admin/gestion-docente-alumno?id=estudiante"><strong>Gestionar estudiante</strong></a>
                 </c:when>
                 <c:otherwise>
-                    <a href="../person?id=estudiante">Gestionar estudiante</a>
+                    <a href="../admin/gestion-docente-alumno?id=estudiante">Gestionar estudiante</a>
                 </c:otherwise>
             </c:choose>
             <div class="min-menA">
-                <a href="#" class="btn-abrir" id="btn-abrir">Agregar usuario</a>
+                <a href="#"  class="btn-abrir" id="btn-abrir" for="btn-menu">Agregar usuario</a>
             </div>
             <div class="salir">
                 <a href="../login?sesion=salir">Salir</a>
@@ -178,119 +189,265 @@
 
 <script type="text/javascript" src="../assets/js/agregar.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--<script>
     function validarFormulario(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        $('input').removeClass('error');
+
+
         var curp = document.getElementsByName('CURP')[0].value.trim();
         var correo = document.getElementsByName('correo')[0].value.trim();
         var nombre = document.getElementsByName('nombre')[0].value.trim();
+        var apellido1 = document.getElementsByName('apellido1')[0].value.trim();
+        var apellido2 = document.getElementsByName('apellido2')[0].value.trim();
         var rol = document.getElementById("rol").value;
+        var matricula = document.getElementsByName('matricula')[0].value.trim();
 
-        if (nombre.split(" ").length > 2) {
-            event.preventDefault();
+
+
+        // Validar el nombre
+        var nombreInput = document.getElementsByName('nombre')[0];
+        if (!/^[A-Z][a-z]*$/.test(nombre)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Alerta',
-                text: 'Colobora tu nombre que este escrito correctamente.',
+                text: 'Verifica que tu nombre esté escrito correctamente.',
                 timer: 3000,
-            })
-            return;
+            });
+            nombreInput.classList.add('error');
+        } else {
+            nombreInput.classList.remove('error');
         }
-        if (curp.length < 18 && curp.length > 0) {
-            event.preventDefault();
+
+        // Validar los apellidos
+        var apellido1Input = document.getElementsByName('apellido1')[0];
+        if (!/^([A-Z][a-z]*\s*)+$/.test(apellido1)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Alerta',
-                text: 'Comprueba tu CURP!',
+                text: 'Verifica que el primer apellido esté escrito correctamente.',
                 timer: 3000,
-            })
-            return;
+            });
+            apellido1Input.classList.add('error');
+        } else {
+            apellido1Input.classList.remove('error');
         }
+
+        var apellido2Input = document.getElementsByName('apellido2')[0];
+        if (apellido2 !== "" && !/^([A-Z][a-z]*\s*)+$/.test(apellido2)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Verifica que el segundo apellido esté escrito correctamente.',
+                timer: 3000,
+            });
+            apellido2Input.classList.add('error');
+        } else {
+            apellido2Input.classList.remove('error');
+        }
+
+        // Validar la CURP
+        var curpInput = document.getElementsByName('CURP')[0];
+        if (!/^[A-Z0-9]{18}$/.test(curp)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Verifica tu CURP.',
+                timer: 3000,
+            });
+            curpInput.classList.add('error');
+        } else {
+            curpInput.classList.remove('error');
+
+
+        var correoInput = document.getElementsByName('correo')[0];
         if (!/^[\w.-]+@utez\.edu\.mx$/.test(correo)) {
-            event.preventDefault();
             Swal.fire({
                 icon: 'warning',
                 title: 'Alerta',
-                text: 'Colobora tu correo XXXXXXXXX@utez.edu.mx',
+                text: 'El correo debe tener el formato XXXXXXXXX@utez.edu.mx',
                 timer: 3000,
-            })
-            return;
+            });
+            correoInput.classList.add('error');
+        } else {
+            correoInput.classList.remove('error');
         }
 
-            if (rol === "") {
-                event.preventDefault(); // Evitar que el formulario se envíe
+        var rolInput = document.getElementById("rol");
+        if (rol === "") {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: 'Por favor, seleccione un rol antes de registrar.',
+                timer: 3000,
+            });
+            rolInput.classList.add('error');
+        } else {
+            rolInput.classList.remove('error');
+        }
+
+        if (rol === 'estudiante') {
+            var matriculaInput = document.getElementsByName('matricula')[0];
+            if (!/^[A-Z0-9]{1,15}$/.test(matricula)) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Alerta',
-                    text: 'Por favor, seleccione un rol antes de registrar.',
+                    text: 'Registre la matrícula correctamente (solo letras mayúsculas y números).',
                     timer: 3000,
-                })
+                });
+                matriculaInput.classList.add('error');
+            } else {
+                matriculaInput.classList.remove('error');
             }
+        }
 
-    }
-</script>
-
-<script>
-    function cargarDatosUsuario(userId) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var responseText = xhr.responseText;
-
-                var datosUsuario = responseText.split('\n');
-                var usuario = {
-                    name: datosUsuario[0].trim(),
-                    lastname1: datosUsuario[1].trim(),
-                    lastname2: datosUsuario[2],
-                    curp: datosUsuario[3].trim(),
-                    email: datosUsuario[4].trim(),
-                    user: datosUsuario[5],
-                    rol: datosUsuario[6],
-                    id: datosUsuario[7],
-                };
-
-                document.getElementById("id_user").value = usuario.id.trim();
-                document.getElementById("nombreuser").value = usuario.name;
-                    document.getElementById("nombre").value = usuario.name;
-                document.getElementById("ap1").value = usuario.lastname1;
-                document.getElementById("ape2").value = usuario.lastname2;
-                document.getElementById("curp").value = usuario.curp;
-                document.getElementById("email").value = usuario.email;
-                document.getElementById("user").value = usuario.user;
-
-                var userLabel = document.querySelector('label[for="user"]');
-                if (usuario.rol.trim() === "3") {
-                    userLabel.textContent = "Usuario/Matricula*:";
-                } else {
-                    userLabel.textContent = "Usuario*:";
-                }
-                document.getElementById("btn-modal").checked = true;
-
-            }
-        };
-
-
-        xhr.open("POST", "../BuscarServlet", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("userId=" + userId);
-    }
-</script>
-
-<script type="text/javascript">
-    function mostrarOcultarMatricula() {
-        var rol = document.getElementById("rol").value;
-        var matriculaInput = document.getElementsByName("matricula")[0];
-        if (rol === "estudiante") {
-            matriculaInput.style.display = "block";
-            matriculaInput.required = true;
-        } else {
-            matriculaInput.style.display = "none";
-            matriculaInput.required = false;
-            matriculaInput.value = "";
+        // Si todas las validaciones son correctas, enviar el formulario
+        if (!document.querySelector('input.error')) {
+            document.querySelector('form').submit();
         }
     }
 
-    function convertirMayusculas(input) {
-        input.value = input.value.toUpperCase();
+    function convertirMayusculaPrimerLetra(input) {
+        var palabras = input.value.split(' ');
+        var resultado = '';
+        for (var i = 0; i < palabras.length; i++) {
+            resultado += palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1).toLowerCase();
+            if (i < palabras.length - 1) {
+                resultado += ' ';
+            }
+        }
+        input.value = resultado;
+    }
+
+
+    $(document).ready(function () {
+        mostrarOcultarMatricula();
+        $('#rol').on('change', function () {
+            mostrarOcultarMatricula();
+        });
+
+        // Evento oninput para activar la validación en tiempo real en cada input
+        $('input[name="nombre"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('input[name="apellido1"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('input[name="apellido2"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('input[name="CURP"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('input[name="correo"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('input[name="matricula"]').on('input', function (event) {
+            validarFormulario(event);
+        });
+
+        $('#rol').on('change', function (event) {
+            validarFormulario(event);
+        });
+    });
+</script>
+-->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.min.js"></script>
+<script>
+    function cargarDatosUsuario(userId) {
+        $.ajax({
+            type: "POST",
+            url: "../admin/buscar-datos",
+            data: { userId: userId },
+            success: function(data) {
+                var datosUsuario = data.split('\n');
+                var usuario = {
+                    name: datosUsuario[0].trim(),
+                    lastname1: datosUsuario[1].trim(),
+                    lastname2: datosUsuario[2].trim(),
+                    curp: datosUsuario[3].trim(),
+                    email: datosUsuario[4].trim(),
+                    user: datosUsuario[5].trim(),
+                    rol: datosUsuario[6].trim(),
+                    id: datosUsuario[7].trim(),
+                };
+                $("#id_user").val(usuario.id);
+                $("#nombreuser").text("Nombre: " + usuario.name);
+                $("#nombre").val(usuario.name);
+                $("#ap1").val(usuario.lastname1);
+                $("#ape2").val(usuario.lastname2);
+                $("#curp").val(usuario.curp);
+                $("#email").val(usuario.email);
+                $("#user").val(usuario.user);
+
+                var userLabel = $('label[for="user"]');
+                if (usuario.rol === "3") {
+                    userLabel.text("Usuario/Matricula*:");
+                } else {
+                    userLabel.text("Usuario*:");
+                }
+                document.getElementById("btn-modal").checked = true;
+
+                // Mostrar la alerta al hacer clic en el botón "Modificar"
+                $("#btn-enviar").on("click", function(event) {
+                    event.preventDefault();
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¿Estás seguro de modificar este usuario?',
+                        text: 'Esta acción modificará al usuario',
+                        showCancelButton: true,
+                        confirmButtonText: 'Aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cambios guardados',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            $("#formulario-modal").submit();
+                        }
+                    });
+                });
+            },
+            error: function() {
+                console.log("Error en la solicitud Ajax.");
+            }
+        });
+    }
+</script>
+
+
+<script type="text/javascript">
+    function convertirMayusculas(element) {
+        element.value = element.value.toUpperCase();
+    }
+
+    function mostrarOcultarMatricula() {
+        var rol = $('#rol').val();
+        var matriculaInput = $('input[name="matricula"]');
+        if (rol === 'estudiante') {
+            matriculaInput.prop('required', true);
+            matriculaInput.show();
+        } else {
+            matriculaInput.prop('required', false);
+            matriculaInput.val('');
+            matriculaInput.hide();
+        }
     }
 </script>
 
@@ -302,28 +459,37 @@
 
         Swal.fire({
             icon: 'warning',
-            title: '¿Estás seguro de '+ action + ' este usuario?',
-            text: 'Esta acción '+ action + 'á al usuario',
+            title: '¿Estás seguro de ' + action + ' este usuario?',
+            text: 'Esta acción ' + action + 'á al usuario',
             showCancelButton: true,
             confirmButtonText: 'Aceptar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "../UpdateStatusServlet", true);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        console.log(xhr.responseText);
+                $.ajax({
+                    type: "POST",
+                    url: "../admin/cambio-status",
+                    data: { personId: personId, estado: estado },
+                    success: function (data) {
+                        console.log(data);
                         Swal.fire({
                             icon: 'success',
                             title: 'Cambios guardados',
                             showConfirmButton: false,
                             timer: 1500,
                         });
+                    },
+                    error: function () {
+                        console.log("Error en la solicitud Ajax.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al guardar los cambios',
+                            text: 'Hubo un problema al intentar guardar los cambios.',
+                            showConfirmButton: true,
+                        });
+                        checkbox.checked = !estado;
                     }
-                };
-                xhr.send("personId=" + personId + "&estado=" + estado);
+                });
             } else {
                 checkbox.checked = !estado;
             }

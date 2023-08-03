@@ -8,12 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import com.google.gson.Gson;
 
-
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import mx.edu.utez.exameneslinea.model.Answer;
 import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 import mx.edu.utez.exameneslinea.model.Question;
 
@@ -33,41 +31,83 @@ public class RegistrarQuestionServlet extends HttpServlet {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class);
         int id = Integer.parseInt(jsonObject.get("id").getAsString());
+        int answerId = Integer.parseInt(jsonObject.get("answer_id").getAsString());
         String value = jsonObject.get("value").getAsString();
         int idexam = (int) req.getSession().getAttribute("examenidques");
 
-        System.out.println("ID: " + id);
-        System.out.println("Valor: " + value);
-        System.out.println("ID: " + idexam);
         ExamenDao daoex = new ExamenDao();
 
-        if (id == 1) {
-            daoex.insertQUES(value, "Abierta");
-            Question QUES = (Question) daoex.findQues(value, "Abierta");
-            Question ques = (Question) daoex.findEQA(idexam, 1);
-            daoex.updateEQA(QUES.getId_ques(), idexam, ques.getId_exam_question());
+        if (answerId == 1) {
+            if (id == 1) {
+                Question QUES = (Question) daoex.insertQUES(value, "Abierta");
+                Question ques = (Question) daoex.findEQA(idexam, 1);
+                daoex.updateEQA(QUES.getQues_id(), idexam, ques.getId_exam_question());
 
-            // Obtener el nuevo ID de la pregunta insertada
-            int newId = QUES.getId_ques();
+                int newId = QUES.getQues_id();
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("originalId", id);
+                jsonResponse.addProperty("newId", newId);
 
-            // Enviar el nuevo ID como parte de la respuesta AJAX
-            JsonObject jsonResponse = new JsonObject();
-            jsonResponse.addProperty("newId", newId);
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                PrintWriter out = resp.getWriter();
+                out.print(jsonResponse.toString());
+                out.flush();
+            } else {
+                System.out.println("Actualiza la pregunta actual");
+                daoex.updateQues(id, value);
+                resp.setContentType("text/plain");
+                resp.setCharacterEncoding("UTF-8");
+                resp.getWriter().write("Datos recibidos en el servidor con éxito");
+            }
+        } else if (answerId == 2) {
+            if(id == 2){
+                Question QUES = (Question) daoex.insertQUES(value, "Multiple");
+                Question ques = (Question) daoex.findEQA(idexam, 2);
+                daoex.updateEQA(QUES.getQues_id(), idexam, ques.getId_exam_question());
 
-            // Configurar el tipo de contenido y enviar la respuesta JSON al cliente
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            PrintWriter out = resp.getWriter();
-            out.print(jsonResponse.toString()); // Corregido aquí, convertir el objeto JSON a cadena
-            out.flush();
-        } else {
-            System.out.println("Actualiza la pregunta actual");
-            daoex.updateQues(id, value);
-            resp.setContentType("text/plain");
-            resp.setCharacterEncoding("UTF-8");
-            resp.getWriter().write("Datos recibidos en el servidor con éxito");
+                int newId = QUES.getQues_id();
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("originalId", id);
+                jsonResponse.addProperty("newId", newId);
+
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                PrintWriter out = resp.getWriter();
+                out.print(jsonResponse.toString());
+                out.flush();
+            } else if (id >= 2) {
+                daoex.updateQues(id, value);
+                resp.setContentType("text/plain");
+                resp.setCharacterEncoding("UTF-8");
+                resp.getWriter().write("Datos recibidos en el servidor con éxito");
+            }
+
+        }else if(answerId == 0 || answerId >2){
+            if(answerId == 0){
+                Answer answer = (Answer) daoex.insertAnswer(value);
+                daoex.insertEQAAnswer(idexam,id,answer.getId_answer());
+
+                int newId = answer.getId_answer();
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("newId", id);
+                jsonResponse.addProperty("newAnswerId", newId);
+
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                PrintWriter out = resp.getWriter();
+                out.print(jsonResponse.toString());
+                out.flush();
+            } else {
+                daoex.updateAnswer(answerId, value);
+                resp.setContentType("text/plain");
+                resp.setCharacterEncoding("UTF-8");
+                resp.getWriter().write("Datos recibidos en el servidor con éxito");
+            }
+
+        }else {
+            System.out.println("Hay un error en el codigo pq no entro en ninguna");
         }
-
     }
 
 }

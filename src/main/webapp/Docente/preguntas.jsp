@@ -12,32 +12,42 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/docente/preguntas.css">
 </head>
 
+<style>
+    .boton-opcion label.disabled {
+        color: #777777; /* Cambiar el color de texto cuando está inactivo */
+        pointer-events: none; /* Evitar que se pueda hacer clic en el botón */
+        cursor: default; /* Cambiar el cursor a 'no permitido' */
+    }
+</style>
+
+
 <body>
 	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
-	<div class="overlay" id="overlay" >
+
+    <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-          
-        <h2>Nombre <!--DEL USUARIO--></h2>
-        <form action="" method="" id="formulario-modal">
+            <h2 id="nombreuser">Nombre:</h2>
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
+                <input type="hidden" name="id_user" id="id_user" value="">
 
-          <label>Nombre:</label>
-          <input type="text" name="nombre">
+                <label>Nombre/s*:</label>
+                <input type="text" name="nombre" id="nombre" maxlength="45">
 
-          <label>Apellido paterno:</label>
-          <input type="text" name="ap1">
+                <label>Apellido paterno*:</label>
+                <input type="text" name="ap1" id="ap1" maxlength="30">
 
-          <label>Apellido materno:</label>
-          <input type="text" name="ape2">
+                <label>Apellido materno*:</label>
+                <input type="text" name="ape2" id="ape2" maxlength="30">
 
-          <label>CURP:</label>
-          <input type="text" name="curp">
+                <label>CURP*:</label>
+                <input type="text" name="CURP" id="curp" maxlength="18">
 
-          <label>Contraseña:</label>
-          <input type="text" name="pass">
-              <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center> 
+                <label>Contraseña:</label>
+                <input type="text" name="pass" id="pass">
+                <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center>
 
-        </form>
+            </form>
         </div>
     </div>
     <!--Termina el registro de usuarios-->
@@ -60,133 +70,163 @@
 
   
 <!--  --------------->
-<input type="checkbox" id="btn-menu">
-<div class="container-menu">
-  <div class="cont-menu">
+    <input type="checkbox" id="btn-menu">
+    <div class="container-menu">
+        <div class="cont-menu">
+            <center><div class="perfil"><i class="bi bi-person-heart"></i><br>
+                <div>
+                    <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
+                </div>
+            </div>
+            </center>
+            <nav>
+                <div class="min-menA">
+                    <a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
+                </div>
+                <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
 
-  	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
-  		<h4>Nombre</h4></div></center>
-
-    <nav> 	
-      <div class="min-menA">
-			<a href="#" class="btn-abrir" id="btn-abrir">Editar perfil</a>
-		</div>
-      <div class="salir"><a href="">Salir</a></div>
-      
-    </nav>
-    <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
-  </div>
-</div>
-
-<!--Termina el menu-->
-
-
-   <!--Formulario para modificar un usuario
-      ESTO FUE LO QUE SE CAMBIO
-<input type="checkbox" id="btn-modal">
-    <div class="container-modal">
-      <div class="content-modal">
-          <h2 class="equipo">Registro de materia</h2>
-            <form accept="" method="">
-              <input type="text" name="nombre" placeholder="Nombre de la materia" required="">
-              <div class="g">
-                <label for="grado">Grado:</label>
-              <input type="number" name="grado"  required="">
-              <label for="grupo">Grado:</label>
-              <input type="text" name="grup" >
-              </div>
-              <br><input type="submit" name="" value="Agregar"> 
-            </form>
-
-        <div class="btn-cerrar">
-          <label for="btn-modal">
-            Cancelar
-          </label>
+            </nav>
+            <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
         </div>
-      </div>
     </div>
 
-    TERMINA LA 1° MODIFICACION-->
-
-<!--Comienza el contenido principal-->
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
         <div class="mai">
             <form id="examenForm">
                 <h2>Nombre del examen</h2>
-
                 <c:forEach items="${questions}" var="question">
                     <c:choose>
-                        <c:when test="${question.answer_id == 1 && question.ques_id == 1}">
+                        <c:when test="${question.ques_id == 1 && question.answer_id == 1}">
                             <div class="abierta">
-                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen"></textarea>
+                                <textarea class="pregunta" data-id="${question.ques_id}" data-answer-id="1"  placeholder="Ingresa la pregunta del examen"></textarea>
                             </div>
                         </c:when>
-                        <c:when test="${question.answer_id == 1 && question.ques_id != 1}">
+                        <c:when test="${question.ques_id != 1 && question.answer_id == 1}">
                             <div class="abierta">
-                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
+                                <textarea class="pregunta" data-id="${question.ques_id}" data-answer-id="1" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
                             </div>
                         </c:when>
-                        <c:when test="${question.answer_id == 2 && question.ques_id == 1}">
-                            <div class="multiple">
-                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen"></textarea>
-                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
-                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
-                                <div class="boton-opcion" id="btn-opcionSD">
-                                    <label for="btn-opcionSD" onclick="agregarInput(this)">+</label>
-                                </div>
+                    <c:when test="${question.ques_id >= 2 && question.answer_id >= 2}">
+                        <div class="multiple">
+                            <textarea class="pregunta" data-id="${question.ques_id}" data-answer-id="${question.answer_id}" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
+                            <c:choose>
+                                <c:when test="${empty question.answers}">
+                                    <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="0" placeholder="Ingresa la opción">
+                                    <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="0" placeholder="Ingresa la opción">
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach items="${question.answers}" var="answer">
+                                        <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="${answer.id_answer}" placeholder="Ingresa la opción" value="${answer.answer}">
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="boton-opcion" id="btn-opcion">
+                                <label for="btn-opcion" onclick="agregarInput(this)">+</label>
                             </div>
-                        </c:when>
-                        <c:when test="${question.answer_id > 2 && question.ques_id != 1}">
-                            <div class="multiple">
-                                <textarea class="pregunta" data-id="${question.ques_id}" placeholder="Ingresa la pregunta del examen">${question.question}</textarea>
-                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
-                                <input type="text" class="opcion" data-id="${question.ques_id}" placeholder="Ingresa la opción">
-                                <div class="boton-opcion" id="btn-opcionCD">
-                                    <label for="btn-opcionCD" onclick="agregarInput(this)">+</label>
-                                </div>
-                            </div>
-                        </c:when>
-                    </c:choose>
+                        </div>
+                    </c:when>
+                </c:choose>
                 </c:forEach>
             </form>
         </div>
             </div>
 
   <script type="text/javascript" src="../assets/js/agregar.js"></script>
-
-
-<script>
-    function agregarInput(boton) {
-      var divMultiple = boton.parentElement.parentElement; // Navegamos al div "multiple" padre del botón
-      var ultimosInputs = divMultiple.querySelectorAll('input[name="opcion"]');
-      var ultimoInput = ultimosInputs[ultimosInputs.length - 1];
-
-      var nuevoInput = document.createElement('input');
-      nuevoInput.setAttribute('type', 'text');
-      nuevoInput.setAttribute('name', 'opcion');
-      nuevoInput.setAttribute('placeholder', 'Ingresa la opción');
-
-      divMultiple.insertBefore(nuevoInput, ultimoInput.nextSibling);
-    }
-  </script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         $(document).ready(function() {
-            class InputData {
-                constructor(originalId, newId) {
-                    this.originalId = originalId;
-                    this.newId = newId;
+            // Función para manejar el cambio en el textarea
+            $(document).on("input", "textarea.pregunta", function() {
+                var $multipleDiv = $(this).closest(".multiple");
+                var $opcionesInputs = $multipleDiv.find("input.opcion");
+                var $btnOpcion = $multipleDiv.find(".boton-opcion label");
+
+                if ($(this).val().trim() === "") {
+                    // Si el textarea está vacío, deshabilitar y cambiar el color de los inputs y el botón
+                    $opcionesInputs.prop("disabled", true);
+                    $opcionesInputs.css("background-color", "#CCCCCC");
+                    $btnOpcion.addClass("disabled");
+                } else {
+                    // Si el textarea contiene texto, habilitar y restaurar el color original de los inputs y el botón
+                    $opcionesInputs.prop("disabled", false);
+                    $opcionesInputs.css("background-color", "");
+                    $btnOpcion.removeClass("disabled");
                 }
+            });
+
+            // Llamar a la función una vez al inicio para aplicar el estado inicial del formulario
+            $("textarea.pregunta").trigger("input");
+        });
+    </script>
+
+    <script>
+        document.addEventListener("click", function(event) {
+            if (event.target.id === "btn-opcion") {
+                agregarInput(event.target);
+            }
+        });
+
+        function agregarInput(boton) {
+            var divMultiple = boton.parentElement.parentElement;
+            var ultimosInputs = divMultiple.querySelectorAll('input.opcion');
+            if (ultimosInputs.length >= 6) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Límite alcanzado',
+                    text: 'Solo se permite un máximo de 6 opciones',
+                    confirmButtonText: 'Aceptar'
+                });
+                return;
             }
 
-            var inputDataMap = {};
+            var ultimoInput = ultimosInputs[ultimosInputs.length - 1];
+            var nuevoInput = document.createElement('input');
+            nuevoInput.setAttribute('type', 'text');
+            nuevoInput.setAttribute('class', 'opcion');
+            nuevoInput.setAttribute('data-id', boton.parentElement.previousElementSibling.dataset.id);
+            nuevoInput.setAttribute('data-answer-id', '0');
+            nuevoInput.setAttribute('placeholder', 'Ingresa la opción');
+            divMultiple.insertBefore(nuevoInput, ultimoInput.nextSibling);
+        }
 
-            function sendDataToServer(id, value) {
+        function cargarDatosUsuario(userId) {
+            $.ajax({
+                type: "POST",
+                url: "../admin/buscar-datos",
+                data: { userId: userId },
+                success: function(data) {
+                    var datosUsuario = data.split('\n');
+                    var usuario = {
+                        name: datosUsuario[0].trim(),
+                        lastname1: datosUsuario[1].trim(),
+                        lastname2: datosUsuario[2].trim(),
+                        curp: datosUsuario[3].trim(),
+                        id: datosUsuario[7].trim(),
+                    };
+
+                    $("#id_user").val(usuario.id);
+                    $("#nombreuser").val(usuario.name);
+                    $("#nombre").val(usuario.name);
+                    $("#ap1").val(usuario.lastname1);
+                    $("#ape2").val(usuario.lastname2);
+                    $("#curp").val(usuario.curp);
+
+                    $("#overlay").prop("checked", true);
+                },
+                error: function() {
+                    console.log("Error en la solicitud Ajax.");
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            function sendDataToServer(id, answerId, value, element) {
                 var dataToSend = {
                     "id": id,
+                    "answer_id": answerId,
                     "value": value
                 };
 
@@ -196,14 +236,26 @@
                     data: JSON.stringify(dataToSend),
                     contentType: "application/json",
                     success: function(data) {
-                        console.log("Datos enviados satisfactoriamente");
-                        var originalId = id;
                         var newId = data.newId;
-                        var inputData = new InputData(originalId, newId);
-                        inputDataMap[originalId] = inputData;
-                        $("textarea[data-id='" + originalId + "']").data("id", newId);
-                        $("input[data-id='" + originalId + "']").data("id", newId);
-                        refreshForm();
+                        var newAnswerId = data.newAnswerId;
+
+                        if ($(element).hasClass("pregunta") && id === 2 && answerId === 2) {
+                            console.log("Vas a entrar si o no mmda")
+                            var $multipleDiv = $(element).closest(".multiple");
+                            $multipleDiv.find("textarea.pregunta").data("id", newId).attr("data-id", newId);
+                            $multipleDiv.find("input.opcion").each(function(index) {
+                                var currentAnswerId = $(this).data("answer-id");
+                                $(this).data("id", newId).attr("data-id", newId);
+                                if (currentAnswerId === 0) {
+                                    $(this).data("answer-id", newAnswerId).attr("data-answer-id", newAnswerId);
+                                }
+                            });
+                        } else {
+                            console.log("Perro catolico")
+                            $(element).data("id", newId).attr("data-id", newId);
+                            $(element).data("answer-id", newAnswerId).attr("data-answer-id", newAnswerId);
+                        }
+
                     },
                     error: function(xhr, status, error) {
                         console.error("Error en la solicitud AJAX:", status, error);
@@ -211,23 +263,15 @@
                 });
             }
 
-            $("textarea.pregunta, input.opcion").on("input", function() {
+            $(document).on("change", "textarea.pregunta, input.opcion", function() {
                 var id = $(this).data("id");
+                var answerId = $(this).data("answer-id"); // Obtenemos el answer_id
                 var value = $(this).val();
-                sendDataToServer(id, value);
+                sendDataToServer(id, answerId, value, this);
             });
-
-            function refreshForm() {
-                $("textarea.pregunta, input.opcion").each(function() {
-                    var id = $(this).data("id");
-                    if (inputDataMap.hasOwnProperty(id)) {
-                        var newId = inputDataMap[id].newId;
-                        $(this).data("id", newId);
-                    }
-                });
-            }
         });
     </script>
+
 
 
 

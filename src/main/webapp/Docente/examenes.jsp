@@ -13,12 +13,12 @@
 <body>
 
 	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
+
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-
             <h2 id="nombreuser">Nombre:</h2>
-            <form action="../up-doce" method="POST" id="formulario-modal">
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
                 <input type="hidden" name="id_user" id="id_user" value="">
 
                 <label>Nombre/s*:</label>
@@ -60,24 +60,26 @@
 
   
 <!--  --------------->
-<input type="checkbox" id="btn-menu">
-<div class="container-menu">
-  <div class="cont-menu">
+    <input type="checkbox" id="btn-menu">
+    <div class="container-menu">
+        <div class="cont-menu">
 
-  	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
-  		<h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4></div></center>
+            <center><div class="perfil"><i class="bi bi-person-heart"></i><br>
+                <div>
+                    <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
+                </div>
+            </div>
+            </center>
+            <nav>
+                <div class="min-menA">
+                    <a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
+                </div>
+                <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
 
-    <nav> 	
-      <div class="min-menA">
-          <a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
-		</div>
-      <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
-      
-    </nav>
-    <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
-  </div>
-</div>
-
+            </nav>
+            <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
+        </div>
+    </div>
 <!--Termina el menu-->
 
 
@@ -87,8 +89,9 @@
     <div class="container-modal">
       <div class="content-modal">
           <h2 class="equipo">Registro de examen</h2>
-          <form method="post" action="../reg-examen">
-              <input type="text" name="nombreex" placeholder="Nombre del examen*" required="" maxlength="45" id="nombreex"><br><br>
+          <form method="post" action="../examen/registrar-examen">
+              <input type="text" name="nombreex" placeholder="Nombre del examen*" required=""
+                     maxlength="45" id="nombreex"><br><br>
               <div class="g">
                   <label>Ingresa el tipo de preguntas de tu examen</label>
                   <div class="respuesta-radio">
@@ -101,7 +104,7 @@
                   </div>
                   <br><br>
                   <label>Ingresa la cantidad de preguntas que debe tener cada examen*:</label>
-                  <input type="number" name="numberex" required="" id="numberex">
+                  <input type="number" name="numberex" required="" id="numberex" min="5" max="100">
               </div>
               <br>
               <input type="submit" value="Agregar">
@@ -120,17 +123,20 @@
 <!--Comienza el contenido principal-->
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
-        <div class="main">
+                <div class="m">
 
             <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
 <c:forEach items="${exam}" var="examen">
       		    <div class="examenes">
+                    <label class="switchBtn">
+                        <input type="checkbox" >
+                        <div class="slide round" ></div>
+                    </label>
         <div class="imagen">
-                <img
-                    src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000">
+                <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000"/>
         </div>
         <div class="pie">
-            <a href="../wri-exam?examenid=${examen.id_exam}">
+            <a href="../examen/buscar-pregunta?examenid=${examen.id_exam}">
             <p><strong>Codigo: ${examen.code}</strong></p>
             <p><strong>EXAMEN: ${examen.namex}</strong></p>
             <p>Estado Examen: ${examen.statusex}</p>
@@ -159,40 +165,42 @@
 
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
-	  <script type="text/javascript" src="../assets/js/eliminar.js"></script>
+    <script type="text/javascript" src="../assets/js/eliminar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         function cargarDatosUsuario(userId) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var responseText = xhr.responseText;
-
-                    var datosUsuario = responseText.split('\n');
+            $.ajax({
+                type: "POST",
+                url: "../admin/buscar-datos",
+                data: { userId: userId },
+                success: function(data) {
+                    var datosUsuario = data.split('\n');
                     var usuario = {
-                        name: datosUsuario[0],
-                        lastname1: datosUsuario[1],
-                        lastname2: datosUsuario[2],
-                        curp: datosUsuario[3],
-                        id: datosUsuario[9],
+                        name: datosUsuario[0].trim(),
+                        lastname1: datosUsuario[1].trim(),
+                        lastname2: datosUsuario[2].trim(),
+                        curp: datosUsuario[3].trim(),
+                        id: datosUsuario[7].trim(),
                     };
 
-                    document.getElementById("id_user").value = usuario.id.trim();
-                    document.getElementById("nombreuser").value = usuario.name;
-                    document.getElementById("nombre").value = usuario.name;
-                    document.getElementById("ap1").value = usuario.lastname1;
-                    document.getElementById("ape2").value = usuario.lastname2;
-                    document.getElementById("curp").value = usuario.curp;
+                    $("#id_user").val(usuario.id);
+                    $("#nombreuser").val(usuario.name);
+                    $("#nombre").val(usuario.name);
+                    $("#ap1").val(usuario.lastname1);
+                    $("#ape2").val(usuario.lastname2);
+                    $("#curp").val(usuario.curp);
 
-                    document.getElementById("overlay").checked = true;
+                    $("#overlay").prop("checked", true);
+                },
+                error: function() {
+                    console.log("Error en la solicitud Ajax.");
                 }
-            };
-
-
-            xhr.open("POST", "../BuscarServlet", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("userId=" + userId);
+            });
         }
     </script>
+
+
+
 </body>
 </html>

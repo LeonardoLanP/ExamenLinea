@@ -11,7 +11,10 @@ public class Answer {
         this.id_answer = id_answer;
         this.answer = answer;
     }
-
+    @Override
+    public String toString() {
+        return "Answer [id_answer=" + id_answer + ", answer=" + answer + "]";
+    }
     public int getId_answer() {
         return id_answer;
     }

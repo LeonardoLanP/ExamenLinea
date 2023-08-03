@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller.Updates;
+package mx.edu.utez.exameneslinea.controller.ServletsABorrar;
 
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
 import mx.edu.utez.exameneslinea.model.Person;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "UpdateStatusServlet", value = "/UpdateStatusServlet")
 public class UpdateStatusServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

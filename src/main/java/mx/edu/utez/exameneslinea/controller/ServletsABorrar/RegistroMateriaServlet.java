@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller.Registro;
+package mx.edu.utez.exameneslinea.controller.ServletsABorrar;
 
 import mx.edu.utez.exameneslinea.model.*;
 import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "RegistroMateriaServlet", value = "/reg-materia")
+@WebServlet(name = "RegistroMateriaServlet", value = "/reg-materia///SSS")
 public class RegistroMateriaServlet extends HttpServlet {
 
     @Override

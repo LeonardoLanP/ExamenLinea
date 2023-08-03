@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller.Registro;
+package mx.edu.utez.exameneslinea.controller.ServletsABorrar;
 
 import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
@@ -35,14 +35,7 @@ public class RegistrarExamenServlet extends HttpServlet {
         User_sub usersub = (User_sub) daoex.findOneUserSub(per.getID_user(),idSub);
         daoex.insertExam(1,usersub.getId_user_sub(),examen);
         Exam exm = (Exam) daoex.findOneEXAMUSI(usersub.getId_user_sub(),examen);
-        for (int i = 0; i < numQues; i++){
-            if(typeQues.equals("Abierta")){
-                daoex.insertEQA(exm.getId_exam(),1,1,"");
-            }else if (typeQues.equals("Multiple")){
-                daoex.insertEQA(exm.getId_exam(),1,2,"");
 
-            }
-        }
 
         resp.sendRedirect("./ser-mater");
 

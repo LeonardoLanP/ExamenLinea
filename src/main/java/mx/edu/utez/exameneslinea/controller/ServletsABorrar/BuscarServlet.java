@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller;
+package mx.edu.utez.exameneslinea.controller.ServletsABorrar;
 
 import mx.edu.utez.exameneslinea.model.Person;
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "BuscarServlet", value = "/BuscarServlet")
 public class BuscarServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String ROL = request.getParameter("userId");

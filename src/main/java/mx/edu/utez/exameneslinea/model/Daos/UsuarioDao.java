@@ -3,7 +3,6 @@ package mx.edu.utez.exameneslinea.model.Daos;
 import mx.edu.utez.exameneslinea.model.Person;
 import mx.edu.utez.exameneslinea.model.User;
 import mx.edu.utez.exameneslinea.utils.MysqlConector;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +16,7 @@ public class UsuarioDao implements DaoRepository{
     public List findAll(){return null;}
     public List findAll(int idRol) {
         List<Person> listaUsuarios = new ArrayList<>();
-        MysqlConector conn = new MysqlConector();
-        Connection con = conn.connect();
+        Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement("select * from sugel.person inner join sugel.user on person.User_id = user.id_user where rol_id = ?  ORDER BY lastname1 ASC");
             stmt.setInt(1,idRol);
@@ -50,8 +48,7 @@ public class UsuarioDao implements DaoRepository{
     @Override
     public Object findOne(int idPerson) {
         Person usr = new Person();
-        MysqlConector conector = new MysqlConector();
-        Connection con = conector.connect();
+        Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
                     "select * from sugel.person inner join sugel.user on person.User_id = user.id_user " +
@@ -78,10 +75,36 @@ public class UsuarioDao implements DaoRepository{
         return usr;
     }
 
+    public String findDuplicado(String curp, String email, String user) {
+        String campoDuplicado = null;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT * FROM sugel.person INNER JOIN sugel.user ON person.User_id = user.id_user " +
+                            "WHERE curp = ? OR email = ? OR user = ?");
+            stmt.setString(1, curp);
+            stmt.setString(2, email);
+            stmt.setString(3, user);
+            ResultSet res = stmt.executeQuery();
+            if (res.next()) {
+                if (curp.equalsIgnoreCase(res.getString("curp"))) {
+                    campoDuplicado = "curp";
+                } else if (email.equalsIgnoreCase(res.getString("email"))) {
+                    campoDuplicado = "email";
+                } else if (user.equalsIgnoreCase(res.getString("user"))) {
+                    campoDuplicado = "user";
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return campoDuplicado;
+    }
+
+
     public Object findOneUSU(String usuario,String email, int idRol,String pass) {
         User usr = new User();
-        MysqlConector conector = new MysqlConector();
-        Connection con = conector.connect();
+        Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
                     "select * from sugel.user  " +
@@ -109,8 +132,7 @@ public class UsuarioDao implements DaoRepository{
 
     public Object findOne(String usuario,String contrasena, int idRol) {
         Person usr = new Person();
-        MysqlConector conector = new MysqlConector();
-        Connection con = conector.connect();
+        Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
                     "select * from sugel.person inner join sugel.user on person.User_id = user.id_user " +
@@ -231,9 +253,8 @@ public class UsuarioDao implements DaoRepository{
     }
 
     public boolean insertp(Person person){
-        MysqlConector connection = new MysqlConector();
-        Connection con = connection.connect();
-            try {
+        Connection con = new MysqlConector().connect();
+        try {
                 PreparedStatement stmt = con.prepareStatement(
                         "insert into person(name, lastname1, lastname2, curp, User_id) " +
                                 "values(?,?,?,?,?)"
@@ -252,8 +273,7 @@ public class UsuarioDao implements DaoRepository{
             return false;
         }
         public  boolean insertu(User usr) {
-            MysqlConector connection = new MysqlConector();
-            Connection con = connection.connect();
+            Connection con = new MysqlConector().connect();
             try {
                 PreparedStatement stmt = con.prepareStatement("insert into sugel.user(user,email,pass,user_status,rol_id) values(?,?,sha2(?,256),?,?)");
                 stmt.setString(1, usr.getUser());
@@ -261,7 +281,6 @@ public class UsuarioDao implements DaoRepository{
                 stmt.setString(3,usr.getPass());
                 stmt.setInt(4,usr.getUser_status());
                 stmt.setInt(5,usr.getRol_id());
-
                 if(stmt.executeUpdate() > 0){
                     return true;
                 }
@@ -270,9 +289,4 @@ public class UsuarioDao implements DaoRepository{
             }
             return false;
         }
-
-
     }
-
-
-

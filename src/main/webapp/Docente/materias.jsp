@@ -13,14 +13,12 @@
 </head>
 
 <body>
-
 	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-
             <h2 id="nombreuser">Nombre:</h2>
-        <form action="../up-doce" method="POST" id="formulario-modal">
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
            <input type="hidden" name="id_user" id="id_user" value="">
 
             <label>Nombre/s*:</label>
@@ -92,7 +90,7 @@
     <div class="container-modal">
       <div class="content-modal">
           <h2 class="equipo">Registro de materia</h2>
-            <form accept="" method="post" action="../reg-materia">
+            <form accept="" method="post" action="../docente/resgitra-materia">
               <input type="text" name="nombre" placeholder="Nombre de la materia*" required="">
               <div class="g">
                 <label for="grado">Grado*:</label>
@@ -119,17 +117,25 @@
                     <c:forEach items="${subjectlista}" var="materia">
                         <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
                         <div class="materia">
-                            <a href="../ser-mater?materiaId=${materia.id_sub}">
+                            <label class="switchBtn">
+                            <input type="checkbox" >
+                            <div class="slide round" ></div>
+                        </label>
+                            <div class="img">
+                                <img src="" class="materiaImg">
+                            </div>
+                            <a href="../docente/buscar-examenes?materiaId=${materia.id_sub}">
                                 <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
-                                <div class="img">
-                                    <img src="./../assets/img/class.svg">
-                                </div>
+
                                 <div class="info">
-                                    <h2>${materia.subname}</h2>
-                                    <h3>${materia.grade} ° ${materia.grouSub}</h3>
+                                    <h2>Desarrollo de aplicaciones web</h2>
+                                    <h3>3°B</h3>
                                 </div>
+
+                        </div>
                             </a>
                         </div>
+
                     </c:forEach>
                 </div>
                 <!--2° MODIFICACIÓN-->
@@ -145,37 +151,37 @@
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
   <script type="text/javascript" src="../assets/js/eliminar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         function cargarDatosUsuario(userId) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var responseText = xhr.responseText;
-
-                    var datosUsuario = responseText.split('\n');
+            $.ajax({
+                type: "POST",
+                url: "../admin/buscar-datos",
+                data: { userId: userId },
+                success: function(data) {
+                    var datosUsuario = data.split('\n');
                     var usuario = {
-                        name: datosUsuario[0],
-                        lastname1: datosUsuario[1],
-                        lastname2: datosUsuario[2],
-                        curp: datosUsuario[3],
-                        id: datosUsuario[7],
+                        name: datosUsuario[0].trim(),
+                        lastname1: datosUsuario[1].trim(),
+                        lastname2: datosUsuario[2].trim(),
+                        curp: datosUsuario[3].trim(),
+                        id: datosUsuario[7].trim(),
                     };
 
-                    document.getElementById("id_user").value = usuario.id.trim();
-                    document.getElementById("nombreuser").value = usuario.name;
-                    document.getElementById("nombre").value = usuario.name;
-                    document.getElementById("ap1").value = usuario.lastname1;
-                    document.getElementById("ape2").value = usuario.lastname2;
-                    document.getElementById("curp").value = usuario.curp;
+                    $("#id_user").val(usuario.id);
+                    $("#nombreuser").val(usuario.name);
+                    $("#nombre").val(usuario.name);
+                    $("#ap1").val(usuario.lastname1);
+                    $("#ape2").val(usuario.lastname2);
+                    $("#curp").val(usuario.curp);
 
-                    document.getElementById("overlay").checked = true;
+                    $("#overlay").prop("checked", true);
+                },
+                error: function() {
+                    console.log("Error en la solicitud Ajax.");
                 }
-            };
-
-
-            xhr.open("POST", "../BuscarServlet", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("userId=" + userId);
+            });
         }
     </script>
 
