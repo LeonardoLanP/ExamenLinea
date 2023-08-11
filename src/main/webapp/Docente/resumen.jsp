@@ -96,13 +96,13 @@
     <span class="close" id="closeBtn"><i class="bi bi-x-lg"></i></span>
     <form id="calificacionForm">
       <label for="calificacion">Calificación:</label>
-      <input type="number" name="calificacion" id="calificacion" max="100" min="0">
+      <input style="text-align: center;" type="number" name="calificacion" id="calificacion" max="100" min="0">
       <br>
       <input type="hidden" name="examid" id="examid" value="">
       <input type="hidden" name="estudentid" id="estudentid" value="">
       <input type="submit" value="Enviar">
     </form>
-    <div class="tooltip">La calificación debe ser sobre 100</div>
+    <div class="tooltip">Ingresa el porcentaje que obtuvo el estudiante, sin el signo de porcentaje</div>
   </div>
 </div>
 
@@ -265,13 +265,11 @@
     }
   });
 
-  // Obtenemos el contenedor "examen"
+  
   const examenContainer = document.querySelector('.resumen');
 
-  // Obtenemos todos los <td> de la tabla
   const tdElements = document.querySelectorAll('table td');
 
-  // Agregamos un event listener a cada <td>
   tdElements.forEach((tdElement) => {
     tdElement.addEventListener('click', () => {
       // Mostramos el contenedor "examen" cuando se hace clic en un <td>
@@ -350,7 +348,7 @@
     Swal.fire({
       icon: 'info',
       title: '¡Bienvenido!',
-      text: 'Este es el Resumen en donde podras evalar a los estudiantes que contesten tu examen.',
+      text: 'Este es el resumen en donde podrás evaluar a los estudiantes que realicen tu examen',
       showConfirmButton: true,
       timer: 30000,
     });
@@ -365,8 +363,8 @@
         if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
           Swal.fire({
             icon: 'error',
-            title: 'Nombre, Apellido',
-            text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+            title: 'Verifica tu información',
+            text: 'Corrobora que tu nombre o apellido esté escrito correctamente.',
             showConfirmButton: true,
           });
           return false;
@@ -374,8 +372,8 @@
         if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
           Swal.fire({
             icon: 'error',
-            title: 'Apellido Materno',
-            text: '¡Colobora que tu apellido este escrito correctamente!',
+            title: 'erifica tu información',
+            text: '¡Corrobora que tu apellido materno esté escrito correctamente!',
             showConfirmButton: true,
           });
           return false;
@@ -383,7 +381,7 @@
         if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
           Swal.fire({
             icon: 'error',
-            title: 'Contraseña',
+            title: 'Verifica tu información',
             text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
             showConfirmButton: true,
           });
@@ -432,7 +430,7 @@
               Swal.fire({
                 icon: 'warning',
                 title: 'Tu cuenta ha sido desactivada',
-                text: 'Comunicate con el admin para mas informacion.',
+                text: 'Comunícate con el administrador para más información',
                 confirmButtonText: 'Aceptar',
                 timer: 5000,
               }).then(function() {
@@ -448,6 +446,39 @@
         });
       }
       setInterval(verificarEstadoUsuario, 1000);
+
+
+//Si la tabla esta vacía muestra que no hay respuestas aún
+      const contentElement = document.querySelector('table');
+
+  
+  if (contentElement && contentElement.childElementCount === 0) {
+    
+    const emptyContentContainer = document.createElement('div');
+    contentElement.style.background = 'none';
+    contentElement.style.width = '100%';
+    contentElement.style.height = '100hv';
+    contentElement.style.display = 'flex';
+    emptyContentContainer.style.textAlign = 'center';
+    emptyContentContainer.style.width = '30%';
+    emptyContentContainer.style.height = '40%';
+    emptyContentContainer.style.color = '#001256';
+    emptyContentContainer.style.font.size = '20px';
+    emptyContentContainer.style.font.weight = '800';
+    emptyContentContainer.style.margin = '30px auto';
+
+    
+    
+
+    
+    const textElement = document.createElement('h2');
+    
+    textElement.textContent = 'Aún no hay respuestas disponibles';
+    emptyContentContainer.appendChild(textElement);
+
+    contentElement.appendChild(emptyContentContainer);
+  }
+
     </script>
 
 

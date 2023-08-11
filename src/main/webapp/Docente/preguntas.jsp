@@ -235,7 +235,6 @@
                         var newAnswerId = data.newAnswerId;
 
                         if ($(element).hasClass("pregunta") && id === 2 && answerId === 2) {
-                            console.log("Vas a entrar si o no mmda")
                             var $multipleDiv = $(element).closest(".multiple");
                             $multipleDiv.find("textarea.pregunta").data("id", newId).attr("data-id", newId);
                             $multipleDiv.find("input.opcion").each(function(index) {
@@ -246,7 +245,6 @@
                                 }
                             });
                         } else {
-                            console.log("Perro catolico")
                             $(element).data("id", newId).attr("data-id", newId);
                             $(element).data("answer-id", newAnswerId).attr("data-answer-id", newAnswerId);
                         }
@@ -277,8 +275,8 @@
             if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Nombre, Apellido',
-                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    title: 'Verifica tu información',
+                    text: 'Corrobora que tu nombre o apellido esté escrito correctamente.',
                     showConfirmButton: true,
                 });
                 return false;
@@ -286,8 +284,8 @@
             if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Apellido Materno',
-                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    title: 'Verifica tu información',
+                    text: '¡Corrobora que tu apellido esté escrito correctamente!',
                     showConfirmButton: true,
                 });
                 return false;
@@ -295,7 +293,7 @@
             if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Contraseña',
+                    title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
                 });
@@ -314,7 +312,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: 'Tu cuenta ha sido desactivada',
-                            text: 'Comunicate con el admin para mas informacion.',
+                            text: 'Comunicate con el administrador para más informacion.',
                             confirmButtonText: 'Aceptar',
                             timer: 5000,
                         }).then(function() {

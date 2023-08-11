@@ -151,7 +151,7 @@
         Swal.fire({
             title: '¡Materia creada con exito!',
             icon: 'success',
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#001256',
             confirmButtonText: 'OK',
             timer: 3000,
         });
@@ -159,8 +159,8 @@
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '!Ya cuentas con una materia con el mismo Grado y Grupo!',
-            confirmButtonColor: '#3085d6',
+            text: '!Ya cuentas con una materia con la misma información!',
+            confirmButtonColor: '#001256',
             confirmButtonText: 'OK',
             timer: 3000,
         });
@@ -168,7 +168,7 @@
         Swal.fire({
             icon: 'success',
             title: 'Se han actualizado correctamente tus datos',
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#001256',
             confirmButtonText: 'OK',
             timer: 3000,
         });
@@ -211,12 +211,22 @@
         function updatesubject(subid) {
             var checkbox = document.getElementById("toggleSwitch_" + subid);
             var estado = checkbox.checked ? 1 : 0;
-            var action = estado === 0 ? 'Desactivar' : 'Activar';
+            var action = estado === 0 ? 'desactivar' : 'activar';
+            var actionText = '';
+
+        switch (action) {
+            case 'desactivar':
+                actionText = 'Esta acción impedirá el acceso a todo el contenido de la materia';
+                break;
+            case 'activar':
+                actionText = 'Esta acción te permitirá el acceso al contenido de la materia';
+                break;
+        }
 
             Swal.fire({
                 icon: 'warning',
                 title: '¿Estás seguro de ' + action + ' esta Materia?',
-                text: 'Esta acción ' + action + 'á ala Materia',
+                text: actionText,
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
                 cancelButtonText: 'Cancelar'
@@ -310,8 +320,8 @@
             if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Nombre, Apellido',
-                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    title: 'Verifica tu informacion',
+                    text: 'Corrobora que tu nombre y apellido esté escrito correctamente.',
                     showConfirmButton: true,
                 });
                 return false;
@@ -319,8 +329,8 @@
             if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Apellido Materno',
-                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    title: 'Verifica tu información',
+                    text: '¡Corrobora que tu apellido materno esté escrito correctamente!',
                     showConfirmButton: true,
                 });
                 return false;
@@ -328,7 +338,7 @@
             if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Contraseña',
+                    title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
                 });
@@ -347,7 +357,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: 'Tu cuenta ha sido desactivada',
-                            text: 'Comunicate con el admin para mas informacion.',
+                            text: 'Comunicate con el administrador para más información.',
                             confirmButtonText: 'Aceptar',
                             timer: 5000,
                         }).then(function() {

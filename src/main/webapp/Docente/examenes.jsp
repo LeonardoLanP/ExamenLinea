@@ -201,12 +201,22 @@
         function updateExamStatus(examID,grade) {
             var checkbox = document.getElementById("toggleSwitch_" + examID);
             var estado = checkbox.checked ? 1 : 0;
-            var action = estado === 0 ? 'Desactivar' : 'Activar';
+            var action = estado === 0 ? 'desactivar' : 'activar';
+            var actionText = '';
+
+        switch (action) {
+            case 'desactivar':
+                actionText = 'Esta acción impedirá a los estudiantes responder el examen';
+                break;
+            case 'activar':
+                actionText = 'Esta acción te impedirá hacer modificaciones en las preguntas del examen. ¡Recuerda compartir el código de acceso con tus alumnos para que puedan responder a este examen!';
+                break;
+            }
             if (grade !== 'AU'){
                 Swal.fire({
                     icon: 'warning',
                     title: '¿Estás seguro de ' + action + ' este examen?',
-                    text: 'Una vez activado ya no podrás realizar modificaciones en este.',
+                    text: actionText,
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
                     cancelButtonText: 'Cancelar'
@@ -221,7 +231,7 @@
                                 if (data.fail) {
                                     Swal.fire({
                                         icon: 'error',
-                                        title: 'Verifica que todos los campos de tu examen estén llenos!',
+                                        title: 'Verifica que todos los campos de tu examen estén llenos',
                                         showConfirmButton: false,
                                         timer: 1500,
                                     });
@@ -347,8 +357,8 @@
             if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Nombre, Apellido',
-                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    title: 'Verifica tu información',
+                    text: 'Corrobora que tu nombre y apellido este escrito correctamente.',
                     showConfirmButton: true,
                 });
                 return false;
@@ -356,8 +366,8 @@
             if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Apellido Materno',
-                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    title: 'Verifica tu información',
+                    text: '¡Corrobora que tu apellido materno este escrito correctamente!',
                     showConfirmButton: true,
                 });
                 return false;
@@ -365,7 +375,7 @@
             if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Contraseña',
+                    title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
                 });
@@ -383,7 +393,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: 'Tu cuenta ha sido desactivada',
-                            text: 'Comunicate con el admin para mas informacion.',
+                            text: 'Comunícate con el administrador para más información',
                             confirmButtonText: 'Aceptar',
                             timer: 5000,
                         }).then(function() {

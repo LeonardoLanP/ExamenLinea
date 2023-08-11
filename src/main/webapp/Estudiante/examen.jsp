@@ -176,7 +176,7 @@
 				text: '¿Deseas finalizar el examen?',
 				icon: 'warning',
 				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
+				confirmButtonColor: '#001256',
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Sí, finalizar',
 				cancelButtonText: 'Cancelar'
@@ -199,9 +199,9 @@
 						Swal.fire({
 							icon: 'warning',
 							title: 'Tu cuenta ha sido desactivada',
-							text: 'Comunicate con el admin para mas informacion.',
+							text: 'Comunícate con el administrador para más información',
 							confirmButtonText: 'Aceptar',
-							timer: 5000,
+							timer: 7000,
 						}).then(function() {
 							setTimeout(function() {
 								window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio

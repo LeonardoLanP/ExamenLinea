@@ -191,14 +191,14 @@
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Ya existe un usuario con el mismo <%=duplicado%>',
+        text: '<%=duplicado%> se encuetra registrada en otra cuenta',
         timer: 5000,
     });
     <% }else if(user!= null){%>
     Swal.fire({
         icon: 'success',
         title: 'Nuevo Usuario <%=user%>',
-        text: 'Usuario registrado con exito!',
+        text: 'Usuario registrado con éxito',
         timer: 5000,
     });
     <%}request.getSession().removeAttribute("statusNewUser");
@@ -274,12 +274,22 @@
     function updateUserStatus(personId) {
         var checkbox = document.getElementById("toggleSwitch_" + personId);
         var estado = checkbox.checked ? 1 : 0;
-        var action = estado === 0 ? 'Desactivar' : 'Activar';
+        var action = estado === 0 ? 'desactivar' : 'activar';
+        var actionText = '';
+
+        switch (action) {
+            case 'desactivar':
+                actionText = 'Esta acción le impedirá al usuario acceder al sistema';
+                break;
+            case 'activar':
+                actionText = 'Esta acción le permitirá al usuario acceder al sistema';
+                break;
+            }
 
         Swal.fire({
             icon: 'warning',
             title: '¿Estás seguro de ' + action + ' este usuario?',
-            text: 'Esta acción ' + action + 'á al usuario',
+            text: actionText,
             showCancelButton: true,
             confirmButtonText: 'Aceptar',
             cancelButtonText: 'Cancelar'
@@ -333,8 +343,8 @@
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
             Swal.fire({
                 icon: 'error',
-                title: 'Nombre, Apellidos',
-                text: 'Colobora tu nombre o apellidos',
+                title: 'Verifica tu información',
+                text: 'Corrobora tu nombre o apellidos esté escrito correctamen',
                 showConfirmButton: true,
             });
             return false;
@@ -345,8 +355,8 @@
         if (CURP.length !== 18  || !regexCURP.test(CURP)) {
             Swal.fire({
                 icon: 'error',
-                title: 'CURP',
-                text: 'Checa tu que tu CURP este escrita bien',
+                title: 'Verifica tu información',
+                text: 'CURP no válida',
                 showConfirmButton: true,
             });
             return false;
@@ -356,7 +366,7 @@
         if (!correo.endsWith('@utez.edu.mx') || correo.split('@')[0] === '') {
             Swal.fire({
                 icon: 'error',
-                title: 'Correo',
+                title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
             });
@@ -377,8 +387,8 @@
             if (matricula.trim() === '') {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Matricula',
-                    text: 'Ingresa una matricula valida',
+                    title: 'Verifica tu información',
+                    text: 'Matrícula no válida',
                     showConfirmButton: true,
                 });
                 return false;
@@ -387,8 +397,8 @@
             if (matricula !== matriculaPart) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Correo, Matricula',
-                    text: 'Tu matricula no coincide con tu correo',
+                    title: 'Verifica tu información',
+                    text: 'La matrícula no coincide con tu correo',
                     showConfirmButton: true,
                 });
                 return false;
@@ -411,8 +421,8 @@
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
             Swal.fire({
                 icon: 'error',
-                title: 'Nombre',
-                text: 'Colobora tu nombre',
+                title: 'Verifica tu información',
+                text: 'Corrobora tu nombre',
                 showConfirmButton: true,
             });
             return false;
@@ -423,8 +433,8 @@
         if (curp.length !== 18  || !regexCURP.test(curp)) {
             Swal.fire({
                 icon: 'error',
-                title: 'CURP',
-                text: 'Checa tu que tu CURP este escrita bien',
+                title: 'Verifica tu información',
+                text: 'CURP no válida',
                 showConfirmButton: true,
             });
             return false;
@@ -434,7 +444,7 @@
         if (!correo.endsWith('@utez.edu.mx') || correo.split('@')[0] === '') {
             Swal.fire({
                 icon: 'error',
-                title: 'Correo',
+                title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
             });
@@ -444,7 +454,7 @@
         if (!correo.endsWith('@utez.edu.mx')) {
             Swal.fire({
                 icon: 'error',
-                title: 'Correo',
+                title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
             });
@@ -454,8 +464,8 @@
         if (!usuario.match(/^[A-Za-z0-9_]+$/)) {
             Swal.fire({
                 icon: 'error',
-                title: 'Usuario',
-                text: 'Porfavor ingrese un usuraio valido',
+                title: 'Verifica tu información',
+                text: 'Por favor ingrese un usuario válido',
                 showConfirmButton: true,
             });
             return false;
@@ -464,8 +474,8 @@
         if (contrasena && (contrasena.length < 3 || contrasena.length > 20)) {
             Swal.fire({
                 icon: 'error',
-                title: 'Correo',
-                text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
+                title: 'Verifica tu información',
+                text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                 showConfirmButton: true,
             });
             return false;
@@ -474,7 +484,7 @@
         Swal.fire({
             icon: 'warning',
             title: '¿Estás seguro de modificar este usuario?',
-            text: 'Esta acción modificará al usuario',
+            text: 'Esta acción modificará los datos del usuario',
             showCancelButton: true,
             confirmButtonText: 'Aceptar',
             cancelButtonText: 'Cancelar'

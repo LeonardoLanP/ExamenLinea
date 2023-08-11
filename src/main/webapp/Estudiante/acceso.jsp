@@ -74,35 +74,35 @@
 		Swal.fire({
 			title: '¡Tus respuestas se han enviado con éxito!',
 			icon: 'success',
-			confirmButtonColor: '#3085d6',
+			confirmButtonColor: '#001256',
 			confirmButtonText: 'OK',
-			timer: 3000,
+			timer: 4000,
 		});
 		<%break;case "desactivado": %>
 		Swal.fire({
 			icon: 'question',
 			title: 'Oops...',
-			text: '!El examen ha sido desactivado comunicate con el docente!',
-			confirmButtonColor: '#3085d6',
+			text: '¡El examen ha sido desactivado!',
+			confirmButtonColor: '#001256',
 			confirmButtonText: 'OK',
-			timer: 3000,
+			timer: 4000,
 		});
 		<%break;case "noencontrado": %>
 		Swal.fire({
 			icon: 'error',
 			title: 'Oops...',
-			text: 'Codigo de Examen No valido, Intenta de nuevo!',
-			confirmButtonColor: '#3085d6',
+			text: 'Código de examen no valido, intenta de nuevo!',
+			confirmButtonColor: '#001256',
 			confirmButtonText: 'OK',
-			timer: 3000,
+			timer: 4000,
 		});
 		<%break;case "completado": %>
 		Swal.fire({
 			icon: 'info',
-			title: '¡Ya has completado este examen!',
-			confirmButtonColor: '#3085d6',
+			title: '¡Ya has respondido este examen!',
+			confirmButtonColor: '#001256',
 			confirmButtonText: 'OK',
-			timer: 3000,
+			timer: 4000,
 		});
 	<%break;} request.getSession().removeAttribute("mensaje");}%>
 	</script>
