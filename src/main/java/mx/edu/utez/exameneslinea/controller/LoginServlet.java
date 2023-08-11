@@ -22,11 +22,12 @@ public class LoginServlet extends HttpServlet {
 
         if (rol != null && sesion == null) {
             req.getSession().setAttribute("rol", rol);
-            resp.sendRedirect("./login.jsp?rol=" + rol);
+            resp.sendRedirect(req.getContextPath() + "/login.jsp?rol=" + rol);
         } else {
             HttpSession session = req.getSession();
             session.invalidate();
-            resp.sendRedirect("./index.jsp?sesion=true");
+            req.getSession().setAttribute("mensaje","salir");
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
         }
     }
 
@@ -60,10 +61,12 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("idEstudiantePerson", usr.getId_person());
                 resp.sendRedirect(req.getContextPath() + "/Estudiante/acceso.jsp");
             } else {
-                resp.sendRedirect(req.getContextPath() + "/login.jsp?rol="+rol+"&status=desactivado");
+                req.getSession().setAttribute("status", "desactivado");
+                resp.sendRedirect(req.getContextPath() + "/login.jsp?rol="+rol);
             }
         } else {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp?rol="+rol+"&status=noRegistrado");
+            req.getSession().setAttribute("status", "noRegistrado");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp?rol="+rol);
 
         }
     }

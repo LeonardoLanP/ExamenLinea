@@ -6,10 +6,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Materias</title>
+    <link rel="icon" href="../assets/img/sugel.png" type="image/png">
+    <title>Materias</title>
 	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/docente/materias.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
 </head>
 
 <body>
@@ -17,27 +20,21 @@
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser">Nombre:</h2>
-            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
-           <input type="hidden" name="id_user" id="id_user" value="">
-
-            <label>Nombre/s*:</label>
-          <input type="text" name="nombre" id="nombre" maxlength="45">
-
-          <label>Apellido paterno*:</label>
-          <input type="text" name="ap1" id="ap1" maxlength="30">
-
-          <label>Apellido materno*:</label>
-          <input type="text" name="ape2" id="ape2" maxlength="30">
-
-          <label>CURP*:</label>
-          <input type="text" name="CURP" id="curp" maxlength="18">
-
-          <label>Contraseña:</label>
-          <input type="text" name="pass" id="pass">
-              <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center> 
-
-        </form>
+            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
+                <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
+                <label>Nombre/s*:</label>
+                <input type="text" name="nombre" id="nombre" maxlength="45">
+                <label>Apellido paterno*:</label>
+                <input type="text" name="ap1" id="ap1" maxlength="30">
+                <label>Apellido materno*:</label>
+                <input type="text" name="ape2" id="ape2" maxlength="30">
+                <label>CURP*:</label>
+                <input type="text" name="CURP" id="curp" maxlength="18" readonly>
+                <label>Actualizar contraseña:</label>
+                <input type="text" name="pass" id="pass" maxlength="20" minlength="3">
+                <br><center><input type="submit" name="" value="Modificar" id="btn-enviar"></center>
+            </form>
         </div>
     </div>
     <!--Termina el registro de usuarios-->
@@ -63,7 +60,7 @@
 <input type="checkbox" id="btn-menu">
 <div class="container-menu">
   <div class="cont-menu">
-
+        <br>
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
         <div>
             <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
@@ -74,8 +71,8 @@
       <div class="min-menA">
 			<a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
 		</div>
-      <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
-      
+      <div class="salir"><a href="../login?sesion=salir">Cerrar sesión</a></div>
+
     </nav>
     <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
   </div>
@@ -98,12 +95,10 @@
               <label for="grupo">Grupo*:</label>
               <input type="text" name="grupo" id="grupo" required="" >
               </div>
-              <br><input type="submit" name="" value="Agregar">
+              <input type="submit" name="" value="Agregar">
             </form>
         <div class="btn-cerrar">
-          <label for="btn-modal">
-            Cancelar
-          </label>
+          <label for="btn-modal">Cancelar</label>
         </div>
       </div>
     </div>
@@ -118,26 +113,22 @@
                         <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
                         <div class="materia">
                             <label class="switchBtn">
-                            <input type="checkbox" >
-                            <div class="slide round" ></div>
-                        </label>
+                                <input type="checkbox" id="toggleSwitch_${materia.id_sub}" ${materia.statusub == 1 ? 'checked' : ''} onChange="updatesubject(${materia.id_sub})">
+                                <div class="slide round" id="toggleText${materia.id_sub}"></div>
+                            </label>
                             <div class="img">
                                 <img src="" class="materiaImg">
                             </div>
-                            <a href="../docente/buscar-examenes?materiaId=${materia.id_sub}">
-                                <!-- esto es opcional lo haría yo con js pero pienso poner que cada materia tome una imagen diferente de un catalogo de 6 imagenes solo que como no es algo funcional como tal lo dejare al final-->
-
+                            <a href="#" id="link_${materia.id_sub}" onclick="checkAccess(${materia.id_sub});">
                                 <div class="info">
-                                    <h2>Desarrollo de aplicaciones web</h2>
-                                    <h3>3°B</h3>
+                                    <h2>${materia.subname}</h2>
+                                    <h3>${materia.grade} ° ${materia.grouSub}</h3>
                                 </div>
-
-                        </div>
                             </a>
                         </div>
-
                     </c:forEach>
                 </div>
+            </div>
                 <!--2° MODIFICACIÓN-->
                 <div class="boton-modal">
                     <label for="btn-modal">
@@ -146,12 +137,43 @@
                 </div>
                 <!-- ULTIMA-->
 
-            </div>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
   <script type="text/javascript" src="../assets/js/eliminar.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        <%String mensaje = (String) request.getSession().getAttribute("subcreate");
+            if (mensaje != null && !mensaje.isEmpty()) {
+                switch (mensaje) {
+                    case "creada":
+        %>
+        Swal.fire({
+            title: '¡Materia creada con exito!',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            timer: 3000,
+        });
+        <%break;case "nocreada": %>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '!Ya cuentas con una materia con el mismo Grado y Grupo!',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            timer: 3000,
+        });
+        <%break;case "cambios": %>
+        Swal.fire({
+            icon: 'success',
+            title: 'Se han actualizado correctamente tus datos',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            timer: 3000,
+        });
+        <%break;} request.getSession().removeAttribute("subcreate");}%>
+    </script>
 
     <script>
         function cargarDatosUsuario(userId) {
@@ -184,6 +206,169 @@
             });
         }
     </script>
+
+    <script>
+        function updatesubject(subid) {
+            var checkbox = document.getElementById("toggleSwitch_" + subid);
+            var estado = checkbox.checked ? 1 : 0;
+            var action = estado === 0 ? 'Desactivar' : 'Activar';
+
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Estás seguro de ' + action + ' esta Materia?',
+                text: 'Esta acción ' + action + 'á ala Materia',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../docente/cambio-status-sub",
+                        data: { subid: subid, estado: estado },
+                        success: function (data) {
+                            console.log(data);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cambios guardados',
+                                showConfirmButton: false,
+                                timer: 2000,
+                            });
+                        },
+                        error: function () {
+                            console.log("Error en la solicitud Ajax.");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error al guardar los cambios',
+                                text: 'Hubo un problema al intentar guardar los cambios.',
+                                showConfirmButton: true,
+                            });
+                            checkbox.checked = !estado;
+                        }
+                    });
+                } else {
+                    checkbox.checked = !estado;
+                }
+            });
+        }
+        function checkAccess(id) {
+            const toggleChecked = document.getElementById(`toggleSwitch_`+id).checked;
+
+            if (!toggleChecked) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Acceso denegado',
+                    text: 'Para acceder al contenido, la materia debe estar activada',
+                });
+            } else {
+                window.location.href = "../docente/buscar-examenes?materiaId="+id;
+            }
+        }
+
+
+
+        const contentElement = document.querySelector('.main');
+
+
+        if (contentElement && contentElement.childElementCount === 0) {
+
+            const emptyContentContainer = document.createElement('div');
+            contentElement.style.background = 'none';
+            contentElement.style.width = '100%';
+            contentElement.style.height = '100hv';
+            contentElement.style.display = 'flex';
+            emptyContentContainer.style.textAlign = 'center';
+            emptyContentContainer.style.width = '30%';
+            emptyContentContainer.style.height = '40%';
+            emptyContentContainer.style.color = '#001256';
+            emptyContentContainer.style.font.size = '20px';
+            emptyContentContainer.style.font.weight = '800';
+            emptyContentContainer.style.margin = '30px auto';
+
+
+            const imageElement = document.createElement('img');
+            imageElement.src = '../assets/img/vaciom.svg';
+            emptyContentContainer.appendChild(imageElement);
+
+
+            const textElement = document.createElement('h2');
+            textElement.textContent = 'Aún no hay materias registradas';
+            emptyContentContainer.appendChild(textElement);
+
+            contentElement.appendChild(emptyContentContainer);
+        }
+
+    </script>
+
+    <script>
+        function validarFormulario() {
+            const nombre = document.getElementById('nombre').value;
+            const apellido1 = document.getElementById('ap1').value;
+            const apellido2 = document.getElementById('ape2').value;
+            const contrasena = document.getElementById('pass').value;
+            const regexNombreApellido = /^[A-Z][a-z]+( [A-Z][a-z]+)*$/;
+            if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nombre, Apellido',
+                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Apellido Materno',
+                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Contraseña',
+                    text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            return true;
+        }
+
+            function verificarEstadoUsuario() {
+            $.ajax({
+                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.usuarioActivo) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tu cuenta ha sido desactivada',
+                            text: 'Comunicate con el admin para mas informacion.',
+                            confirmButtonText: 'Aceptar',
+                            timer: 5000,
+                        }).then(function() {
+                            setTimeout(function() {
+                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
+                            }, 1000); // Espera 1 segundo antes de redirigir
+                        });
+                    }
+                },
+                error: function() {
+                    console.log("Error al verificar el estado del usuario.");
+                }
+            });
+        }
+            setInterval(verificarEstadoUsuario, 1000);
+    </script>
+
+
+
+
+
 
 
 

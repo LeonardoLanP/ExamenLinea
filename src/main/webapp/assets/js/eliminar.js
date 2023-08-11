@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Si el checkbox está marcado, quitar la clase 'disabled' y restaurar una imagen aleatoria
       materiaDiv.classList.remove('disabled');
       const randomIndex = getRandomIndex();
-      materiaImg.src = `../img/${imagenesDisponibles[randomIndex]}`;
+      materiaImg.src = `../assets/img/${imagenesDisponibles[randomIndex]}`;
     } else {
       // Si el checkbox no está marcado, añadir la clase 'disabled' y establecer la imagen desactivada
       materiaDiv.classList.add('disabled');
-      materiaImg.src = '../img/desactivada.svg';
+      materiaImg.src = '../assets/img/desactivada.svg';
     }
   }
 
@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+
+
   // Obtener todos los elementos con la clase 'examenes'
   const examenes = document.querySelectorAll('.examenes');
 
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       // Si el checkbox no está marcado, añadir la clase 'disabled' y establecer la imagen desactivada
       examenDiv.classList.add('disabled');
-      imagen.src = '../img/desactivada.svg';
+      imagen.src = '../assets/img/desactivada.svg';
     }
   }
 
@@ -72,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkbox.addEventListener('change', updateImageAndStyles);
     updateImageAndStyles({ target: checkbox }); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
   });
+
 });
 
 

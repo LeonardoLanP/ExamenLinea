@@ -3,21 +3,22 @@ package mx.edu.utez.exameneslinea.model;
 public class Exam  extends User_sub{
     private int id_exam;
     private String code;
-    private String grade1;
+    private String gradeex;
     private String statusex;
     private String dateex;
     private int user_sub_id;
 
     private String namex;
+    private String namexSub;
     private String type_exam;
-
+    private int studenAnswer;
     public Exam() {
     }
 
     public Exam(int id_exam, String code, String grade1, String statusex, String dateex, int user_sub_id, String namex, String type_exam) {
         this.id_exam = id_exam;
         this.code = code;
-        this.grade1 = grade1;
+        this.gradeex = grade1;
         this.statusex = statusex;
         this.dateex = dateex;
         this.user_sub_id = user_sub_id;
@@ -29,7 +30,7 @@ public class Exam  extends User_sub{
         super(id_sub, grade, grouSub, subname, statusub, id_user_sub, user_id, sub_id);
         this.id_exam = id_exam;
         this.code = code;
-        this.grade1 = grade1;
+        this.gradeex = grade1;
         this.statusex = statusex;
         this.dateex = dateex;
         this.user_sub_id = user_sub_id;
@@ -52,12 +53,8 @@ public class Exam  extends User_sub{
         this.code = code;
     }
 
-    public String getGrade1() {
-        return grade1;
-    }
-
     public void setGrade(String grade1) {
-        this.grade1 = grade1;
+        this.gradeex = grade1;
     }
 
     public String getStatusex() {
@@ -98,5 +95,29 @@ public class Exam  extends User_sub{
 
     public void setType_exam(String type_exam) {
         this.type_exam = type_exam;
+    }
+
+    public String getNamexSub() {
+        return namexSub;
+    }
+
+    public void setNamexSub(String namexSub) {
+        this.namexSub = namexSub;
+    }
+
+    public int getStudenAnswer() {
+        return studenAnswer;
+    }
+
+    public void setStudenAnswer(int studenAnswer) {
+        this.studenAnswer = studenAnswer;
+    }
+
+    public String getGradeex() {
+        return gradeex;
+    }
+
+    public void setGradeex(String gradeex) {
+        this.gradeex = gradeex;
     }
 }

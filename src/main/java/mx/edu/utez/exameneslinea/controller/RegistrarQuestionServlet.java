@@ -1,4 +1,4 @@
-package mx.edu.utez.exameneslinea.controller.Registro;
+package mx.edu.utez.exameneslinea.controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,7 +54,6 @@ public class RegistrarQuestionServlet extends HttpServlet {
                 out.print(jsonResponse.toString());
                 out.flush();
             } else {
-                System.out.println("Actualiza la pregunta actual");
                 daoex.updateQues(id, value);
                 resp.setContentType("text/plain");
                 resp.setCharacterEncoding("UTF-8");

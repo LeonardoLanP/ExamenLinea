@@ -1,6 +1,8 @@
 package mx.edu.utez.exameneslinea.model.Daos;
 
+import mx.edu.utez.exameneslinea.model.Exam;
 import mx.edu.utez.exameneslinea.model.Person;
+import mx.edu.utez.exameneslinea.model.Subject;
 import mx.edu.utez.exameneslinea.model.User;
 import mx.edu.utez.exameneslinea.utils.MysqlConector;
 import java.sql.Connection;
@@ -14,7 +16,7 @@ public class UsuarioDao implements DaoRepository{
 
     @Override
     public List findAll(){return null;}
-    public List findAll(int idRol) {
+    public List<Person> findAll(int idRol) {
         List<Person> listaUsuarios = new ArrayList<>();
         Connection con = new MysqlConector().connect();
         try {
@@ -36,6 +38,48 @@ public class UsuarioDao implements DaoRepository{
                 usr.setRol_id(res.getInt("rol_id"));
                 usr.setUser_status(res.getInt("user_status"));
                 listaUsuarios.add(usr);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listaUsuarios;
+
+
+    }
+
+
+    public List<Person> findAllgrades(int idRol) {
+        List<Person> listaUsuarios = new ArrayList<>();
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement("select code,exam.grade,dateex from sugel.user " +
+                    "inner join sugel.user_sub on user.ID_user = user_sub.user_id " +
+                    "inner join sugel.subject on subject.id_sub = user_sub.sub_id " +
+                    "inner join sugel.exam on exam.user_sub_id = user_sub.id_user_sub " +
+                    "where user_id = ? and statusex = ?");
+            stmt.setInt(1,idRol);
+            stmt.setInt(2,2);
+            ResultSet res = stmt.executeQuery();
+            while (res.next()){
+                Person per = new Person();
+                Exam ex = new Exam();
+                ex.setCode(res.getString("code"));
+                per.setDatex(res.getString("dateex"));
+                per.setGrade(res.getString("grade"));
+                PreparedStatement stmtdatex = con.prepareStatement("select name,lastname1,lastname2,subname,namex from sugel.user " +
+                        "inner join sugel.person on person.User_id = user.ID_user " +
+                        "inner join sugel.user_sub on user.ID_user = user_sub.user_id " +
+                        "inner join sugel.subject on subject.id_sub = user_sub.sub_id " +
+                        "inner join sugel.exam on exam.user_sub_id = user_sub.id_user_sub " +
+                        "where code = ? order by exam.id_exam asc ");
+                stmtdatex.setString(1,ex.getCode());
+                ResultSet rest = stmtdatex.executeQuery();
+                if (rest.next()) {
+                    per.setName(rest.getString("name")+ " " +rest.getString("lastname1") + " " + (rest.getString("lastname2") == null || rest.getString("lastname2").isEmpty() ? "" : rest.getString("lastname2")));
+                    per.setSubname(rest.getString("subname"));
+                    per.setNamex(rest.getString("namex"));
+                    listaUsuarios.add(per);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -75,8 +119,26 @@ public class UsuarioDao implements DaoRepository{
         return usr;
     }
 
-    public String findDuplicado(String curp, String email, String user) {
-        String campoDuplicado = null;
+    public boolean verificarestatus(int idUser) {
+        Person usr = new Person();
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "select * from sugel.user where ID_user = ?");
+            stmt.setInt(1,idUser);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                usr.setUser_status(res.getInt("user_status"));
+                return usr.getUser_status() == 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public List<String> findDuplicados(String curp, String email, String user) {
+        List<String> camposDuplicados = new ArrayList<>();
         Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
@@ -86,20 +148,24 @@ public class UsuarioDao implements DaoRepository{
             stmt.setString(2, email);
             stmt.setString(3, user);
             ResultSet res = stmt.executeQuery();
-            if (res.next()) {
+
+            while (res.next()) {
                 if (curp.equalsIgnoreCase(res.getString("curp"))) {
-                    campoDuplicado = "curp";
-                } else if (email.equalsIgnoreCase(res.getString("email"))) {
-                    campoDuplicado = "email";
-                } else if (user.equalsIgnoreCase(res.getString("user"))) {
-                    campoDuplicado = "user";
+                    camposDuplicados.add(" CURP");
+                }
+                if (email.equalsIgnoreCase(res.getString("email"))) {
+                    camposDuplicados.add(" Correo");
+                }
+                if (user.equalsIgnoreCase(res.getString("user"))) {
+                    camposDuplicados.add(" Matricula");
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return campoDuplicado;
+        return camposDuplicados;
     }
+
 
 
     public Object findOneUSU(String usuario,String email, int idRol,String pass) {
@@ -127,6 +193,25 @@ public class UsuarioDao implements DaoRepository{
             throw new RuntimeException(e);
         }
         return usr;
+    }
+
+    public int findOneUSUDoc(String usuario) {
+        int numerouser = 0;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT * FROM sugel.user " +
+                            "WHERE user LIKE ? OR REPLACE(user, SUBSTRING_INDEX(user, '_', -1), '') = ?");
+            stmt.setString(1, usuario + "%");
+            stmt.setString(2, usuario);
+            ResultSet res = stmt.executeQuery();
+            while (res.next()){
+               numerouser ++;
+                }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return numerouser;
     }
 
 
@@ -186,15 +271,16 @@ public class UsuarioDao implements DaoRepository{
         return estado;
     }
 
+
     public boolean updatePerson(int id, Person usr) {
         boolean estado = false;
         Connection con = new MysqlConector().connect();
         try {
             PreparedStatement stmt = con.prepareStatement(
-                    "update person set name = ?," +
-                            " lastname1 = ?," +
-                            " lastname2 = ?," +
-                            " curp = ?"+
+                    "update person set name = ?, " +
+                            " lastname1 = ?, " +
+                            " lastname2 = ?, " +
+                            " curp = ? "+
                             "where ID_person = ?"
             );
             stmt.setString(1,usr.getName());
@@ -202,6 +288,27 @@ public class UsuarioDao implements DaoRepository{
             stmt.setString(3,usr.getLastname2());
             stmt.setString(4,usr.getCurp());
             stmt.setInt(5,id);
+            estado = stmt.executeUpdate() > 0 ? true:false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+    public boolean updateDocente(int id, Person usr) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "update person set name = ?," +
+                            " lastname1 = ?," +
+                            " lastname2 = ? " +
+                            "where ID_person = ?"
+            );
+            stmt.setString(1,usr.getName());
+            stmt.setString(2,usr.getLastname1());
+            stmt.setString(3,usr.getLastname2());
+            stmt.setInt(4,id);
             estado = stmt.executeUpdate() > 0 ? true:false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -289,4 +396,94 @@ public class UsuarioDao implements DaoRepository{
             }
             return false;
         }
+
+    public boolean updatedocente(int iduser) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT * FROM sugel.user " +
+                            "INNER JOIN sugel.user_sub ON user_sub.user_id = user.ID_user " +
+                            "INNER JOIN sugel.subject ON user_sub.sub_id = id_sub " +
+                            "INNER JOIN sugel.exam ON exam.user_sub_id = id_user_sub " +
+                            "WHERE user.ID_user = ?");
+
+            stmt.setInt(1, iduser);
+            ResultSet res = stmt.executeQuery();
+            while (res.next()) {
+                Exam ex = new Exam();
+                ex.setId_exam(res.getInt("id_exam"));
+                ex.setSub_id(res.getInt("id_sub"));
+
+                PreparedStatement stmtsub = con.prepareStatement(
+                        "UPDATE sugel.subject SET statusub = 0 " +
+                                "WHERE id_sub = ?");
+
+                stmtsub.setInt(1, ex.getSub_id());
+                estado = stmtsub.executeUpdate() > 0 ? true : false;
+
+
+                    PreparedStatement stmtex = con.prepareStatement(
+                            "SELECT * FROM sugel.exam " +
+                                    "WHERE id_exam = ?");
+
+                    stmtex.setInt(1, ex.getId_exam());
+                    ResultSet resex = stmtex.executeQuery();
+
+                    while (resex.next()) {
+                        ex.setGradeex(resex.getString("grade"));
+
+                        if (ex.getGradeex().equals("AU")) {
+                            PreparedStatement stmtgrade = con.prepareStatement(
+                                    "UPDATE sugel.exam SET grade = 10, statusex = 0 " +
+                                            "WHERE id_exam = ?");
+
+                            stmtgrade.setInt(1, ex.getId_exam());
+                            estado = stmtgrade.executeUpdate() > 0 ? true : false;
+                        } else {
+                            PreparedStatement stmtgrstatus = con.prepareStatement(
+                                    "UPDATE sugel.exam SET statusex = 0 " +
+                                            "WHERE id_exam = ?");
+                            stmtgrstatus.setInt(1, ex.getId_exam());
+                            estado = stmtgrstatus.executeUpdate() > 0 ? true : false;
+                        }
+                    }
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return estado;
     }
+
+    public boolean onlysub(int iduser) {
+        boolean estado = false;
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT * FROM sugel.user " +
+                            "INNER JOIN sugel.user_sub ON user_sub.user_id = user.ID_user " +
+                            "INNER JOIN sugel.subject ON user_sub.sub_id = id_sub " +
+                            "WHERE user.ID_user = ?");
+            stmt.setInt(1,iduser);
+            ResultSet res = stmt.executeQuery();
+            while (res.next()) {
+                Subject sub = new Subject();
+                sub.setId_sub(res.getInt("id_sub"));
+                PreparedStatement stmtsub = con.prepareStatement(
+                        "UPDATE sugel.subject SET statusub = 0 " +
+                                "WHERE id_sub = ?");
+                stmtsub.setInt(1, sub.getId_sub());
+                estado = stmtsub.executeUpdate() > 0 ? true : false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+
+
+}

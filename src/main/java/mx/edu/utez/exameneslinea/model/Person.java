@@ -7,6 +7,10 @@ public class Person extends User {
     private String lastname2;
     private String curp;
     private int User_id;
+    private String subname;
+    private String namex;
+    private String grade;
+    private String datex;
 
     public Person() {
     }
@@ -76,5 +80,37 @@ public class Person extends User {
 
     public void setUser_id(int user_id) {
         User_id = user_id;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getDatex() {
+        return datex;
+    }
+
+    public void setDatex(String datex) {
+        this.datex = datex;
+    }
+
+    public String getSubname() {
+        return subname;
+    }
+
+    public void setSubname(String subname) {
+        this.subname = subname;
+    }
+
+    public String getNamex() {
+        return namex;
+    }
+
+    public void setNamex(String namex) {
+        this.namex = namex;
     }
 }

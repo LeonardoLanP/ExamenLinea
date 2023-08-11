@@ -5,7 +5,8 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Preguntas</title>
+    <link rel="icon" href="../assets/img/sugel.png" type="image/png">
+    <title>Preguntas</title>
 	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/docente/materias.css">
@@ -14,9 +15,9 @@
 
 <style>
     .boton-opcion label.disabled {
-        color: #777777; /* Cambiar el color de texto cuando está inactivo */
-        pointer-events: none; /* Evitar que se pueda hacer clic en el botón */
-        cursor: default; /* Cambiar el cursor a 'no permitido' */
+        color: #777777;
+        pointer-events: none;
+        cursor: default;
     }
 </style>
 
@@ -27,25 +28,20 @@
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser">Nombre:</h2>
-            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
-                <input type="hidden" name="id_user" id="id_user" value="">
-
+            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
+                <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
                 <label>Nombre/s*:</label>
                 <input type="text" name="nombre" id="nombre" maxlength="45">
-
                 <label>Apellido paterno*:</label>
                 <input type="text" name="ap1" id="ap1" maxlength="30">
-
                 <label>Apellido materno*:</label>
                 <input type="text" name="ape2" id="ape2" maxlength="30">
-
                 <label>CURP*:</label>
-                <input type="text" name="CURP" id="curp" maxlength="18">
-
-                <label>Contraseña:</label>
-                <input type="text" name="pass" id="pass">
-                <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center>
+                <input type="text" name="CURP" id="curp" maxlength="18" readonly>
+                <label>Actualizar contraseña:</label>
+                <input type="text" name="pass" id="pass" maxlength="20" minlength="3">
+                <br><center><input type="submit" name="" value="Modificar" id="btn-enviar"></center>
 
             </form>
         </div>
@@ -80,11 +76,10 @@
             </div>
             </center>
             <nav>
-                <div class="min-menA">
-                    <a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
-                </div>
-                <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
-
+                <div class="min-menA"><a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a></div>
+                <a href="../docente/buscar-examenes?materiaId=<%=  request.getSession().getAttribute("idsub") %>" >Examenes</a>
+                <a href="../docente/buscar-materias" >Materias</a>
+                <div class="salir"><a href="../login?sesion=salir">Cerrar sesión</a></div>
             </nav>
             <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
         </div>
@@ -270,6 +265,71 @@
                 sendDataToServer(id, answerId, value, this);
             });
         });
+    </script>
+
+    <script>
+        function validarFormulario() {
+            const nombre = document.getElementById('nombre').value;
+            const apellido1 = document.getElementById('ap1').value;
+            const apellido2 = document.getElementById('ape2').value;
+            const contrasena = document.getElementById('pass').value;
+            const regexNombreApellido = /^[A-Z][a-z]+( [A-Z][a-z]+)*$/;
+            if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nombre, Apellido',
+                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Apellido Materno',
+                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Contraseña',
+                    text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            return true;
+        }
+
+        function verificarEstadoUsuario() {
+            $.ajax({
+                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.usuarioActivo) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tu cuenta ha sido desactivada',
+                            text: 'Comunicate con el admin para mas informacion.',
+                            confirmButtonText: 'Aceptar',
+                            timer: 5000,
+                        }).then(function() {
+                            setTimeout(function() {
+                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
+                            }, 1000); // Espera 1 segundo antes de redirigir
+                        });
+                    }
+                },
+                error: function() {
+                    console.log("Error al verificar el estado del usuario.");
+                }
+            });
+        }
+        setInterval(verificarEstadoUsuario, 10000);
     </script>
 
 

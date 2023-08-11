@@ -11,6 +11,12 @@ public class Question extends Exam_Question_Answer{
 
     private List<Answer> answers;
 
+    private String nombreMateria;
+
+    private String nombreExamen;
+
+    private String nombreAlumno;
+
 
     public Question() {
     }
@@ -71,5 +77,29 @@ public class Question extends Exam_Question_Answer{
 
     public List<Answer> getAnswers() {
         return answers;
+    }
+
+    public String getNombreMateria() {
+        return nombreMateria;
+    }
+
+    public void setNombreMateria(String nombreMateria) {
+        this.nombreMateria = nombreMateria;
+    }
+
+    public String getNombreExamen() {
+        return nombreExamen;
+    }
+
+    public void setNombreExamen(String nombreExamen) {
+        this.nombreExamen = nombreExamen;
+    }
+
+    public String getNombreAlumno() {
+        return nombreAlumno;
+    }
+
+    public void setNombreAlumno(String nombreAlumno) {
+        this.nombreAlumno = nombreAlumno;
     }
 }

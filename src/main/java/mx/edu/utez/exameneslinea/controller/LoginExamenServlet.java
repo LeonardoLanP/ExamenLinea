@@ -28,7 +28,7 @@ public class LoginExamenServlet extends HttpServlet {
 
         Person per = (Person) daoUs.findOne(id);
         Exam exm = (Exam) dao.findOneByCode(codigo);
-        System.out.println("Tipo de examen: " + exm.getType_exam());
+        System.out.println("Tipo de examen: " + exm.getType_exam() + " id del examen: " + exm.getId_exam() + exm.getCode());
         if (exm.getCode().equals(codigo)) {
             if (exm.getStatusex().equals("1")) {
                 if(!(dao.finOpenExam(codigo,id)) && exm.getType_exam().equals("Abierta")){
@@ -61,9 +61,12 @@ public class LoginExamenServlet extends HttpServlet {
                         examQuestionAnswers.add(new Exam_Question_Answer(0, Newexam.getId_exam(), pregunta.getQues_id(),1,null));
                     }
                     dao.insertEQA(examQuestionAnswers);
+                    List<Question> finalques;
+                    finalques = dao.findAllExamStudentAbierta(codigo, uS.getId_user_sub());
+                    req.getSession().setAttribute("subject", exm);
                     req.getSession().setAttribute("examenid", Newexam.getId_exam());
-                    req.getSession().setAttribute("quests", preguntasSeleccionadasList);
-                    resp.sendRedirect("./Estudiante/examen.jsp");
+                    req.getSession().setAttribute("quests", finalques);
+                    resp.sendRedirect(req.getContextPath() + "/Estudiante/examen.jsp");
 
                 }else if(!(dao.finOpenExam(codigo,id)) && exm.getType_exam().equals("Multiple")){
                     System.out.println("Examen multiple a registrar");
@@ -89,36 +92,48 @@ public class LoginExamenServlet extends HttpServlet {
                     Exam Newexam = (Exam) dao.finOpenExamID(codigo,per.getId_person());
                     List<Question> preguntasSeleccionadasList = new ArrayList<>(preguntasSeleccionadas);
                     for (Question pregunta : preguntasSeleccionadasList) {
+                        System.out.println("1 pregunta mas a la lista");
                         examQuestionAnswers.add(new Exam_Question_Answer(0, Newexam.getId_exam(), pregunta.getQues_id(),2,"Multiple"));
                         System.out.println(pregunta.getQuestion());
                     }
                     dao.insertEQA(examQuestionAnswers);
-                    req.getSession().setAttribute("quests", preguntasSeleccionadasList);
-                    resp.sendRedirect("./Estudiante/examen.jsp");
+                    List<Question> finalques;
+                    finalques = dao.finAllQuestionMultipleEstudiante(ExamInseId);
+                    req.getSession().setAttribute("subject", exm);
+                    req.getSession().setAttribute("examenid", Newexam.getId_exam());
+                    req.getSession().setAttribute("quests", finalques);
+                    resp.sendRedirect(req.getContextPath() +"/Estudiante/examen.jsp");
                 }else{
                     System.out.println("Entra aqui si hay un examen con ese usuario");
                     System.out.println(codigo + " id de la persona: " + per.getUser_id());
-                    Exam exam = (Exam) dao.finOpenExamID(codigo,id);
-                    Exam_Question_Answer EQA = (Exam_Question_Answer) dao.findOneQuestionOne(exam.getId_exam());
-                    System.out.println("Id de la pregunta: " + EQA.getAnswer_id() + "Tipo de la pregunta: " + EQA.getOpen_Answer());
-
-                    if(EQA.getAnswer_id() != 1 && EQA.getOpen_Answer().equals("Multiple")){
-                        List<Question> questionList = dao.finAllQuestionMultipleEstudiante(exam.getId_exam());
+                    Exam exam = (Exam) dao.finOpenExamID(codigo, id);
+                    if(exam.getStatusex().equals("1")) {
+                        Exam_Question_Answer EQA = (Exam_Question_Answer) dao.findOneQuestionOne(exam.getId_exam());
+                        System.out.println("Id de la pregunta: " + EQA.getAnswer_id() + "Tipo de la pregunta: " + EQA.getOpen_Answer());
+                        List<Question> questionList;
+                        if (EQA.getAnswer_id() != 1 && EQA.getOpen_Answer().equals("Multiple")) {
+                            questionList = dao.finAllQuestionMultipleEstudiante(exam.getId_exam());
+                        } else {
+                            questionList = dao.findAllExamStudentAbierta(codigo, exam.getUser_sub_id());
+                        }
+                        req.getSession().setAttribute("subject", exm);
                         req.getSession().setAttribute("examenid", exam.getId_exam());
                         req.getSession().setAttribute("quests", questionList);
-                        resp.sendRedirect("./Estudiante/examen.jsp");
-                    }else {
-                        List<Question> questionList = dao.findAllExamStudentAbierta(codigo,exam.getUser_sub_id());
-                        req.getSession().setAttribute("examenid", exam.getId_exam());
-                        req.getSession().setAttribute("quests", questionList);
-                        resp.sendRedirect("./Estudiante/examen.jsp");
+                        resp.sendRedirect(req.getContextPath() + "/Estudiante/examen.jsp");
+                    }else if(exam.getStatusex().equals("2")){
+                        req.getSession().setAttribute("mensaje","completado");
+                        resp.sendRedirect(req.getContextPath() +"/Estudiante/acceso.jsp");
+                    }else{
+                        resp.sendRedirect(req.getContextPath() +"paginaDeError.jsp");
                     }
                 }
             } else {
-                resp.sendRedirect("./Estudiante/acceso.jsp?"+"status=desactivado");
+                req.getSession().setAttribute("mensaje","desactivado");
+                resp.sendRedirect(req.getContextPath() +"/Estudiante/acceso.jsp");
             }
         } else {
-            resp.sendRedirect("./Estudiante/acceso.jsp?"+"status=noRegistrado");
+            req.getSession().setAttribute("mensaje","noencontrado");
+            resp.sendRedirect(req.getContextPath() + "/Estudiante/acceso.jsp");
         }
     }
 }

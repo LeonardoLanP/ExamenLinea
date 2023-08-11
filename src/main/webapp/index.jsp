@@ -6,10 +6,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="assets/css/boot/bootstrap.css">
+  <link rel="icon" href="assets/img/sugel.png" type="image/png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="assets/css/index.css">
   <link rel="stylesheet" type="text/css" href="assets/css/estiloHeader/header.css">
-    <input type="hidden" id="mensaje" value="<%= request.getAttribute("mensaje") %>">
   <title>Sugel</title>
 </head>
 
@@ -91,17 +91,14 @@
 
   <script src="assets/css/js/bootstrap.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="text/javascript">
-    const urlParams = new URLSearchParams(window.location.search);
-    const sesionCerrada = urlParams.get('sesion');
-
-    // Verificar si se ha cerrado la sesión y mostrar la alerta correspondiente
-    if (sesionCerrada) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Sesión cerrada correctamente.'
-      });
-    }
+  <script>
+    <%String mensaje = (String) request.getSession().getAttribute("mensaje");
+        if (mensaje != null && !mensaje.isEmpty()) {%>
+    Swal.fire({
+      icon: 'success',
+      title: 'Sesión cerrada correctamente.'
+    });
+           <% } request.getSession().removeAttribute("mensaje");%>
   </script>
 </body>
 </html>

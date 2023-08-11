@@ -1,189 +1,17 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
+<%@ page import="mx.edu.utez.exameneslinea.model.Exam" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Examen Opción multiple</title>
-	 <link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
+	<link rel="icon" href="../assets/img/sugel.png" type="image/png">
+	<title>Examen</title>
+	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/estudiante/examen.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 </head>
-<style type="text/css">
- @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
-
-body{
-    font-family: 'Urbanist', sans-serif;
-}
-/*FONDO*/
-body {
-	margin: 0;
-	padding: 0;
-}
-
-.background {
-	position: absolute;
-	width: 100%;
-	background: #f1ffff;
-	z-index: -2;
-	box-shadow: 0px 3px 8px rgba(0, 0, 0, 25%);
-	overflow: hidden;
-}
-
-.background::before {
-	content: '';
-	position: absolute;
-	z-index: -2;
-	top: -30%;
-	left: -50%;
-	width: 100%;
-	height: 100vh;
-	background: linear-gradient(60deg, #03BB85, #03BB85, #03BB85);
-	transform-origin: bottom right;
-	animation: animate 120s linear infinite;
-}
-
-.background::after {
-	content: '';
-	z-index: -1;
-	position: absolute;
-	top: -50%;
-	left: -50%;
-	width: 100%;
-	height: 100vh;
-	background: linear-gradient(60deg, #001256, #001256, #001256);
-	transform-origin: bottom right;
-	animation: animate 120 linear infinite;
-	animation-delay: -60s;
-}
-
-@keyframes animate {
-	0% {
-		transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
-}
-
-.contenedor {
-    background-color: #ffffff;
-    width: 98%;
-    margin: auto;
-    position: relative;
-    z-index: 1;
-    padding-bottom: 30px;
-    padding-top: 20px;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 25%);
-    margin-top: 81px;
-}
-.contenedor h1{
-	text-align: center;
-	color: #001256;
-	margin-top: 20px;
-}
-@media (min-width: 320px) and (max-width: 425px) {
-	form{
-		width: 98%;
-	}
-}
-@media (min-width: 768px) and (max-width: 2560px){
-	form{
-		width: 65%;
-	}
-}
-form {
-    margin: 10px auto;
-    padding-top: 25px;
-    padding-bottom: 20px;
-    padding-left: 5%;
-    padding-right: 5%;
-    border-radius: 10px;
-     box-shadow: 0px 3px 8px rgba(0, 0, 0, 25%);
-}
-
-.pregunta {
-    font-size: 17px;
-    font-weight: 500;
-    width: 100%;
-    overflow: hidden;
-    text-align: left;
-    margin-bottom: 10px;
-    margin-top: 25px;
-}
-.respuesta-radio {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-.respuesta-radio label{
-	padding: 4px;
-	display: inline-block;
-	position: relative;
-	font-size: 1em;
-	border-radius: 5px;
-	cursor: pointer;
-}
-.respuesta-radio label:hover{
-	background-color: rgba(3, 187, 133, 0.1)
-}
-.respuesta-radio label:before{
-	content: "";
-	width: 14px;
-	height: 14px;
-	display: inline-block;
-	background-color: transparent;
-	border-radius: 50%;
-	margin-right: 10px;
-	border:2px solid#03BB85;
-	top: 7px;
-}
-.respuesta-radio input[type="radio"]:checked ~	label{
-
-}
-.respuesta-radio input[type="radio"] {
-    margin-right: 5px;
-    display: none;
-
-}
-
-.respuesta-text {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.respuesta-text textarea{
-	margin: auto;
-	width: 98%;
-	resize: none;
-	background-color: #F1FCF9;
-	border:0;
-	padding: 5px;
-	height: 70px;
-	margin-bottom: 5px;
-	font-size: 15px;
-	text-align: left;
-	border-radius: 10px;
-}
-.respuesta-text textarea:focus{
-	outline: 2px solid #03BB85;
-}
-input[type="submit"]{
-	width: 250px;
-	height: 40px;
-	font-size: 18px;
-	background-color: #03BB85;
-	color: #ffffff;
-	border:none;
-	border-radius: 20px;
-	margin: auto;
-}
-input[type="submit"]:hover{
-	background-color: #001256;
-}
-
-</style>
 <body>
 	
 	<div class="background">
@@ -198,39 +26,44 @@ input[type="submit"]:hover{
       </div>
     </div>
   </header>
-
 	<div class="contenedor">
-		<h1>Nombre del exámen</h1>
-		<form action="../examen/enviar-Respuesta">
+		<h1><%= ((Exam) request.getSession().getAttribute("subject")).getNamexSub()%></h1>
+		<h1><%= ((Exam) request.getSession().getAttribute("subject")).getNamex() %></h1>
+		<form id="examen" action="../examen/enviar-Respuesta" method="post">
 			<c:forEach items="${quests}" var="pregunta">
 				<c:choose>
 					<c:when test="${pregunta.answer_id == 1}">
 						<div class="pregunta">
-							<label id="${pregunta.ques_id}" class="${pregunta.open_answer}">Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
+							<label id="${pregunta.ques_id}">${pregunta.question}</label>
 							<div class="respuesta-text">
                         <textarea name="respuesta-t" cols="30" rows="5" class="pregunta" data-id="${pregunta.ques_id}"
-								  data-answer-id="${pregunta.id_exam_question}" placeholder="Ingresa la pregunta del examen">${pregunta.open_Answer}</textarea>
+								  data-answer-id="${pregunta.id_exam_question}" placeholder="Ingresa tu respuesta. . .">${pregunta.open_Answer}</textarea>
 							</div>
 						</div>
 					</c:when>
-					<c:when test="${pregunta.answer_id == 2}">
+					<c:when test="${pregunta.answer_id >= 2}">
 						<div class="pregunta">
-							<label id="${pregunta.ques_id}" class="${pregunta.open_Answer}" >Pregunta ${pregunta.ques_id} ${pregunta.question}</label>
+							<label>${pregunta.question}</label>
 							<c:forEach items="${pregunta.answers}" var="answer">
-								<div class="respuesta-radio" for="${pregunta.ques_id}">
-									<input type="radio" name="opcion" data-id="${pregunta.id_exam_question}" data-answer-id="${pregunta.answer_id}" class="respuesta">
-									<label for="${pregunta.answer_id}">${answer.answer}</label>
+								<div class="respuesta-radio">
+									<input type="radio" name="${pregunta.id_exam_question}" id="${answer.id_answer}" class="respuesta"
+									<c:if test="${answer.id_answer eq pregunta.answer_id}">
+										   checked
+									</c:if>>
+									<label for="${answer.id_answer}">${answer.answer}</label>
 								</div>
 							</c:forEach>
 						</div>
 					</c:when>
 				</c:choose>
 			</c:forEach>
-			<center><input type="submit" name="" value="Finalizar examen"></center>
+
+			<center><input type="submit" value="Finalizar examen" id="btnEnviar"></center>
 		</form>
 			</div>
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -252,6 +85,7 @@ input[type="submit"]:hover{
 					}
 				});
 			}
+				// Agrega aquí tus event listeners
 			$(document).on("change", "textarea.pregunta, input.opcion", function() {
 				var id = $(this).data("id");
 				var answerId = $(this).data("answer-id"); // Obtenemos el answer_id
@@ -261,7 +95,126 @@ input[type="submit"]:hover{
 		});
 	</script>
 
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+		$(document).ready(function () {
+			$(".respuesta-radio").on("click", function () {
+				const id_exam_ques = $(this).find("input").attr("name");
+				const id_answer = $(this).find("input").attr("id");
+				actualizarRespuesta(id_exam_ques, id_answer);
+			});
+		});
+		});
+		function actualizarRespuesta(id_exam_ques, id_answer) {
+			$.ajax({
+				type: "POST",
+				url: "../examen/cabio-respuestas",
+				data: {
+					id_exam_ques: id_exam_ques,
+					id_answer: id_answer
+				},
+				success: function (response) {
+				},
+				error: function (xhr, status, error) {
+					console.error("Error en la solicitud AJAX:", error);
+				}
+			});
+		}
+	</script>
 
-	
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function() {
+		$(document).ready(function () {
+			// Agregar el evento click a los divs 'respuesta-radio'
+			$(".respuesta-radio").on("click", function () {
+				const radio = $(this).find(".respuesta");
+				radio.prop("checked", true);
+				actualizarEstilosRespuestas();
+			});
+		});
+		});
+
+		function actualizarEstilosRespuestas() {
+			$(".respuesta-radio").each(function () {
+				const radio = $(this).find(".respuesta");
+				const label = $(this).find("label");
+				if (radio.prop("checked")) {
+					label.css({
+						backgroundColor: 'transparent',
+						content: 'o',
+						marginRight: '10px',
+						borderRadius: '50%'
+					});
+				} else {
+					label.css({
+						backgroundColor: '',
+						color: '',
+						content: '',
+						fontSize: '',
+						textAlign: '',
+						lineHeight: '',
+						width: '',
+						height: '',
+						marginRight: '',
+						borderRadius: ''
+					});
+				}
+			});
+		}
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('btnEnviar').addEventListener('click', function (event) {
+			event.preventDefault();
+			mostrarConfirmacion();
+		});
+		});
+		function mostrarConfirmacion() {
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¿Deseas finalizar el examen?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, finalizar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					document.getElementById('examen').submit();
+				}
+			});
+		}
+	</script>
+
+	<script>
+		function verificarEstadoUsuario() {
+			$.ajax({
+				url: '../admin/verificar-estado-usuario', // Ruta al servlet
+				method: 'GET',
+				dataType: 'json',
+				success: function(response) {
+					if (response.usuarioActivo) {
+						Swal.fire({
+							icon: 'warning',
+							title: 'Tu cuenta ha sido desactivada',
+							text: 'Comunicate con el admin para mas informacion.',
+							confirmButtonText: 'Aceptar',
+							timer: 5000,
+						}).then(function() {
+							setTimeout(function() {
+								window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
+							}, 1000); // Espera 1 segundo antes de redirigir
+						});
+					}
+				},
+				error: function() {
+					console.log("Error al verificar el estado del usuario.");
+				}
+			});
+		}
+		setInterval(verificarEstadoUsuario, 10000);
+	</script>
 </body>
 </html>

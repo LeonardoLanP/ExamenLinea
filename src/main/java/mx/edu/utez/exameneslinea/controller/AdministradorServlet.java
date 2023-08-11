@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -91,64 +92,64 @@ public class AdministradorServlet extends HttpServlet {
                 String rolR = req.getParameter("rol");
                 String matriculaR = req.getParameter("matricula");
 
-                String[] nombres = nameR.split(" ");
-                String firstname = nombres[0];
+                List<String> duplicado = dao.findDuplicados(curpR, emailR, matriculaR);
 
-                String userR = "";
-                String passR = "";
-                int id_rolR = 0;
-                final String CURPASS = curpR.substring(curpR.length() - 3);
-                if(rolR.equals("estudiante")){
-                    id_rolR = 3;
-                    userR = matriculaR;
-                    passR = CURPASS;
+                if(duplicado == null || duplicado.isEmpty()){
+                    String[] nombres = nameR.split(" ");
+                    String firstname = nombres[0];
+
+                    String userR = "";
+                    String passR = "";
+                    int id_rolR = 0;
+                    final String CURPASS = curpR.substring(curpR.length() - 3);
+                    if(rolR.equals("estudiante")){
+                        id_rolR = 3;
+                        userR = matriculaR;
+                        passR = CURPASS;
+                    }else{
+                        id_rolR = 2;
+                        userR = firstname+"_"+last1R;
+                        passR = firstname + CURPASS;
+                        int usersimilar = dao.findOneUSUDoc(userR);
+                        if(usersimilar>0){
+                            userR += usersimilar;
+                            System.out.println("nuevo usuario: " + userR);
+                        }
+                    }
+
+                    dao.insertu(new User(0,userR,emailR.toLowerCase(),passR,1,id_rolR));
+                    User USR = (User) dao.findOneUSU(userR,emailR,id_rolR,passR);
+                    dao.insertp(new Person(0,nameR,last1R,last2R,curpR,USR.getID_user()));
+
+                    if(id_rolR==3){
+                        req.getSession().setAttribute("personType", "estudiante");
+                        req.getSession().setAttribute("newperson", USR.getID_user());
+                        req.getSession().setAttribute("newuser", matriculaR);
+                        resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=estudiante");
+                    }else{
+                        req.getSession().setAttribute("personType", "docente");
+                        req.getSession().setAttribute("newperson", USR.getID_user());
+                        req.getSession().setAttribute("newuser", userR);
+                        resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
+                    }
                 }else{
-                    id_rolR = 2;
-                    userR = firstname+"_"+last1R;
-                    passR = firstname + CURPASS;
-                }
-
-                dao.insertu(new User(0,userR,emailR.toLowerCase(),passR,1,id_rolR));
-                User USR = (User) dao.findOneUSU(userR,emailR,id_rolR,passR);
-                dao.insertp(new Person(0,nameR,last1R,last2R,curpR,USR.getID_user()));
-
-                if(id_rolR==3){
-                    req.getSession().setAttribute("personType", "estudiante");
-                    resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=estudiante");
-                }else{
-                    req.getSession().setAttribute("personType", "docente");
-                    resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
+                    req.getSession().setAttribute("statusNewUser", duplicado);
+                    resp.sendRedirect(req.getContextPath() + "/Administrador/inicio.jsp");
                 }
                 break;
 
             case "/cambio-status":
                 int personId = Integer.parseInt(req.getParameter("personId"));
                 int estado = Integer.parseInt(req.getParameter("estado"));
-
                 Person users = (Person) dao.findOne(personId);
-
+                if(users.getRol_id()== 2 && estado == 0){
+                    dao.updatedocente(users.getID_user());
+                    dao.onlysub(users.getID_user());
+                }
                     dao.updateStatus(users.getID_user(), estado, users.getRol_id());
                     resp.setContentType("text/plain");
                     resp.setCharacterEncoding("UTF-8");
                     resp.setStatus(HttpServletResponse.SC_OK);
-
-                break;
-            case "/verificar-duplicados":
-                String curp = req.getParameter("curp");
-                String emailC = req.getParameter("email");
-                String userC = req.getParameter("user");
-
-                String duplicado = dao.findDuplicado(curp, emailC, userC);
-
-                if (duplicado != null) {
-                    resp.setContentType("text/plain"); // Establecer el tipo de contenido como texto plano
-                    resp.setCharacterEncoding("UTF-8");
-                    resp.getWriter().write(duplicado);
-                } else {
-                    resp.setContentType("text/plain"); // Establecer el tipo de contenido como texto plano
-                    resp.setCharacterEncoding("UTF-8");
-                    resp.getWriter().write("no_duplicado");
-                }
                 break;
             default:
 
@@ -161,31 +162,42 @@ public class AdministradorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String action = req.getPathInfo();
-
         UsuarioDao dao = new UsuarioDao();
-
         switch (action) {
             case "/gestion-docente-alumno":
                 String id = req.getParameter("id");
-                int idRol = 0;
-
+                int idRol;
                 if (id.equals("docente")) {
                     idRol = 2;
                     req.getSession().setAttribute("personType", "docente");
                 } else if (id.equals("estudiante")) {
                     idRol = 3;
                     req.getSession().setAttribute("personType", "estudiante");
+                } else {
+                    idRol = 0;
                 }
+                List<Person> lista;
 
-                List<Person> lista = null;
                 if (idRol > 0) {
                     lista = dao.findAll(idRol);
+                } else {
+                    lista = dao.findAll();
                 }
-
                 req.getSession().setAttribute("personList", lista);
                 resp.sendRedirect(req.getContextPath() + "/Administrador/inicio.jsp");
                 break;
-
+            case"/verificar-estado-usuario":
+                Person pers = (Person) req.getSession().getAttribute("sesion");
+                boolean usuarioActivo = dao.verificarestatus(pers.getID_user());
+                if(usuarioActivo){
+                    HttpSession session = req.getSession();
+                    session.invalidate();
+                }
+                resp.setContentType("application/json");
+                PrintWriter out = resp.getWriter();
+                out.print("{\"usuarioActivo\": " + usuarioActivo + "}");
+                out.flush();
+                break;
             default:
                 resp.getWriter().println("Acción inválida");
                 break;

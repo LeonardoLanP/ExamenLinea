@@ -8,6 +8,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Docente/examenes.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Docente" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Docente/materias.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Docente" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Docente/preguntas.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Docente" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/Docente/resumen.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Docente" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Estudiante/examen.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Estudiante" />
       </map>
     </option>

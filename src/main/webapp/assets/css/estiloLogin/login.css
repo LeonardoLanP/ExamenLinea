@@ -54,10 +54,24 @@ section h2::after {
   align-items: center;
 }
 .hero-text img{
-    width: 200px;
-    height: 200px;
+    width: 150%;
+    height: 130%;
 }
-
+.hero-text button{
+  border:none;
+  background: #001256;
+  color: #fff;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+}
+.hero-text button:hover{
+  background: #03bb85;
+  border:1px solid#fff;
+}
 
 .bg {
   animation: slide 3s ease-in-out infinite alternate;

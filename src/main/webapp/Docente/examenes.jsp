@@ -1,14 +1,16 @@
 <%@ page import="mx.edu.utez.exameneslinea.model.Person" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Examenes</title>
+    <link rel="icon" href="../assets/img/sugel.png" type="image/png">
+    <title>Examenes</title>
 	<link rel="stylesheet" type="text/css" href="../assets/css/estiloHeader/header.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/docente/materias.css">
-		<link rel="stylesheet" type="text/css" href="../assets/css/docente/boton.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/docente/boton.css">
 </head>
 <body>
 
@@ -17,25 +19,20 @@
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser">Nombre:</h2>
-            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal">
-                <input type="hidden" name="id_user" id="id_user" value="">
-
+            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
+                <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
                 <label>Nombre/s*:</label>
                 <input type="text" name="nombre" id="nombre" maxlength="45">
-
                 <label>Apellido paterno*:</label>
                 <input type="text" name="ap1" id="ap1" maxlength="30">
-
                 <label>Apellido materno*:</label>
                 <input type="text" name="ape2" id="ape2" maxlength="30">
-
                 <label>CURP*:</label>
-                <input type="text" name="CURP" id="curp" maxlength="18">
-
-                <label>Contraseña:</label>
-                <input type="text" name="pass" id="pass">
-                <br><center><input type="submit" name="" value="modificar" id="btn-enviar"></center>
+                <input type="text" name="CURP" id="curp" maxlength="18" readonly>
+                <label>Actualizar contraseña:</label>
+                <input type="text" name="pass" id="pass" maxlength="20" minlength="3">
+                <br><center><input type="submit" name="" value="Modificar" id="btn-enviar"></center>
 
             </form>
         </div>
@@ -74,8 +71,8 @@
                 <div class="min-menA">
                     <a href="#" class="btn-abrir" id="btn-abrir" onclick="cargarDatosUsuario(<%= ((Person) request.getSession().getAttribute("sesion")).getId_person()%>)">Editar perfil</a>
                 </div>
-                <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
-
+                <a href="../docente/buscar-materias" >Materias</a>
+                <div class="salir"><a href="../login?sesion=salir">Cerrar sesión</a></div>
             </nav>
             <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
         </div>
@@ -106,7 +103,6 @@
                   <label>Ingresa la cantidad de preguntas que debe tener cada examen*:</label>
                   <input type="number" name="numberex" required="" id="numberex" min="5" max="100">
               </div>
-              <br>
               <input type="submit" value="Agregar">
           </form>
 
@@ -124,27 +120,26 @@
 			<div class="contenedor">
         <!--Main es todo el contenedor de los recuadros de la materia-->
                 <div class="m">
-
             <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
-<c:forEach items="${exam}" var="examen">
+        <c:forEach items="${exam}" var="examen">
       		    <div class="examenes">
                     <label class="switchBtn">
-                        <input type="checkbox" >
-                        <div class="slide round" ></div>
+                        <input type="checkbox" id="toggleSwitch_${examen.id_exam}" ${examen.statusex == 1 ? 'checked' : ''} data-examen-id="${examen.id_exam}" onChange="updateExamStatus(${examen.id_exam},'${examen.gradeex}')">
+                        <div class="slide round" id="toggleText${examen.id_exam}"></div>
                     </label>
         <div class="imagen">
                 <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000"/>
         </div>
         <div class="pie">
-            <a href="../examen/buscar-pregunta?examenid=${examen.id_exam}">
+            <a id="enlaceQuesGra_${examen.id_exam}" href="../examen/buscar-pregunta?codeex=${examen.code}&examenid=${examen.id_exam}&grade=${examen.gradeex}">
             <p><strong>Codigo: ${examen.code}</strong></p>
             <p><strong>EXAMEN: ${examen.namex}</strong></p>
-            <p>Estado Examen: ${examen.statusex}</p>
             <p>Realizado por: </p>
+                <p>${examen.studenAnswer}</p>
             </a>
         </div>
     </div>
-</c:forEach>
+        </c:forEach>
 
         </div>
 
@@ -166,6 +161,7 @@
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
     <script type="text/javascript" src="../assets/js/eliminar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -200,6 +196,210 @@
         }
     </script>
 
+
+    <script type="text/javascript">
+        function updateExamStatus(examID,grade) {
+            var checkbox = document.getElementById("toggleSwitch_" + examID);
+            var estado = checkbox.checked ? 1 : 0;
+            var action = estado === 0 ? 'Desactivar' : 'Activar';
+            if (grade !== 'AU'){
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¿Estás seguro de ' + action + ' este examen?',
+                    text: 'Una vez activado ya no podrás realizar modificaciones en este.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../examen/cambio-status",
+                            data: {examID: examID, estado: estado, grade: grade},
+                            success: function (data) {
+                                console.log(data);
+                                if (data.fail) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Verifica que todos los campos de tu examen estén llenos!',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                    });
+                                    checkbox.checked = !estado;
+                                } else {
+                                    const enlaceQuesGra = document.getElementById('enlaceQuesGra_'+examID);
+                                    let urlActual = enlaceQuesGra.href;
+                                    const nuevaURL = urlActual.replace(/grade=[^&]+/,`grade=AU`);
+                                    enlaceQuesGra.href = nuevaURL;
+                                    const input = document.getElementById(`toggleSwitch_`+examID);
+                                    input.setAttribute('onchange', `updateExamStatus(`+examID+`,'AU')`);
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Cambios guardados',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                    });
+                                    const NEWURL = nuevaURL + (nuevaURL.includes('?') ? '&' : '?') + 'primeraVez=true';
+                                    window.location.href = NEWURL; // Redirigir a la nueva página
+                                }
+                            },
+                            error: function () {
+                                console.log("Error en la solicitud Ajax.");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error al guardar los cambios',
+                                    text: 'Hubo un problema al intentar guardar los cambios.',
+                                    showConfirmButton: true,
+                                });
+                                checkbox.checked = !estado;
+                            }
+                        });
+                    }
+                });
+        }else{
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¿Estás seguro de ' + action + ' este examen?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../examen/cambio-status",
+                            data: {examID: examID, estado: estado, grade: grade},
+                            success: function (data) {
+                                console.log(data);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Cambios guardados',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error al guardar los cambios',
+                                    text: 'Hubo un problema al intentar guardar los cambios.',
+                                    showConfirmButton: true,
+                                });
+                                checkbox.checked = !estado;
+                            }
+                        });
+                    } else {
+                        checkbox.checked = !estado;
+                    }
+                });
+            }
+        }
+
+        const contentElement = document.querySelector('.m');
+
+
+        if (contentElement && contentElement.childElementCount === 0) {
+
+            const emptyContentContainer = document.createElement('div');
+            contentElement.style.background = 'none';
+            contentElement.style.width = '100%';
+            contentElement.style.height = '100hv';
+            contentElement.style.display = 'flex';
+            emptyContentContainer.style.textAlign = 'center';
+            emptyContentContainer.style.width = '30%';
+            emptyContentContainer.style.height = '40%';
+            emptyContentContainer.style.color = '#001256';
+            emptyContentContainer.style.margin = '30px auto';
+
+
+            const imageElement = document.createElement('img');
+            imageElement.src = '../assets/img/vacioe.svg';
+            emptyContentContainer.appendChild(imageElement);
+
+
+            const textElement = document.createElement('h2');
+            textElement.textContent = 'Aún no hay exámenes registrados';
+            emptyContentContainer.appendChild(textElement);
+
+            contentElement.appendChild(emptyContentContainer);
+        }
+
+
+        // Función para comprobar la conexión a Internet
+        function checkInternetConnection() {
+            const img = new Image();
+            img.src = 'https://img.freepik.com/vector-gratis/ilustracion-concepto-estres-estudiantil_114360-8968.jpg?size=626&ext=jpg&ga=GA1.2.904957567.1691512263&semt=ais';
+            img.onerror = function() {
+                window.location.href = '../coneccion.jsp';
+            };
+        }
+        setInterval(checkInternetConnection, 5000);
+
+    </script>
+    <script>
+        function validarFormulario() {
+            const nombre = document.getElementById('nombre').value;
+            const apellido1 = document.getElementById('ap1').value;
+            const apellido2 = document.getElementById('ape2').value;
+            const contrasena = document.getElementById('pass').value;
+            const regexNombreApellido = /^[A-Z][a-z]+( [A-Z][a-z]+)*$/;
+            if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido1)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nombre, Apellido',
+                    text: 'Colobora que tu nombre y apellido este escrito correctamente.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (apellido2.trim() !== '' && !regexNombreApellido.test(apellido2)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Apellido Materno',
+                    text: '¡Colobora que tu apellido este escrito correctamente!',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            if (contrasena.length > 0 && (contrasena.length < 3 || contrasena.length > 20)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Contraseña',
+                    text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
+                    showConfirmButton: true,
+                });
+                return false;
+            }
+            return true;
+        }
+            function verificarEstadoUsuario() {
+            $.ajax({
+                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.usuarioActivo) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tu cuenta ha sido desactivada',
+                            text: 'Comunicate con el admin para mas informacion.',
+                            confirmButtonText: 'Aceptar',
+                            timer: 5000,
+                        }).then(function() {
+                            setTimeout(function() {
+                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
+                            }, 1000); // Espera 1 segundo antes de redirigir
+                        });
+                    }
+                },
+                error: function() {
+                    console.log("Error al verificar el estado del usuario.");
+                }
+            });
+        }
+            setInterval(verificarEstadoUsuario, 1000);
+    </script>
 
 
 </body>

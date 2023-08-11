@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/assets/img/sugel.png" type="image/png">
     <link rel="stylesheet" href="assets/css/boot/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="assets/css/estiloHeader/header.css">
@@ -112,20 +113,33 @@
      document.addEventListener('DOMContentLoaded', function() {
      var status = '<%= request.getParameter("status") %>';
      if (status === 'noRegistrado') {
-         Swal.fire({
-             icon: 'error',
-             title: 'Oops...',
-             text: 'Usuario o contraseña incorrectos. Intenta de nuevo!',
-         })
+
      } else if (status === 'desactivado') {
-         Swal.fire({
-             icon: 'error',
-             title: 'Oops...',
-             text: 'Usuario desactivado. Solicita la reactivación!',
-         })
      }
- })
-     ;
+ });
  </script>
+
+ <script>
+     <%String mensaje = (String) request.getSession().getAttribute("status");
+         if (mensaje != null && !mensaje.isEmpty()) {
+             switch (mensaje) {
+                 case "desactivado":
+     %>
+     Swal.fire({
+         icon: 'error',
+         title: 'Oops...',
+         text: 'Usuario desactivado. Solicita la reactivación!',
+         timer: 3000,
+     })
+     <%break;case "noRegistrado": %>
+     Swal.fire({
+         icon: 'error',
+         title: 'Oops...',
+         text: 'Usuario o contraseña incorrectos. Intenta de nuevo!',
+         timer: 3000,
+     })
+     <%break;} request.getSession().removeAttribute("status");}%>
+ </script>
+
 </body>
 </html>
