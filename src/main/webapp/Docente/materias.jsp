@@ -20,7 +20,7 @@
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
                 <label>Nombre/s*:</label>
@@ -60,7 +60,6 @@
 <input type="checkbox" id="btn-menu">
 <div class="container-menu">
   <div class="cont-menu">
-        <br>
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
         <div>
             <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
@@ -88,12 +87,12 @@
       <div class="content-modal">
           <h2 class="equipo">Registro de materia</h2>
             <form accept="" method="post" action="../docente/resgitra-materia">
-              <input type="text" name="nombre" placeholder="Nombre de la materia*" required="">
+                <input type="text" name="nombre" placeholder="Nombre de la materia*" required="" maxlength="50" pattern="[A-Za-zÁÉÍÓÚáéíóúüÜñÑ ]*">
               <div class="g">
                 <label for="grado">Grado*:</label>
-              <input type="number" name="grado" id="grado"  required="">
+              <input type="number" name="grado" id="grado" required="" max="12" min="1">
               <label for="grupo">Grupo*:</label>
-              <input type="text" name="grupo" id="grupo" required="" >
+              <input type="text" name="grupo" id="grupo" required="" pattern="[A-Z]" oninput="convertirMayusculas(this)" maxlength="1" minlength="1">
               </div>
               <input type="submit" name="" value="Agregar">
             </form>
@@ -162,7 +161,7 @@
             text: '!Ya cuentas con una materia con la misma información!',
             confirmButtonColor: '#001256',
             confirmButtonText: 'OK',
-            timer: 3000,
+            timer: 5000,
         });
         <%break;case "cambios": %>
         Swal.fire({
@@ -176,6 +175,10 @@
     </script>
 
     <script>
+        function convertirMayusculas(element) {
+            element.value = element.value.toUpperCase();
+        }
+
         function cargarDatosUsuario(userId) {
             $.ajax({
                 type: "POST",

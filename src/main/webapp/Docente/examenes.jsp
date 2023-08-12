@@ -19,7 +19,7 @@
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
                 <label>Nombre/s*:</label>
@@ -60,7 +60,6 @@
     <input type="checkbox" id="btn-menu">
     <div class="container-menu">
         <div class="cont-menu">
-
             <center><div class="perfil"><i class="bi bi-person-heart"></i><br>
                 <div>
                     <h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4>
@@ -233,7 +232,15 @@
                                         icon: 'error',
                                         title: 'Verifica que todos los campos de tu examen estén llenos',
                                         showConfirmButton: false,
-                                        timer: 1500,
+                                        timer: 2000,
+                                    });
+                                    checkbox.checked = !estado;
+                                } else if(data.ques){
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Asegurate de que cada pregunta tenga almenos 2 respuestas',
+                                        showConfirmButton: false,
+                                        timer: 2000,
                                     });
                                     checkbox.checked = !estado;
                                 } else {
@@ -246,12 +253,16 @@
 
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'Cambios guardados',
+                                        title: 'El examen se activó satisfactoriamente',
                                         showConfirmButton: false,
-                                        timer: 1500,
+                                        timer: 2000,
                                     });
+                                    // ... Tu código anterior ...
+
                                     const NEWURL = nuevaURL + (nuevaURL.includes('?') ? '&' : '?') + 'primeraVez=true';
+                                    document.cookie = 'alertaMostrada=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
                                     window.location.href = NEWURL; // Redirigir a la nueva página
+
                                 }
                             },
                             error: function () {

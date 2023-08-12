@@ -502,32 +502,23 @@ public class ExamenDao implements DaoRepository{
         return exm;
     }
 
-    public Object findOneEXAMUSI(int USI, String name) {
-        Exam exm = new Exam();
+    public Object findNamex(int idexam) {
+        String name = "";
         Connection con = new MysqlConector().connect();
         try {
-
             PreparedStatement stmt =
-                    con.prepareStatement("select * from sugel.exam where user_sub_id = ? and namex = ?");
-            stmt.setInt(1,USI);
-            stmt.setString(2,name);
-
+                    con.prepareStatement("select * from sugel.exam where id_exam = ?");
+            stmt.setInt(1,idexam);
             ResultSet res = stmt.executeQuery();
             if(res.next()){
-                exm.setId_exam(res.getInt("id_exam"));
-                exm.setCode(res.getString("code"));
-                exm.setGrade(res.getString("grade"));
-                exm.setStatusex(res.getString("statusex"));
-                exm.setDateex(res.getString("dateex"));
-                exm.setUser_sub_id(res.getInt("user_sub_id"));
-                exm.setNamex(res.getString("namex"));
+            name = res.getString("namex");
             }
             res.close();
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return exm;
+        return name;
     }
 
     public Object findOneUserSub(int user, int subject) {

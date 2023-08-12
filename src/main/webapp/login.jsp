@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="assets/css/estiloHeader/header.css">
      <link rel="stylesheet" type="text/css" href="assets/css/estiloLogin/login.css">
-    <input type="hidden" id="status" value="<%= request.getParameter("status") %>">
 
     <title>Inicio de sesión</title>
 </head>
@@ -83,7 +82,6 @@
                   <c:when test="${rol == 'docente'}">Inicia Docente</c:when>
                   <c:when test="${rol == 'estudiante'}">Inicia Estudiante</c:when>
                   <c:when test="${rol == 'admin'}">Inicia Admin</c:when>
-                  <c:otherwise>Inicia Usuario</c:otherwise>
               </c:choose></h1>
               <div class="inputbox">
                 <input type="text" name="usuario" required="" id="usuario">
@@ -129,14 +127,14 @@
          icon: 'error',
          title: 'Oops...',
          text: 'Usuario desactivado. Solicita la reactivación!',
-         timer: 3000,
+         timer: 5000,
      })
      <%break;case "noRegistrado": %>
      Swal.fire({
          icon: 'error',
          title: 'Oops...',
          text: 'Usuario o contraseña incorrectos. Intenta de nuevo!',
-         timer: 3000,
+         timer: 5000,
      })
      <%break;} request.getSession().removeAttribute("status");}%>
  </script>

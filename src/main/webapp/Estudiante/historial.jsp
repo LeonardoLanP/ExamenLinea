@@ -78,14 +78,11 @@
 
 
   <script type="text/javascript">
-     // Obtener todos los elementos con la clase "calif"
   const califElements = document.querySelectorAll('.calif');
 
-  // Iterar sobre cada elemento y cambiar el color de fondo según el texto
   califElements.forEach((califElement) => {
     const text = califElement.textContent.trim();
 
-    // Asignar el color de fondo correspondiente según el texto
     switch (text) {
       case 'AU':
         califElement.style.backgroundColor = '#203276';
@@ -100,7 +97,7 @@
         califElement.style.backgroundColor = '#E74C3C';
         break;
       default:
-        califElement.style.backgroundColor = '#555'; // Color por defecto para SC
+        califElement.style.backgroundColor = '#555';
         break;
     }
   });
@@ -108,7 +105,7 @@
      const contentElement = document.querySelector('.content');
 
      if (contentElement && contentElement.childElementCount === 0) {
-       //contenedor para la imagen y el texto
+
        const emptyContentContainer = document.createElement('div');
        contentElement.style.background = 'none';
        emptyContentContainer.style.textAlign = 'center';

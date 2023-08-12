@@ -33,11 +33,13 @@ public class ExamenServlet extends HttpServlet {
                 if(grade.equals("SC")){
                     Exam_Question_Answer eqa = (Exam_Question_Answer) dao.findOneQuestionOne(idexam);
                     List<Question> lista;
+                    String name = (String) dao.findNamex(id);
                     if(eqa.getAnswer_id() >=2){
                         lista = dao.finAllQuestionMultiple(id);
                     }else{
                         lista = dao.findQuestion(idexam);
                     }
+                    req.getSession().setAttribute("nombrexamen", name);
                     req.getSession().setAttribute("questions", lista);
                     req.getSession().setAttribute("examenidques", id);
                     resp.sendRedirect(req.getContextPath() +  "/Docente/preguntas.jsp");
@@ -77,16 +79,14 @@ public class ExamenServlet extends HttpServlet {
                 int idSub = (int) req.getSession().getAttribute("idsub");
 
                 User_sub usersub = (User_sub) daoex.findOneUserSub(per.getID_user(),idSub);
-                daoex.insertExam(0,usersub.getId_user_sub(),examen);
-                Exam exm = (Exam) daoex.findOneEXAMUSI(usersub.getId_user_sub(),examen);
-
+                int idExamNew = daoex.insertExam(0,usersub.getId_user_sub(),examen);
                 List<Exam_Question_Answer> examQuestionAnswers = new ArrayList<>();
 
                 for (int i = 0; i < numQues; i++) {
                     if (typeQues.equals("Abierta")) {
-                        examQuestionAnswers.add(new Exam_Question_Answer(0, exm.getId_exam(), 1,1,"Abierta"));
+                        examQuestionAnswers.add(new Exam_Question_Answer(0, idExamNew, 1,1,"Abierta"));
                     } else if (typeQues.equals("Multiple")) {
-                        examQuestionAnswers.add(new Exam_Question_Answer(0, exm.getId_exam(), 2,2,"Multiple"));
+                        examQuestionAnswers.add(new Exam_Question_Answer(0, idExamNew, 2,2,"Multiple"));
                     }
                 }
 
@@ -132,7 +132,10 @@ public class ExamenServlet extends HttpServlet {
                 Exam_Question_Answer eqa = (Exam_Question_Answer) daoex.findOneQuestionOne(examID);
                 List<Question> listas;
                 int contador = 0;
+                int contadorques = 0;
+
                 if(!(eqa.getAnswer_id() >=2)){
+                    contadorques = 2;
                     listas = daoex.findQuestion(examID);
                     for (Question mul: listas) {
                         if(mul.getQuestion().isEmpty() || mul.getQuestion() == null){
@@ -145,16 +148,20 @@ public class ExamenServlet extends HttpServlet {
                         if(mul.getQuestion().isEmpty() || mul.getQuestion() == null){
                             contador++;
                         }
-
+                        contadorques = 0;
                             for (Answer ans : mul.getAnswers()) {
                                 if (ans.getAnswer().isEmpty() || ans.getAnswer() == null) {
                                     contador++;
                                 }
+                                contadorques++;
                             }
-
+                        System.out.println(contadorques);
+                        if(contadorques<2 || contador>0){
+                            break;
+                        }
                     }
                 }
-                if(!(contador>0)) {
+                if(!(contador>0) && contadorques >=2) {
                     if (daoex.updateStatusExmanDocente(examID, estado)) {
                         JsonObject jsonResponse = new JsonObject();
                         jsonResponse.addProperty("success", true);
@@ -165,6 +172,13 @@ public class ExamenServlet extends HttpServlet {
                     } else {
                         resp.sendRedirect(req.getContextPath() + "paginaDeError.jsp");
                     }
+                }else if(contadorques < 2){
+                    JsonObject jsonResponse = new JsonObject();
+                    jsonResponse.addProperty("ques", true);
+                    resp.setContentType("application/json");
+                    resp.setCharacterEncoding("UTF-8");
+                    resp.getWriter().write(jsonResponse.toString());
+                    resp.setStatus(HttpServletResponse.SC_OK);
                 }else{
                     JsonObject jsonResponse = new JsonObject();
                     jsonResponse.addProperty("fail", true);

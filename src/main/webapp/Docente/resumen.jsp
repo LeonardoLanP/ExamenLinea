@@ -20,7 +20,7 @@
     <div class="overlay" id="overlay" >
       <div class="pop-up" id="pop-up">
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-        <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+        <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
         <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
           <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
           <label>Nombre/s*:</label>
@@ -57,7 +57,6 @@
 <input type="checkbox" id="btn-menu">
 <div class="container-menu">
   <div class="cont-menu">
-
   	<center><div class="perfil"><i class="bi bi-person-heart"></i><br>
   		<h4><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h4></div></center>
     <nav> 	
@@ -340,11 +339,19 @@
 
 
 
+  // Obtén los parámetros de la URL
   const params = new URLSearchParams(window.location.search);
-  const primeraVez = params.get('primeraVez');
-  console.log(primeraVez);
+  const codeex = params.get('codeex');
+  const examenid = params.get('examenid');
+  const grade = params.get('grade');
 
-  if (primeraVez === 'true') {
+  // Crea una clave única para identificar si la alerta ya se mostró para esta combinación de parámetros
+  const storageKey = `alertaMostrada_${codeex}_${examenid}_${grade}`;
+
+  // Verifica si la alerta ya se mostró para esta combinación de parámetros
+  const alertaMostrada = localStorage.getItem(storageKey);
+
+  if (!alertaMostrada) {
     Swal.fire({
       icon: 'info',
       title: '¡Bienvenido!',
@@ -352,9 +359,14 @@
       showConfirmButton: true,
       timer: 30000,
     });
+
+    // Almacena en el almacenamiento local que la alerta ya se mostró para esta combinación de parámetros
+    localStorage.setItem(storageKey, 'true');
   }
 
-      function validarFormulario() {
+
+
+  function validarFormulario() {
         const nombre = document.getElementById('nombre').value;
         const apellido1 = document.getElementById('ap1').value;
         const apellido2 = document.getElementById('ape2').value;

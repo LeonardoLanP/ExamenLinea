@@ -125,7 +125,7 @@
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', function() {
 		$(document).ready(function () {
-			// Agregar el evento click a los divs 'respuesta-radio'
+
 			$(".respuesta-radio").on("click", function () {
 				const radio = $(this).find(".respuesta");
 				radio.prop("checked", true);
@@ -191,7 +191,7 @@
 	<script>
 		function verificarEstadoUsuario() {
 			$.ajax({
-				url: '../admin/verificar-estado-usuario', // Ruta al servlet
+				url: '../admin/verificar-estado-usuario',
 				method: 'GET',
 				dataType: 'json',
 				success: function(response) {
@@ -204,8 +204,8 @@
 							timer: 7000,
 						}).then(function() {
 							setTimeout(function() {
-								window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
-							}, 1000); // Espera 1 segundo antes de redirigir
+								window.location.href = "../index.jsp";
+							}, 1000);
 						});
 					}
 				},

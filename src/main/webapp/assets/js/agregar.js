@@ -17,15 +17,6 @@ btnCerrar.addEventListener('click', function () {
 });
 
 
- // Obtener referencia al botón de enviar y al botón de cerrar el modal
-  const btnEnviar = document.getElementById('btn-enviar');
-  const btn_Cerrar = document.getElementById('btn-modal');
-
-  // Agregar evento al botón de enviar para cerrar el modal al hacer clic
-  btnEnviar.addEventListener('click', () => {
-    btn_Cerrar.checked = false; // Desmarca el checkbox del botón de cerrar modal
-  });
-
 
 
 

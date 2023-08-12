@@ -28,7 +28,7 @@
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
             <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
-            <h2 id="nombreuser"><%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
+            <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
                 <label>Nombre/s*:</label>
@@ -89,7 +89,7 @@
         <!--Main es todo el contenedor de los recuadros de la materia-->
         <div class="mai">
             <form id="examenForm">
-                <h2>Nombre del examen</h2>
+                <h2><%= request.getSession().getAttribute("nombrexamen")%></h2>
                 <c:forEach items="${questions}" var="question">
                     <c:choose>
                         <c:when test="${question.ques_id == 1 && question.answer_id == 1}">
@@ -109,6 +109,12 @@
                                 <c:when test="${empty question.answers}">
                                     <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="0" placeholder="Ingresa la opción">
                                     <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="0" placeholder="Ingresa la opción">
+                                </c:when>
+                                <c:when test="${question.answers.size() == 1}">
+                                    <c:forEach items="${question.answers}" var="answer">
+                                        <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="${answer.id_answer}" placeholder="Ingresa la opción" value="${answer.answer}">
+                                        <input type="text" class="opcion" data-id="${question.ques_id}" data-answer-id="0" placeholder="Ingresa la opción">
+                                    </c:forEach>
                                 </c:when>
                                 <c:otherwise>
                                     <c:forEach items="${question.answers}" var="answer">
@@ -167,13 +173,12 @@
         function agregarInput(boton) {
             var divMultiple = boton.parentElement.parentElement;
             var ultimosInputs = divMultiple.querySelectorAll('input.opcion');
+
             if (ultimosInputs.length >= 6) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Límite alcanzado',
-                    text: 'Solo se permite un máximo de 6 opciones',
-                    confirmButtonText: 'Aceptar'
-                });
+                var $btnOpcion = $(boton);
+                $btnOpcion.css("background-color", "#CCCCCC");
+                $btnOpcion.addClass("disabled");
+                $btnOpcion.off("click");
                 return;
             }
 
@@ -186,6 +191,7 @@
             nuevoInput.setAttribute('placeholder', 'Ingresa la opción');
             divMultiple.insertBefore(nuevoInput, ultimoInput.nextSibling);
         }
+
 
         function cargarDatosUsuario(userId) {
             $.ajax({
@@ -327,7 +333,7 @@
                 }
             });
         }
-        setInterval(verificarEstadoUsuario, 10000);
+        setInterval(verificarEstadoUsuario, 1000);
     </script>
 
 

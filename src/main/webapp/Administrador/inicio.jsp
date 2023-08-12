@@ -16,9 +16,6 @@
     input[name="matricula"] {
         display: none;
     }
-    .error-input {
-        border: 2px solid red;
-    }
 </style>
 
 <body>
@@ -29,18 +26,18 @@
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
         <h2 class="equipo">Registro de usuarios</h2>
         <form method="post" action="../admin/registro-user">
-            <input type="text" name="nombre" placeholder="Nombres*" required="" maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúüÜñÑ]+([ ][A-Za-zÁÉÍÓÚáéíóúüÜñÑ]+)*">
-            <input type="text" name="apellido1" placeholder="Apellido paterno*" required="" maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúüÜñÑ]+">
-            <input type="text" name="apellido2" placeholder="Apellido materno" maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúüÜñÑ]+">
-            <input type="text" name="CURP" placeholder="CURP*" required="" maxlength="18" oninput="convertirMayusculas(this)" pattern="[A-Za-z0-9]+" >
-            <input type="email" name="correo" placeholder="correo@institucional*" required value="@utez.edu.mx" maxlength="45" pattern=".+@utez\.edu\.mx" oninput="convertirMinusculas(this)">
+            <input type="text" name="nombre" placeholder="Nombres*" required="" maxlength="45">
+            <input type="text" name="apellido1" placeholder="Apellido paterno*" required="" maxlength="30">
+            <input type="text" name="apellido2" placeholder="Apellido materno" maxlength="30" >
+            <input type="text" name="CURP" placeholder="CURP*" required="" maxlength="18" oninput="convertirMayusculas(this)" >
+            <input type="email" name="correo" placeholder="correo@institucional*" required value="@utez.edu.mx" maxlength="45" oninput="convertirMinusculas(this)">
             <label for="rol">Selecciona el rol del nuevo usuario:</label><br>
             <select name="rol" id="rol" onchange="mostrarOcultarMatricula()" required="">
                 <option value="">Seleccione un Rol*</option>
                 <option value="estudiante">Estudiante</option>
                 <option value="docente">Docente</option>
             </select>
-            <input type="text" name="matricula" placeholder="Matricula*" maxlength="15" pattern="[0-9]+" oninput="convertirMinusculas(this)">
+            <input type="text" name="matricula" placeholder="Matricula*" maxlength="11"  oninput="convertirMinusculas(this)">
             <br><input type="submit" value="Agregar" onclick="validarFormulario(event)">
         </form>
     </div>
@@ -225,7 +222,13 @@
                     id: datosUsuario[7].trim(),
                 };
                 $("#id_user").val(usuario.id);
-                $("#nombreuser").text(usuario.name);
+                if(usuario.rol ===  "1"){
+                    $("#nombreuser").text('Administrador ' + usuario.name);
+                }else if(usuario.rol ===  "2"){
+                    $("#nombreuser").text('Docente ' + usuario.name);
+                }else{
+                    $("#nombreuser").text('Estudiante ' + usuario.name);
+                }
                 $("#nombre").val(usuario.name);
                 $("#ap1").val(usuario.lastname1);
                 $("#ape2").val(usuario.lastname2);
@@ -239,6 +242,9 @@
                 } else {
                     userLabel.text("Usuario*:");
                 }
+
+                document.getElementById("btn-modal").checked = true;
+
             },
             error: function() {
                 console.log("Error en la solicitud Ajax.");
@@ -305,7 +311,7 @@
                             icon: 'success',
                             title: 'Cambios guardados',
                             showConfirmButton: false,
-                            timer: 1500,
+                            timer: 2000,
                         });
                     },
                     error: function () {
@@ -346,6 +352,8 @@
                 title: 'Verifica tu información',
                 text: 'Corrobora tu nombre o apellidos esté escrito correctamen',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -358,17 +366,20 @@
                 title: 'Verifica tu información',
                 text: 'CURP no válida',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
 
-        // Validar correo
         if (!correo.endsWith('@utez.edu.mx') || correo.split('@')[0] === '') {
             Swal.fire({
                 icon: 'error',
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -379,6 +390,8 @@
                 title: 'Rol',
                 text: 'Selecciona un rol',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -390,6 +403,8 @@
                     title: 'Verifica tu información',
                     text: 'Matrícula no válida',
                     showConfirmButton: true,
+                    timer: 5000,
+
                 });
                 return false;
             }
@@ -400,6 +415,8 @@
                     title: 'Verifica tu información',
                     text: 'La matrícula no coincide con tu correo',
                     showConfirmButton: true,
+                    timer: 5000,
+
                 });
                 return false;
             }
@@ -417,6 +434,13 @@
         const usuario = document.getElementById('user').value.trim();
         const contrasena = document.getElementById('pass').value.trim();
 
+        const btnEnviar = document.getElementById('btn-enviar');
+        const btn_Cerrar = document.getElementById('btn-modal');
+
+        btnEnviar.addEventListener('click', () => {
+            btn_Cerrar.checked = true;
+        });
+
         const regexNombre = /^[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*)*$/;
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
             Swal.fire({
@@ -424,11 +448,12 @@
                 title: 'Verifica tu información',
                 text: 'Corrobora tu nombre',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
 
-        // Validar CURP
         const regexCURP = /^[A-Za-z0-9]+$/;
         if (curp.length !== 18  || !regexCURP.test(curp)) {
             Swal.fire({
@@ -436,17 +461,20 @@
                 title: 'Verifica tu información',
                 text: 'CURP no válida',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
 
-        // Validar correo
         if (!correo.endsWith('@utez.edu.mx') || correo.split('@')[0] === '') {
             Swal.fire({
                 icon: 'error',
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -457,11 +485,13 @@
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
+                timer: 2000,
+
             });
             return false;
         }
 
-        if (!usuario.match(/^[A-Za-z0-9_]+$/)) {
+        if (!usuario.match(/^[A-Za-z0-9_áéíóúÁÉÍÓÚñÑ]+$/)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Verifica tu información',
@@ -494,9 +524,13 @@
                     icon: 'success',
                     title: 'Cambios guardados',
                     showConfirmButton: false,
-                    timer: 1500,
+                    timer: 2000,
+                });
+                btnEnviar.addEventListener('click', () => {
+                    btn_Cerrar.checked = false;
                 });
                 document.getElementById('formulario-modal').submit();
+
             }
         });
         return false;
