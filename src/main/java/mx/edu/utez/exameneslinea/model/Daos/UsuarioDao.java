@@ -149,22 +149,35 @@ public class UsuarioDao implements DaoRepository{
             stmt.setString(3, user);
             ResultSet res = stmt.executeQuery();
 
+            boolean curpDuplicado = false;
+            boolean emailDuplicado = false;
+            boolean userDuplicado = false;
+            int contador = 0;
+
             while (res.next()) {
-                if (curp.equalsIgnoreCase(res.getString("curp"))) {
-                    camposDuplicados.add(" CURP");
+                if(curp.equalsIgnoreCase(res.getString("curp")) || email.equalsIgnoreCase(res.getString("email")) || user.equalsIgnoreCase(res.getString("user")) ){
+                    contador ++;
                 }
-                if (email.equalsIgnoreCase(res.getString("email"))) {
-                    camposDuplicados.add(" Correo");
+                if (curp.equalsIgnoreCase(res.getString("curp")) && !curpDuplicado) {
+                    camposDuplicados.add("CURP");
+                    curpDuplicado = true;
                 }
-                if (user.equalsIgnoreCase(res.getString("user"))) {
-                    camposDuplicados.add(" Matricula");
+                if (email.equalsIgnoreCase(res.getString("email")) && !emailDuplicado) {
+                    camposDuplicados.add("correo");
+                    emailDuplicado = true;
+                }
+                if (user.equalsIgnoreCase(res.getString("user")) && !userDuplicado) {
+                    camposDuplicados.add("matricula");
+                    userDuplicado = true;
                 }
             }
+            camposDuplicados.add(String.valueOf(contador));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return camposDuplicados;
     }
+
 
 
 

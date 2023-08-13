@@ -119,7 +119,7 @@
                                 <img src="" class="materiaImg">
                             </div>
                             <a href="#" id="link_${materia.id_sub}" onclick="checkAccess(${materia.id_sub});">
-                                <div class="info">
+                            <div class="info">
                                     <h2>${materia.subname}</h2>
                                     <h3>${materia.grade} ° ${materia.grouSub}</h3>
                                 </div>
@@ -138,7 +138,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
-  <script type="text/javascript" src="../assets/js/eliminar.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -211,20 +210,56 @@
     </script>
 
     <script>
-        function updatesubject(subid) {
-            var checkbox = document.getElementById("toggleSwitch_" + subid);
+        const materias = document.querySelectorAll('.materia');
+
+        const imagenesDisponibles = [
+            'class.svg',
+            'estudiantes.svg',
+            'profesores.svg',
+            'usD.svg',
+            'usE.svg',
+            'docente.svg'
+        ];
+
+        function getRandomIndex() {
+            return Math.floor(Math.random() * imagenesDisponibles.length);
+        }
+
+        function updateImageAndStyles(materiaDiv, isChecked) {
+            const materiaImg = materiaDiv.querySelector('.materiaImg');
+
+            if (isChecked) {
+                const randomIndex = getRandomIndex();
+                materiaDiv.classList.remove('disabled');
+                materiaImg.src = `../assets/img/`+imagenesDisponibles[randomIndex];
+            } else {
+                materiaDiv.classList.add('disabled');
+                materiaImg.src = '../assets/img/desactivada.svg';
+            }
+        }
+
+        materias.forEach((materia) => {
+            const checkbox = materia.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', () => {
+                updatesubject(checkbox, materia);
+            });
+            updateImageAndStyles(materia, checkbox.checked); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+        });
+
+        function updatesubject(checkbox, materiaDiv) {
+            var subid = checkbox.id.split('_')[1];
             var estado = checkbox.checked ? 1 : 0;
             var action = estado === 0 ? 'desactivar' : 'activar';
             var actionText = '';
 
-        switch (action) {
-            case 'desactivar':
-                actionText = 'Esta acción impedirá el acceso a todo el contenido de la materia';
-                break;
-            case 'activar':
-                actionText = 'Esta acción te permitirá el acceso al contenido de la materia';
-                break;
-        }
+            switch (action) {
+                case 'desactivar':
+                    actionText = 'Esta acción impedirá el acceso a todo el contenido de la materia';
+                    break;
+                case 'activar':
+                    actionText = 'Esta acción te permitirá el acceso al contenido de la materia';
+                    break;
+            }
 
             Swal.fire({
                 icon: 'warning',
@@ -241,6 +276,7 @@
                         data: { subid: subid, estado: estado },
                         success: function (data) {
                             console.log(data);
+                            updateImageAndStyles(materiaDiv, checkbox.checked); // Actualizar imagen y estilos solo si la acción es confirmada
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Cambios guardados',
@@ -264,6 +300,8 @@
                 }
             });
         }
+
+
         function checkAccess(id) {
             const toggleChecked = document.getElementById(`toggleSwitch_`+id).checked;
 

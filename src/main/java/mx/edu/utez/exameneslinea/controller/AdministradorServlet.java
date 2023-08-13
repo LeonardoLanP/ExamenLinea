@@ -59,28 +59,40 @@ public class AdministradorServlet extends HttpServlet {
                 String pass = req.getParameter("pass");
                 int userid = Integer.parseInt(req.getParameter("id_user").trim());
 
-                Person user = new Person();
-                Person user1 = (Person) dao.findOne(userid);
+                List<String> duplicUser = dao.findDuplicados(CURP, email, usuario);
+                int ultimaPosicion = duplicUser.size() - 1;
 
-                user.setName(name);
-                user.setUser(usuario);
-                user.setCurp(CURP);
-                user.setLastname1(last1);
-                user.setLastname2(last2);
-                user.setEmail(email);
+                if(Integer.parseInt(duplicUser.get(ultimaPosicion)) == 1) {
+                    Person user = new Person();
+                    Person user1 = (Person) dao.findOne(userid);
 
-                if(!pass.equals("")){
-                    dao.updatepass(user1.getID_user(),pass,user1.getRol_id());
-                }
+                    user.setName(name);
+                    user.setUser(usuario);
+                    user.setCurp(CURP);
+                    user.setLastname1(last1);
+                    user.setLastname2(last2);
+                    user.setEmail(email);
 
-                dao.updateUser(user1.getUser_id(),user);
-                dao.updatePerson(userid,user);
-                if(user1.getRol_id()==3){
-                    req.getSession().setAttribute("personType", "estudiante");
-                    resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=estudiante");
+                    if (!pass.equals("")) {
+                        dao.updatepass(user1.getID_user(), pass, user1.getRol_id());
+                    }
+
+                    dao.updateUser(user1.getUser_id(), user);
+                    dao.updatePerson(userid, user);
+                    if (user1.getRol_id() == 3) {
+                        req.getSession().setAttribute("update", "actualizado");
+                        req.getSession().setAttribute("personType", "estudiante");
+                        resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=estudiante");
+                    } else {
+                        req.getSession().setAttribute("update", "actualizado");
+                        req.getSession().setAttribute("personType", "docente");
+                        resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
+                    }
                 }else{
-                    req.getSession().setAttribute("personType", "docente");
-                    resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
+                    duplicUser.clear();
+                    duplicUser.add("El nuevo CURP, correo o usuario ");
+                    req.getSession().setAttribute("statusNewUser", duplicUser);
+                    resp.sendRedirect(req.getContextPath() + "/Administrador/inicio.jsp");
                 }
                 break;
             case "/registro-user":
@@ -93,8 +105,9 @@ public class AdministradorServlet extends HttpServlet {
                 String matriculaR = req.getParameter("matricula");
 
                 List<String> duplicado = dao.findDuplicados(curpR, emailR, matriculaR);
+                int registros = duplicado.size() - 1;
 
-                if(duplicado == null || duplicado.isEmpty()){
+                if(Integer.parseInt(duplicado.get(registros)) == 0){
                     String[] nombres = nameR.split(" ");
                     String firstname = nombres[0];
 
@@ -133,6 +146,7 @@ public class AdministradorServlet extends HttpServlet {
                         resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
                     }
                 }else{
+                    duplicado.remove(registros);
                     req.getSession().setAttribute("statusNewUser", duplicado);
                     resp.sendRedirect(req.getContextPath() + "/Administrador/inicio.jsp");
                 }

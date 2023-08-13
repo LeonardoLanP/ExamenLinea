@@ -121,6 +121,7 @@
                 <div class="m">
             <!-- materia es el contedor completo de la materia y todo el recuadro es a su vez un enlace a ver los examenes de esa materia-->
         <c:forEach items="${exam}" var="examen">
+                    <a id="enlaceQuesGra_${examen.id_exam}" href="../examen/buscar-pregunta?codeex=${examen.code}&examenid=${examen.id_exam}&grade=${examen.gradeex}">
       		    <div class="examenes">
                     <label class="switchBtn">
                         <input type="checkbox" id="toggleSwitch_${examen.id_exam}" ${examen.statusex == 1 ? 'checked' : ''} data-examen-id="${examen.id_exam}" onChange="updateExamStatus(${examen.id_exam},'${examen.gradeex}')">
@@ -130,14 +131,15 @@
                 <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000"/>
         </div>
         <div class="pie">
-            <a id="enlaceQuesGra_${examen.id_exam}" href="../examen/buscar-pregunta?codeex=${examen.code}&examenid=${examen.id_exam}&grade=${examen.gradeex}">
             <p><strong>Codigo: ${examen.code}</strong></p>
             <p><strong>EXAMEN: ${examen.namex}</strong></p>
             <p>Realizado por: </p>
                 <p>${examen.studenAnswer}</p>
-            </a>
+
         </div>
+
     </div>
+                    </a>
         </c:forEach>
 
         </div>
@@ -159,7 +161,6 @@
 
 
 	<script type="text/javascript" src="../assets/js/agregar.js"></script>
-    <script type="text/javascript" src="../assets/js/eliminar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -197,6 +198,32 @@
 
 
     <script type="text/javascript">
+
+        const examenes = document.querySelectorAll('.examenes');
+
+        // Función para cambiar la imagen y los estilos cuando el checkbox cambia de estado
+        function updateImageAndStyles(checkbox) {
+            const examenDiv = checkbox.closest('.examenes');
+            const imagen = examenDiv.querySelector('.imagen img');
+
+            if (checkbox.checked) {
+                examenDiv.classList.remove('disabled');
+                imagen.src = 'https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-1815.jpg?w=2000';
+            } else {
+                examenDiv.classList.add('disabled');
+                imagen.src = '../assets/img/desactivada.svg';
+            }
+        }
+
+        // Añadir un listener al evento 'change' del checkbox para cada div .examenes
+        examenes.forEach((examen) => {
+            const checkbox = examen.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', () => {
+                updateExamStatus(checkbox);
+            });
+            updateImageAndStyles(checkbox); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+        });
+
         function updateExamStatus(examID,grade) {
             var checkbox = document.getElementById("toggleSwitch_" + examID);
             var estado = checkbox.checked ? 1 : 0;
@@ -251,14 +278,13 @@
                                     const input = document.getElementById(`toggleSwitch_`+examID);
                                     input.setAttribute('onchange', `updateExamStatus(`+examID+`,'AU')`);
 
+                                    updateImageAndStyles(checkbox);
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'El examen se activó satisfactoriamente',
+                                        title: 'Cambios guardados',
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 1500,
                                     });
-                                    // ... Tu código anterior ...
-
                                     const NEWURL = nuevaURL + (nuevaURL.includes('?') ? '&' : '?') + 'primeraVez=true';
                                     document.cookie = 'alertaMostrada=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
                                     window.location.href = NEWURL; // Redirigir a la nueva página
@@ -293,6 +319,7 @@
                             data: {examID: examID, estado: estado, grade: grade},
                             success: function (data) {
                                 console.log(data);
+                                updateImageAndStyles(checkbox);
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Cambios guardados',

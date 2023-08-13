@@ -50,7 +50,7 @@
 <div class="container-modal">
     <div class="content-modal">
         <h2 id="nombreuser"></h2>
-        <form action="../admin/actualizar-user" method="POST" id="formulario-modal" onsubmit="return validarFormularioUpdate()">
+        <form action="../admin/actualizar-user" method="POST" id="formulario-modal">
             <input type="hidden" name="id_user" id="id_user" value="">
             <label>Nombres*:</label>
             <input type="text" name="nombre" id="nombre" maxlength="45" required="">
@@ -66,7 +66,7 @@
             <input type="text" name="usuario" id="user" maxlength="30" required="">
             <label>Actualizar contraseña:</label>
             <input type="text" name="pass" id="pass" value=""  maxlength="30">
-            <br><input type="submit" name="" value="Modificar" id="btn-enviar">
+            <br><input type="submit" name="" value="Modificar" id="btn-enviar" onclick="validarFormularioUpdate(event)">
         </form>
         <div class="btn-cerrar">
             <label for="btn-modal">Cancelar</label>
@@ -176,19 +176,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.min.js"></script>
 
-<script type="text/javascript">
+<script>
     <% List<String> mensaje = (List<String>) request.getSession().getAttribute("statusNewUser");
         String user = (String) request.getSession().getAttribute("newuser");
+        String updateuser = (String) request.getSession().getAttribute("update");
+
        if (mensaje != null) {
            String duplicado = "";
        for (String dup: mensaje) {
-           duplicado = duplicado + dup;
+           duplicado = duplicado + dup +", ";
        }
        %>
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: '<%=duplicado%> se encuetra registrada en otra cuenta',
+        text: '<%=duplicado%> se encuetra registrado en otra cuenta',
         timer: 5000,
     });
     <% }else if(user!= null){%>
@@ -198,8 +200,15 @@
         text: 'Usuario registrado con éxito',
         timer: 5000,
     });
+    <%}else if(updateuser != null){%>
+    Swal.fire({
+        icon: 'success',
+        title: 'Usuario actualizado con éxito',
+        timer: 2000,
+    });
     <%}request.getSession().removeAttribute("statusNewUser");
-    request.getSession().removeAttribute("newuser");%>
+    request.getSession().removeAttribute("newuser");
+    request.getSession().removeAttribute("update");%>
 
 </script>
 
@@ -425,7 +434,8 @@
     }
 </script>
 <script type="text/javascript">
-    function validarFormularioUpdate() {
+    function validarFormularioUpdate(event) {
+        event.preventDefault();
         const nombre = document.getElementById('nombre').value.trim();
         const apellido1 = document.getElementById('ap1').value.trim();
         const apellido2 = document.getElementById('ape2').value.trim();
@@ -443,13 +453,13 @@
 
         const regexNombre = /^[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*)*$/;
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
+            btn_Cerrar.checked = true;
             Swal.fire({
                 icon: 'error',
                 title: 'Verifica tu información',
                 text: 'Corrobora tu nombre',
                 showConfirmButton: true,
                 timer: 5000,
-
             });
             return false;
         }
@@ -520,17 +530,10 @@
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Cambios guardados',
-                    showConfirmButton: false,
-                    timer: 2000,
-                });
                 btnEnviar.addEventListener('click', () => {
                     btn_Cerrar.checked = false;
                 });
                 document.getElementById('formulario-modal').submit();
-
             }
         });
         return false;
