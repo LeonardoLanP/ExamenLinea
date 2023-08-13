@@ -79,9 +79,9 @@
 
          <form class="" action="login" method="post">
               <h1><c:choose>
-                  <c:when test="${rol == 'docente'}">Inicia Docente</c:when>
-                  <c:when test="${rol == 'estudiante'}">Inicia Estudiante</c:when>
-                  <c:when test="${rol == 'admin'}">Inicia Admin</c:when>
+                  <c:when test="${rol == 'docente'}">Docente</c:when>
+                  <c:when test="${rol == 'estudiante'}">Estudiante</c:when>
+                  <c:when test="${rol == 'admin'}">Administrador</c:when>
               </c:choose></h1>
               <div class="inputbox">
                 <input type="text" name="usuario" required="" id="usuario">

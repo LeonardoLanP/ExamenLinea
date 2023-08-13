@@ -50,7 +50,7 @@
 <div class="container-modal">
     <div class="content-modal">
         <h2 id="nombreuser"></h2>
-        <form action="../admin/actualizar-user" method="POST" id="formulario-modal">
+        <form action="../admin/actualizar-user" method="POST" id="formulario-modal" onsubmit="return validarFormularioUpdate()">
             <input type="hidden" name="id_user" id="id_user" value="">
             <label>Nombres*:</label>
             <input type="text" name="nombre" id="nombre" maxlength="45" required="">
@@ -66,7 +66,7 @@
             <input type="text" name="usuario" id="user" maxlength="30" required="">
             <label>Actualizar contraseña:</label>
             <input type="text" name="pass" id="pass" value=""  maxlength="30">
-            <br><input type="submit" name="" value="Modificar" id="btn-enviar" onclick="validarFormularioUpdate(event)">
+            <br><input type="submit" name="" value="Modificar" id="btn-enviar">
         </form>
         <div class="btn-cerrar">
             <label for="btn-modal">Cancelar</label>
@@ -112,10 +112,10 @@
             </c:choose>
             <c:choose>
                 <c:when test="${personType == 'estudiante'}">
-                    <a href="../admin/gestion-docente-alumno?id=estudiante"><strong>Gestionar estudiante</strong></a>
+                    <a href="../admin/gestion-docente-alumno?id=estudiante"><strong>Gestionar estudiantes</strong></a>
                 </c:when>
                 <c:otherwise>
-                    <a href="../admin/gestion-docente-alumno?id=estudiante">Gestionar estudiante</a>
+                    <a href="../admin/gestion-docente-alumno?id=estudiante">Gestionar estudiantes</a>
                 </c:otherwise>
             </c:choose>
             <div class="min-menA">
@@ -138,7 +138,7 @@
                 <td colspan="4">
                     <c:choose>
                         <c:when test="${personType == 'docente'}">Docentes</c:when>
-                        <c:when test="${personType == 'estudiante'}">Estudiante</c:when>
+                        <c:when test="${personType == 'estudiante'}">Estudiantes</c:when>
                         <c:otherwise>Usuario</c:otherwise>
                     </c:choose>
                 </td>
@@ -171,8 +171,6 @@
 <script type="text/javascript" src="../assets/js/agregar.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.min.js"></script>
 
 <script>
@@ -438,8 +436,7 @@
     }
 </script>
 <script type="text/javascript">
-    function validarFormularioUpdate(event) {
-        event.preventDefault();
+    function validarFormularioUpdate() {
         const nombre = document.getElementById('nombre').value.trim();
         const apellido1 = document.getElementById('ap1').value.trim();
         const apellido2 = document.getElementById('ape2').value.trim();
@@ -456,7 +453,6 @@
 
         const regexNombre = /^[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*)*$/;
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
-            btn_Cerrar.checked = true;
             Swal.fire({
                 icon: 'error',
                 title: 'Verifica tu información',
@@ -528,14 +524,13 @@
             });
             return false;
         }
-
         Swal.fire({
             icon: 'warning',
             title: '¿Estás seguro de modificar este usuario?',
             text: 'Esta acción modificará los datos del usuario',
             showCancelButton: true,
             confirmButtonText: 'Aceptar',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
             confirmButtonColor: '#001256',
             cancelButtonColor: '#d33',
             trimer: 8000,
@@ -547,8 +542,9 @@
                 document.getElementById('formulario-modal').submit();
             }
         });
-    }
+        return false;
 
+    }
 </script>
 
 <SCRIPT>
@@ -565,7 +561,6 @@
             return response;
         })
         .then(() => {
-            // Conexión exitosa, realizar acciones adicionales
         })
         .catch(error => {
             console.error(error);
