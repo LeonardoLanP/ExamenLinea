@@ -41,12 +41,18 @@
       <img src="assets/img/503.svg">
 
         <h2>¡Oops!</h2><br>
-        <button>Regresar</button>
+        <button id="btn-regresar">Regresar</button>
      </div>
    
   </div>
  
   <script src="assets/js/bootstrap.js"></script>
+  <script>
+      const btnRegresar = document.getElementById('btn-regresar');
 
+      btnRegresar.addEventListener('click', function() {
+          window.location.href = 'index.jsp';
+      });
+  </script>
 </body>
 </html>

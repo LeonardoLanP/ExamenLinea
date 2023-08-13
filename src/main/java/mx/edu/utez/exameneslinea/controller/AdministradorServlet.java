@@ -126,7 +126,6 @@ public class AdministradorServlet extends HttpServlet {
                         int usersimilar = dao.findOneUSUDoc(userR);
                         if(usersimilar>0){
                             userR += usersimilar;
-                            System.out.println("nuevo usuario: " + userR);
                         }
                     }
 

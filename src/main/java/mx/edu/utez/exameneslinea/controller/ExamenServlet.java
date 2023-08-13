@@ -122,8 +122,7 @@ public class ExamenServlet extends HttpServlet {
                     req.getSession().setAttribute("mensaje","exito");
                     resp.sendRedirect(req.getContextPath() +"/Estudiante/acceso.jsp");
                 }else{
-                    System.out.println("Valio madres todo");
-                    resp.sendRedirect(req.getContextPath() +"paginaDeError.jsp");
+                    resp.sendRedirect(req.getContextPath() +"500.jsp");
                 }
                 break;
             case"/cambio-status":
@@ -155,7 +154,6 @@ public class ExamenServlet extends HttpServlet {
                                 }
                                 contadorques++;
                             }
-                        System.out.println(contadorques);
                         if(contadorques<2 || contador>0){
                             break;
                         }
@@ -191,7 +189,6 @@ public class ExamenServlet extends HttpServlet {
             case"/respuestas-estudiantes":
                 int userId = Integer.parseInt(req.getParameter("userId"));
                 String codeex = (String) req.getSession().getAttribute("codeaccess");
-                System.out.println("Petición recibida desde AJAX. UserId: " + userId + " codigo" + codeex);
                 List<Question> preguntasRespuestas = daoex.findAllAnswerStudents(userId,codeex);
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");

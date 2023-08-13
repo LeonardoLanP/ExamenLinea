@@ -416,6 +416,28 @@
             setInterval(verificarEstadoUsuario, 1000);
     </script>
 
+    <SCRIPT>
+        fetch('https://cdn.jsdelivr.net/npm/sweetalert2@11')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de conexion',
+                            timer: 1500,
+                        }));
+                }
+                return response;
+            })
+            .then(() => {
+                // Conexión exitosa, realizar acciones adicionales
+            })
+            .catch(error => {
+                console.error(error);
+                window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+            });
+
+    </SCRIPT>
 
 
 

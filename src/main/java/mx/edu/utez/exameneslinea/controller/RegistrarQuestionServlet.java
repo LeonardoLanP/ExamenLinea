@@ -103,9 +103,6 @@ public class RegistrarQuestionServlet extends HttpServlet {
                 resp.setCharacterEncoding("UTF-8");
                 resp.getWriter().write("Datos recibidos en el servidor con éxito");
             }
-
-        }else {
-            System.out.println("Hay un error en el codigo pq no entro en ninguna");
         }
     }
 

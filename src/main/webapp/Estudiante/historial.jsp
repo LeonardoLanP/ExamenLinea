@@ -43,7 +43,7 @@
       <div class="min-menA">
       <a href="acceso.jsp">Regresar</a>
     </div>
-      <div class="salir"><a href="../login?sesion=salir">Salir</a></div>
+      <div class="salir"><a href="../login?sesion=salir">Cerrar sesión</a></div>
     </nav>
     <label for="btn-menu"><i class="bi bi-x-lg"></i></label>
   </div>
@@ -128,6 +128,29 @@
        contentElement.appendChild(emptyContentContainer);
      }
   </script>
+
+  <SCRIPT>
+    fetch('https://cdn.jsdelivr.net/npm/sweetalert2@11')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Error de conexion',
+                          timer: 1500,
+                        }));
+              }
+              return response;
+            })
+            .then(() => {
+              // Conexión exitosa, realizar acciones adicionales
+            })
+            .catch(error => {
+              console.error(error);
+              window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+            });
+
+  </SCRIPT>
   
 
 </body>

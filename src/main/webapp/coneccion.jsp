@@ -41,12 +41,43 @@
       <img src="assets/img/noconect2.svg">
 
         <h2>Sin conexión a internet</h2><br>
-        <button>Reintentar</button>
+        <button id="btn-reintentar">Reintentar</button>
      </div>
    
   </div>
  
   <script src="assets/js/bootstrap.js"></script>
+  <script>
+      function verificarConexion() {
+          fetch('https://cdn.jsdelivr.net/npm/sweetalert2@11')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error(
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Error de conexion',
+                              timer: 1500,
+                          }));
+                  }
+                  return response;
+              })
+              .then(() => {
+              })
+              .catch(error => {
+                  console.error(error);
+                  window.location.href = 'coneccion.jsp';
+              });
+      }
+      // Seleccionar el botón
+      const btnRegresar = document.getElementById('btn-reintentar');
 
+      window.addEventListener('load', verificarConexion);
+
+      btnRegresar.addEventListener('click', function() {
+          verificarConexion();
+          window.location.href = 'index.jsp';
+      });
+
+  </script>
 </body>
 </html>

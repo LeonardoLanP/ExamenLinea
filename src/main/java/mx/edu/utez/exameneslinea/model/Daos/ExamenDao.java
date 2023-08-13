@@ -284,9 +284,7 @@ public class ExamenDao implements DaoRepository{
             if(res.next()){
                 Question ques = new Question();
                 ques.setOpen_Answer(res.getString("open_Answer"));
-                System.out.println(ques.getOpen_Answer());
                 if(ques.getOpen_Answer().equals("Abierta")){
-                    System.out.println("Entro a buscar el examen Abierto");
                     PreparedStatement stmtOpen =
                             con.prepareStatement("select id_exam_question,exam_id,ques_id,question,open_Answer,name,lastname1,lastname2,person.User_id from sugel.exam_question_answer " +
                                     "inner join sugel.question on id_ques = ques_id " +
@@ -299,7 +297,6 @@ public class ExamenDao implements DaoRepository{
                     stmtOpen.setString(2,code);
                     ResultSet resopen = stmtOpen.executeQuery();
                     while (resopen.next()) {
-                        System.out.println("si encontro respuesta");
                         Question question = new Question();
                         question.setNombreAlumno(resopen.getString("name")+ " " +resopen.getString("lastname1") + " " + (resopen.getString("lastname2") == null || resopen.getString("lastname2").isEmpty() ? "" : resopen.getString("lastname2")));
                         question.setId_exam_question(resopen.getInt("id_exam_question"));
@@ -310,7 +307,6 @@ public class ExamenDao implements DaoRepository{
                         lista.add(question);
                     }
                 }else if(ques.getOpen_Answer().equals("Multiple")){
-                    System.out.println("Entro a buscar el examen Multiple");
                     PreparedStatement stmtClose =
                             con.prepareStatement("select id_exam_question,exam_id,ques_id,answer_id,question,answer,name,lastname1,lastname2,person.User_id from sugel.exam_question_answer " +
                                     "inner join sugel.question on id_ques = ques_id " +
@@ -334,8 +330,6 @@ public class ExamenDao implements DaoRepository{
                         question.setAnswer(resclose.getString("answer"));
                         lista.add(question);
                     }
-                }else{
-                    System.out.println("Error");
                 }
             }
             res.close();
@@ -627,7 +621,6 @@ public class ExamenDao implements DaoRepository{
             if(res.next()){
                 QUES.setId_exam_question(res.getInt("id_exam_question"));
                 QUES.setAnswer_id(res.getInt("answer_id"));
-                System.out.println(QUES.getId_exam_question() + " ID de la primer pregunta encontrada");
             }
             res.close();
             con.close();

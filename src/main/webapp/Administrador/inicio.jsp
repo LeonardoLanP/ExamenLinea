@@ -150,8 +150,7 @@
                     <td>
                         <label class="switchBtn">
                             <input type="checkbox" id="toggleSwitch_${person.id_person}" ${person.user_status == 1 ? 'checked' : ''} onChange="updateUserStatus(${person.id_person})">
-                            <div class="slide round" id="toggleText_${person.id_person}">
-                            </div>
+                            <div class="slide round" id="toggleText_${person.id_person}"></div>
                         </label>
                     </td>
                     <td colspan="2" id="">${person.lastname1} ${person.lastname2} ${person.name}</td>
@@ -445,10 +444,9 @@
         const contrasena = document.getElementById('pass').value.trim();
 
         const btnEnviar = document.getElementById('btn-enviar');
-        const btn_Cerrar = document.getElementById('btn-modal');
 
         btnEnviar.addEventListener('click', () => {
-            btn_Cerrar.checked = true;
+            document.getElementById("btn-modal").checked = true;
         });
 
         const regexNombre = /^[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*)*$/;
@@ -495,7 +493,7 @@
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
-                timer: 2000,
+                timer: 5000,
 
             });
             return false;
@@ -507,6 +505,8 @@
                 title: 'Verifica tu información',
                 text: 'Por favor ingrese un usuario válido',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -517,6 +517,8 @@
                 title: 'Verifica tu información',
                 text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                 showConfirmButton: true,
+                timer: 5000,
+
             });
             return false;
         }
@@ -531,15 +533,37 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 btnEnviar.addEventListener('click', () => {
-                    btn_Cerrar.checked = false;
+                    document.getElementById("btn-modal").checked = false;
                 });
                 document.getElementById('formulario-modal').submit();
             }
         });
-        return false;
     }
 
 </script>
+
+<SCRIPT>
+    fetch('https://cdn.jsdelivr.net/npm/sweetalert2@11')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de conexion',
+                        timer: 1500,
+                    }));
+            }
+            return response;
+        })
+        .then(() => {
+            // Conexión exitosa, realizar acciones adicionales
+        })
+        .catch(error => {
+            console.error(error);
+            window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+        });
+
+</SCRIPT>
 
 
 
