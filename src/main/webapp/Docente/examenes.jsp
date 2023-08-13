@@ -245,7 +245,9 @@
                     text: actionText,
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
-                    cancelButtonText: 'Cancelar'
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#001256',
+                    cancelButtonColor: '#d33',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -259,7 +261,7 @@
                                         icon: 'error',
                                         title: 'Verifica que todos los campos de tu examen estén llenos',
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 4000,
                                     });
                                     checkbox.checked = !estado;
                                 } else if(data.ques){
@@ -267,7 +269,7 @@
                                         icon: 'error',
                                         title: 'Asegurate de que cada pregunta tenga almenos 2 respuestas',
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 4000,
                                     });
                                     checkbox.checked = !estado;
                                 } else {
@@ -298,6 +300,7 @@
                                     title: 'Error al guardar los cambios',
                                     text: 'Hubo un problema al intentar guardar los cambios.',
                                     showConfirmButton: true,
+                                    confirmButtonColor: '#001256',
                                 });
                                 checkbox.checked = !estado;
                             }
@@ -309,6 +312,8 @@
                     icon: 'warning',
                     title: '¿Estás seguro de ' + action + ' este examen?',
                     showCancelButton: true,
+                    confirmButtonColor: '#001256',
+                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Aceptar',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
@@ -333,6 +338,7 @@
                                     title: 'Error al guardar los cambios',
                                     text: 'Hubo un problema al intentar guardar los cambios.',
                                     showConfirmButton: true,
+                                    confirmButtonColor: '#001256',
                                 });
                                 checkbox.checked = !estado;
                             }
@@ -387,6 +393,7 @@
                     title: 'Verifica tu información',
                     text: 'Corrobora que tu nombre y apellido este escrito correctamente.',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -396,6 +403,7 @@
                     title: 'Verifica tu información',
                     text: '¡Corrobora que tu apellido materno este escrito correctamente!',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -405,6 +413,7 @@
                     title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -422,7 +431,8 @@
                             title: 'Tu cuenta ha sido desactivada',
                             text: 'Comunícate con el administrador para más información',
                             confirmButtonText: 'Aceptar',
-                            timer: 5000,
+                            timer: 6000,
+                            confirmButtonColor: '#001256',
                         }).then(function() {
                             setTimeout(function() {
                                 window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio

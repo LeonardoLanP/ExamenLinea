@@ -266,6 +266,8 @@
                 title: '¿Estás seguro de ' + action + ' esta Materia?',
                 text: actionText,
                 showCancelButton: true,
+                confirmButtonColor: '#001256',
+                cancelButtonColor: '#d33',
                 confirmButtonText: 'Aceptar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
@@ -291,6 +293,7 @@
                                 title: 'Error al guardar los cambios',
                                 text: 'Hubo un problema al intentar guardar los cambios.',
                                 showConfirmButton: true,
+                                confirmButtonColor: '#001256',
                             });
                             checkbox.checked = !estado;
                         }
@@ -363,6 +366,7 @@
                     icon: 'error',
                     title: 'Verifica tu informacion',
                     text: 'Corrobora que tu nombre y apellido esté escrito correctamente.',
+                    confirmButtonColor: '#001256',
                     showConfirmButton: true,
                 });
                 return false;
@@ -373,6 +377,7 @@
                     title: 'Verifica tu información',
                     text: '¡Corrobora que tu apellido materno esté escrito correctamente!',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -382,6 +387,7 @@
                     title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -400,6 +406,7 @@
                             title: 'Tu cuenta ha sido desactivada',
                             text: 'Comunicate con el administrador para más información.',
                             confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '#001256',
                             timer: 5000,
                         }).then(function() {
                             setTimeout(function() {

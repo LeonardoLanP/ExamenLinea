@@ -203,7 +203,7 @@
     Swal.fire({
         icon: 'success',
         title: 'Usuario actualizado con éxito',
-        timer: 2000,
+        timer: 3000,
     });
     <%}request.getSession().removeAttribute("statusNewUser");
     request.getSession().removeAttribute("newuser");
@@ -305,8 +305,10 @@
             title: '¿Estás seguro de ' + action + ' este usuario?',
             text: actionText,
             showCancelButton: true,
+            confirmButtonColor: '#001256',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Aceptar',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -319,7 +321,8 @@
                             icon: 'success',
                             title: 'Cambios guardados',
                             showConfirmButton: false,
-                            timer: 2000,
+                            timer: 3000,
+                            confirmButtonColor: '#001256',
                         });
                     },
                     error: function () {
@@ -329,6 +332,7 @@
                             title: 'Error al guardar los cambios',
                             text: 'Hubo un problema al intentar guardar los cambios.',
                             showConfirmButton: true,
+                            confirmButtonColor: '#001256',
                         });
                         checkbox.checked = !estado;
                     }
@@ -361,7 +365,7 @@
                 text: 'Corrobora tu nombre o apellidos esté escrito correctamen',
                 showConfirmButton: true,
                 timer: 5000,
-
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -375,7 +379,7 @@
                 text: 'CURP no válida',
                 showConfirmButton: true,
                 timer: 5000,
-
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -387,6 +391,7 @@
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
                 timer: 5000,
+                confirmButtonColor: '#001256',
 
             });
             return false;
@@ -399,7 +404,7 @@
                 text: 'Selecciona un rol',
                 showConfirmButton: true,
                 timer: 5000,
-
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -412,7 +417,7 @@
                     text: 'Matrícula no válida',
                     showConfirmButton: true,
                     timer: 5000,
-
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -424,7 +429,7 @@
                     text: 'La matrícula no coincide con tu correo',
                     showConfirmButton: true,
                     timer: 5000,
-
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -457,7 +462,8 @@
                 title: 'Verifica tu información',
                 text: 'Corrobora tu nombre',
                 showConfirmButton: true,
-                timer: 5000,
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -469,8 +475,8 @@
                 title: 'Verifica tu información',
                 text: 'CURP no válida',
                 showConfirmButton: true,
-                timer: 5000,
-
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -481,8 +487,8 @@
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
-                timer: 5000,
-
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -493,8 +499,8 @@
                 title: 'Verifica tu información',
                 text: 'Solo se admiten correos XXXXXXXX@utez.edu.mx',
                 showConfirmButton: true,
-                timer: 5000,
-
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -505,8 +511,8 @@
                 title: 'Verifica tu información',
                 text: 'Por favor ingrese un usuario válido',
                 showConfirmButton: true,
-                timer: 5000,
-
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -517,8 +523,8 @@
                 title: 'Verifica tu información',
                 text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                 showConfirmButton: true,
-                timer: 5000,
-
+                timer: 6000,
+                confirmButtonColor: '#001256',
             });
             return false;
         }
@@ -530,6 +536,9 @@
             showCancelButton: true,
             confirmButtonText: 'Aceptar',
             cancelButtonText: 'Cancelar'
+            confirmButtonColor: '#001256',
+            cancelButtonColor: '#d33',
+            trimer: 8000,
         }).then((result) => {
             if (result.isConfirmed) {
                 btnEnviar.addEventListener('click', () => {

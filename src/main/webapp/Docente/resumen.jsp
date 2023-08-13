@@ -378,6 +378,7 @@
             title: 'Verifica tu información',
             text: 'Corrobora que tu nombre o apellido esté escrito correctamente.',
             showConfirmButton: true,
+            confirmButtonColor: '#001256',
           });
           return false;
         }
@@ -387,6 +388,7 @@
             title: 'erifica tu información',
             text: '¡Corrobora que tu apellido materno esté escrito correctamente!',
             showConfirmButton: true,
+            confirmButtonColor: '#001256',
           });
           return false;
         }
@@ -396,6 +398,7 @@
             title: 'Verifica tu información',
             text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
             showConfirmButton: true,
+            confirmButtonColor: '#001256',
           });
           return false;
         }
@@ -444,6 +447,7 @@
                 title: 'Tu cuenta ha sido desactivada',
                 text: 'Comunícate con el administrador para más información',
                 confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#001256',
                 timer: 5000,
               }).then(function() {
                 setTimeout(function() {

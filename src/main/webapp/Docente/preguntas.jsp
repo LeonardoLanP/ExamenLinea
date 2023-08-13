@@ -284,6 +284,7 @@
                     title: 'Verifica tu información',
                     text: 'Corrobora que tu nombre o apellido esté escrito correctamente.',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -293,6 +294,7 @@
                     title: 'Verifica tu información',
                     text: '¡Corrobora que tu apellido esté escrito correctamente!',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -302,6 +304,7 @@
                     title: 'Verifica tu información',
                     text: 'La nueva contraseña debe tener entre 3 y 8 caracteres.',
                     showConfirmButton: true,
+                    confirmButtonColor: '#001256',
                 });
                 return false;
             }
@@ -321,6 +324,7 @@
                             text: 'Comunicate con el administrador para más informacion.',
                             confirmButtonText: 'Aceptar',
                             timer: 5000,
+                            confirmButtonColor: '#001256',
                         }).then(function() {
                             setTimeout(function() {
                                 window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio

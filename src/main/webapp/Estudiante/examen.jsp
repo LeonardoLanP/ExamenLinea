@@ -201,6 +201,7 @@
 							title: 'Tu cuenta ha sido desactivada',
 							text: 'Comunícate con el administrador para más información',
 							confirmButtonText: 'Aceptar',
+							confirmButtonColor: '#001256',
 							timer: 7000,
 						}).then(function() {
 							setTimeout(function() {
