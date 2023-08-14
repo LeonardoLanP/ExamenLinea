@@ -128,6 +128,7 @@
          title: 'Oops...',
          text: 'Usuario desactivado. Solicita la reactivación!',
          timer: 5000,
+        confirmButtonColor: '#001256',
      })
      <%break;case "noRegistrado": %>
      Swal.fire({
@@ -135,6 +136,7 @@
          title: 'Oops...',
          text: 'Usuario o contraseña incorrectos. Intenta de nuevo!',
          timer: 5000,
+         confirmButtonColor: '#001256',
      })
      <%break;} request.getSession().removeAttribute("status");}%>
  </script>
