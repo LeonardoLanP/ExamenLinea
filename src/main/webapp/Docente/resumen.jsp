@@ -515,7 +515,7 @@
               })
               .catch(error => {
                 console.error(error);
-                window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+                window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
               });
 
     </SCRIPT>

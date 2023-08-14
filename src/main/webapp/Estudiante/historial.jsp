@@ -147,9 +147,39 @@
             })
             .catch(error => {
               console.error(error);
-              window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+              window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
             });
 
+
+    function verificarEstadoUsuario() {
+
+      $.ajax({
+        url: '../admin/verificar-estado-usuario',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+          if (response.usuarioActivo) {
+            alertaMostrada = true; // Marcar que se mostró la alerta
+            Swal.fire({
+              icon: 'warning',
+              title: 'Tu cuenta ha sido desactivada',
+              text: 'Comunícate con el administrador para más información',
+              confirmButtonText: 'Aceptar',
+              confirmButtonColor: '#001256',
+              timer: 7000,
+            }).then(function() {
+              setTimeout(function() {
+                window.location.href = "../index.jsp";
+              }, 1000);
+            });
+          }
+        },
+        error: function() {
+          console.log("Error al verificar el estado del usuario.");
+        }
+      });
+    }
+    setInterval(verificarEstadoUsuario, 1000);
   </SCRIPT>
   
 

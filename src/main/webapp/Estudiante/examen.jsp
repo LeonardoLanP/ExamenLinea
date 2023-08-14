@@ -64,6 +64,18 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+	<script>
+	<%String mensaje = (String) request.getSession().getAttribute("inconcluso");
+		if (mensaje != null && !mensaje.isEmpty()) {%>
+	Swal.fire({
+	icon: 'warning',
+	title: 'Se ha retomado el curso de tu examen',
+	text: 'Se seguirá retomando hasta que se concluya o sea desactivado',
+	timer: 5000,
+	confirmButtonColor: '#001256',
+	});
+	<% } request.getSession().removeAttribute("inconcluso");%>
+</script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -189,13 +201,20 @@
 	</script>
 
 	<script>
+		var alertaMostrada = false;
+
 		function verificarEstadoUsuario() {
+			if (alertaMostrada) {
+				return; // Detener la verificación si ya se mostró una alerta
+			}
+
 			$.ajax({
 				url: '../admin/verificar-estado-usuario',
 				method: 'GET',
 				dataType: 'json',
 				success: function(response) {
 					if (response.usuarioActivo) {
+						alertaMostrada = true; // Marcar que se mostró la alerta
 						Swal.fire({
 							icon: 'warning',
 							title: 'Tu cuenta ha sido desactivada',
@@ -215,7 +234,41 @@
 				}
 			});
 		}
-		setInterval(verificarEstadoUsuario, 10000);
+		setInterval(verificarEstadoUsuario, 1000);
+
+		function verificarEstadoExamen() {
+			if (alertaMostrada) {
+				return; // Detener la verificación si ya se mostró una alerta
+			}
+
+			$.ajax({
+				url: '../docente/verificar-estado-examen',
+				method: 'GET',
+				dataType: 'json',
+				success: function(response) {
+					if (response.usuarioActivo) {
+						alertaMostrada = true; // Marcar que se mostró la alerta
+						Swal.fire({
+							icon: 'warning',
+							title: 'El examen ha sido desactivado',
+							text: 'Comunícate con el docente para más información',
+							confirmButtonText: 'Aceptar',
+							confirmButtonColor: '#001256',
+							timer: 7000,
+						}).then(function() {
+							setTimeout(function() {
+								window.location.href = "acceso.jsp";
+							}, 1000);
+						});
+					}
+				},
+				error: function() {
+					console.log("Error al verificar el estado del usuario.");
+				}
+			});
+		}
+		setInterval(verificarEstadoExamen, 1000);
+
 	</script>
 
 	<SCRIPT>
@@ -232,11 +285,10 @@
 					return response;
 				})
 				.then(() => {
-					// Conexión exitosa, realizar acciones adicionales
 				})
 				.catch(error => {
 					console.error(error);
-					window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+					window.location.href = '../coneccion.jsp';
 				});
 
 	</SCRIPT>

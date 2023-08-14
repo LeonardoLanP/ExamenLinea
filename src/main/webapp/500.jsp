@@ -38,7 +38,7 @@
       </div>
       <div class="hero-text">
       
-      <img src="assets/img/503.svg">
+      <img src="assets/img/500.svg">
 
         <h2>¡Oops!</h2><br>
         <button id="btn-regresar">Regresar</button>

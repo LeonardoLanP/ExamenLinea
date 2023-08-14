@@ -496,6 +496,31 @@ public class ExamenDao implements DaoRepository{
         return exm;
     }
 
+    public Object findexameninconcluso(int iduser) {
+        Exam exm = new Exam();
+        Connection con = new MysqlConector().connect();
+        try {
+
+            PreparedStatement stmt =
+                    con.prepareStatement("select * from sugel.exam " +
+                            "inner join sugel.user_sub on id_user_sub = id_user_sub " +
+                            "inner join sugel.user on user_id = ID_user " +
+                            "where ID_user = ? and statusex = ? order by id_exam DESC ");
+            stmt.setInt(1,iduser);
+            stmt.setInt(2,1);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                exm.setCode(res.getString("code"));
+                exm.setStatusex(res.getString("statusex"));
+            }
+            res.close();
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return exm;
+    }
+
     public Object findNamex(int idexam) {
         String name = "";
         Connection con = new MysqlConector().connect();

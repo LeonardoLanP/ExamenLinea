@@ -187,7 +187,7 @@
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: '<%=duplicado%> se encuetra registrado en otra cuenta',
+        text: 'Este <%=duplicado%> se encuetra registrado en otra cuenta',
         timer: 5000,
     });
     <% }else if(user!= null){%>
@@ -564,7 +564,7 @@
         })
         .catch(error => {
             console.error(error);
-            window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+            window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
         });
 
 </SCRIPT>

@@ -98,6 +98,7 @@
       icon: 'success',
       title: 'Sesión cerrada correctamente',
       timer: 5000,
+      confirmButtonColor: '#001256',
     });
            <% } request.getSession().removeAttribute("mensaje");%>
   </script>
@@ -110,7 +111,9 @@
                 icon: 'error',
                 title: 'Error de conexion',
                 timer: 1500,
-              }));
+                        confirmButtonColor: '#001256',
+
+                      }));
             }
             return response;
           })

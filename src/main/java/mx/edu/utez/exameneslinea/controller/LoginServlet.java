@@ -1,6 +1,8 @@
 package mx.edu.utez.exameneslinea.controller;
 
+import mx.edu.utez.exameneslinea.model.Daos.ExamenDao;
 import mx.edu.utez.exameneslinea.model.Daos.UsuarioDao;
+import mx.edu.utez.exameneslinea.model.Exam;
 import mx.edu.utez.exameneslinea.model.Person;
 
 import javax.servlet.ServletException;
@@ -10,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-
 @WebServlet(name = "UsuarioServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
@@ -59,7 +60,22 @@ public class LoginServlet extends HttpServlet {
             } else if (usr.getRol_id() == 3 && usr.getUser_status() == 1) {
                 req.getSession().setAttribute("sesion", usr);
                 req.getSession().setAttribute("idEstudiantePerson", usr.getId_person());
-                resp.sendRedirect(req.getContextPath() + "/Estudiante/acceso.jsp");
+                ExamenDao exm= new ExamenDao();
+                Exam examen = new Exam();
+                Exam exmdocente = new Exam();
+
+                examen = (Exam) exm.findexameninconcluso(usr.getID_user());
+                exmdocente = (Exam) exm.findOneByCode(examen.getCode());
+                if(examen.getStatusex()!=null && exmdocente.getStatusex() != null && !exmdocente.getStatusex().isEmpty() && !examen.getStatusex().isEmpty()){
+                    if(examen.getStatusex().equals("1") && exmdocente.getStatusex().equals("1")){
+                        req.getSession().setAttribute("inconcluso", "inconcluso");
+                        resp.sendRedirect(req.getContextPath() + "/ques_reload?codigo="+examen.getCode());
+                    }else{
+                        resp.sendRedirect(req.getContextPath() + "/Estudiante/acceso.jsp");
+                    }
+                }else{
+                    resp.sendRedirect(req.getContextPath() + "/Estudiante/acceso.jsp");
+                }
             } else {
                 req.getSession().setAttribute("status", "desactivado");
                 resp.sendRedirect(req.getContextPath() + "/login.jsp?rol="+rol);

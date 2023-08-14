@@ -58,11 +58,13 @@ public class AdministradorServlet extends HttpServlet {
                 String usuario = req.getParameter("usuario");
                 String pass = req.getParameter("pass");
                 int userid = Integer.parseInt(req.getParameter("id_user").trim());
+                Person pers = (Person) dao.findOne(userid);
+                List<String> duplicUser = null;
+                if(!(pers.getCurp().equals(CURP) && pers.getUser().equals(usuario) && pers.getEmail().equals(email))){
+                    duplicUser = dao.findCampoDuplicadoupdate(CURP, email, usuario,userid);
+                }
 
-                List<String> duplicUser = dao.findDuplicados(CURP, email, usuario);
-                int ultimaPosicion = duplicUser.size() - 1;
-
-                if(Integer.parseInt(duplicUser.get(ultimaPosicion)) == 1) {
+                if(duplicUser == null || duplicUser.isEmpty()) {
                     Person user = new Person();
                     Person user1 = (Person) dao.findOne(userid);
 
@@ -89,8 +91,6 @@ public class AdministradorServlet extends HttpServlet {
                         resp.sendRedirect(req.getContextPath() + "/admin/gestion-docente-alumno?id=docente");
                     }
                 }else{
-                    duplicUser.clear();
-                    duplicUser.add("El nuevo CURP, correo o usuario ");
                     req.getSession().setAttribute("statusNewUser", duplicUser);
                     resp.sendRedirect(req.getContextPath() + "/Administrador/inicio.jsp");
                 }

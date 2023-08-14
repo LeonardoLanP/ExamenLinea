@@ -13,7 +13,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "DocenteServlet", value = "/docente/*")
@@ -51,6 +53,14 @@ public class DocenteServlet extends HttpServlet {
                 List<Person> listagrade = daou.findAllgrades(estudiate.getUser_id());
                 req.getSession().setAttribute("materias", listagrade);
                 resp.sendRedirect(req.getContextPath() + "/Estudiante/historial.jsp");
+                break;
+            case "/verificar-estado-examen":
+                Person student = (Person) req.getSession().getAttribute("sesion");
+                boolean usuarioActivo = daou.verificarestatusexamen(student.getID_user());
+                resp.setContentType("application/json");
+                PrintWriter out = resp.getWriter();
+                out.print("{\"usuarioActivo\": " + usuarioActivo + "}");
+                out.flush();
                 break;
             default:
         }

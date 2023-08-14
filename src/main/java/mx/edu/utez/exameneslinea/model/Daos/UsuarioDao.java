@@ -119,6 +119,7 @@ public class UsuarioDao implements DaoRepository{
         return usr;
     }
 
+
     public boolean verificarestatus(int idUser) {
         Person usr = new Person();
         Connection con = new MysqlConector().connect();
@@ -130,6 +131,27 @@ public class UsuarioDao implements DaoRepository{
             if(res.next()){
                 usr.setUser_status(res.getInt("user_status"));
                 return usr.getUser_status() == 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public boolean verificarestatusexamen(int idUser) {
+        Exam ex = new Exam();
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "select * from sugel.exam  " +
+                            "inner join sugel.user_sub on id_user_sub = id_user_sub " +
+                            "inner join sugel.user on user_id = ID_user " +
+                            "where code = ? order by id_exam asc ");
+            stmt.setInt(1,idUser);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                ex.setStatusex(res.getString("statusex"));
+                return ex.getStatusex().equals("0");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -178,7 +200,64 @@ public class UsuarioDao implements DaoRepository{
         return camposDuplicados;
     }
 
+    public List<String> findCampoDuplicadoupdate(String curp, String email, String user, int iduser) {
+        List<String> camposDuplicados = new ArrayList<>();
+        Connection con = new MysqlConector().connect();
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT * FROM sugel.person INNER JOIN sugel.user ON person.User_id = user.id_user " +
+                            "WHERE (curp = ? OR email = ? OR user = ?) and ID_user != ?");
+            stmt.setString(1, curp);
+            stmt.setString(2, email);
+            stmt.setString(3, user);
+            stmt.setInt(4, iduser);
 
+            ResultSet res = stmt.executeQuery();
+            boolean curpcorreoDuplicado = false;
+            boolean curpusuarioDuplicado = false;
+            boolean emailusuarioDuplicado = false;
+            boolean curpDuplicado = false;
+            boolean emailDuplicado = false;
+            boolean userDuplicado = false;
+            boolean todos = false;
+
+            while (res.next()) {
+                if (curp.equalsIgnoreCase(res.getString("curp")) && email.equalsIgnoreCase(res.getString("email")) && !user.equalsIgnoreCase(res.getString("user")) && !curpcorreoDuplicado) {
+                    camposDuplicados.add("CURP, correo");
+                    curpcorreoDuplicado = true;
+                }
+                if (curp.equalsIgnoreCase(res.getString("curp")) && !email.equalsIgnoreCase(res.getString("email")) && user.equalsIgnoreCase(res.getString("user")) && !curpusuarioDuplicado) {
+                    camposDuplicados.add("CURP, usuario");
+                    curpusuarioDuplicado = true;
+                }
+                if (!curp.equalsIgnoreCase(res.getString("curp")) && email.equalsIgnoreCase(res.getString("email")) && user.equalsIgnoreCase(res.getString("user")) && !emailusuarioDuplicado) {
+                    camposDuplicados.add("correo, usuario");
+                    emailusuarioDuplicado = true;
+                }
+                if (curp.equalsIgnoreCase(res.getString("curp")) && !email.equalsIgnoreCase(res.getString("email")) && !user.equalsIgnoreCase(res.getString("user")) && !curpDuplicado) {
+                    camposDuplicados.add("CURP");
+                    curpDuplicado = true;
+                }
+                if (!curp.equalsIgnoreCase(res.getString("curp")) && email.equalsIgnoreCase(res.getString("email")) && !user.equalsIgnoreCase(res.getString("user")) && !emailDuplicado) {
+                    camposDuplicados.add("correo");
+                    emailDuplicado = true;;
+                }
+                if (!curp.equalsIgnoreCase(res.getString("curp")) && !email.equalsIgnoreCase(res.getString("email")) && user.equalsIgnoreCase(res.getString("user")) && !userDuplicado) {
+                    camposDuplicados.add("usuario");
+                    userDuplicado = true;
+                }
+                if (curp.equalsIgnoreCase(res.getString("curp")) && email.equalsIgnoreCase(res.getString("email")) && user.equalsIgnoreCase(res.getString("user")) && !todos) {
+                    camposDuplicados.add("CURP, correo, usuario");
+                    break;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return camposDuplicados; // Ningún campo está duplicado
+    }
 
 
     public Object findOneUSU(String usuario,String email, int idRol,String pass) {
