@@ -138,7 +138,7 @@ public class UsuarioDao implements DaoRepository{
         return false;
     }
 
-    public boolean verificarestatusexamen(int idUser) {
+    public boolean verificarestatusexamen(String idUser) {
         Exam ex = new Exam();
         Connection con = new MysqlConector().connect();
         try {
@@ -147,7 +147,7 @@ public class UsuarioDao implements DaoRepository{
                             "inner join sugel.user_sub on id_user_sub = id_user_sub " +
                             "inner join sugel.user on user_id = ID_user " +
                             "where code = ? order by id_exam asc ");
-            stmt.setInt(1,idUser);
+            stmt.setString(1,idUser);
             ResultSet res = stmt.executeQuery();
             if(res.next()){
                 ex.setStatusex(res.getString("statusex"));

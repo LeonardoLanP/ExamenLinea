@@ -55,8 +55,8 @@ public class DocenteServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/Estudiante/historial.jsp");
                 break;
             case "/verificar-estado-examen":
-                Person student = (Person) req.getSession().getAttribute("sesion");
-                boolean usuarioActivo = daou.verificarestatusexamen(student.getID_user());
+                String codex = (String) req.getSession().getAttribute("codex");
+                boolean usuarioActivo = daou.verificarestatusexamen(codex);
                 resp.setContentType("application/json");
                 PrintWriter out = resp.getWriter();
                 out.print("{\"usuarioActivo\": " + usuarioActivo + "}");

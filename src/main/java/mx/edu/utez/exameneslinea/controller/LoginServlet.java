@@ -68,6 +68,7 @@ public class LoginServlet extends HttpServlet {
                 exmdocente = (Exam) exm.findOneByCode(examen.getCode());
                 if(examen.getStatusex()!=null && exmdocente.getStatusex() != null && !exmdocente.getStatusex().isEmpty() && !examen.getStatusex().isEmpty()){
                     if(examen.getStatusex().equals("1") && exmdocente.getStatusex().equals("1")){
+                        req.getSession().setAttribute("codex",examen.getCode());
                         req.getSession().setAttribute("inconcluso", "inconcluso");
                         resp.sendRedirect(req.getContextPath() + "/ques_reload?codigo="+examen.getCode());
                     }else{

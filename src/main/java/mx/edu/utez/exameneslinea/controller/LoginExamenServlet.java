@@ -27,6 +27,8 @@ public class LoginExamenServlet extends HttpServlet {
 
         Person per = (Person) daoUs.findOne(id);
         Exam exm = (Exam) dao.findOneByCode(codigo);
+        req.getSession().setAttribute("codex",codigo);
+
         if (exm.getCode().equals(codigo)) {
             if (exm.getStatusex().equals("1")) {
                 if(!(dao.finOpenExam(codigo,id)) && exm.getType_exam().equals("Abierta")){
@@ -135,6 +137,7 @@ public class LoginExamenServlet extends HttpServlet {
 
         Person per = (Person) daoUs.findOne(id);
         Exam exm = (Exam) dao.findOneByCode(codigo);
+        req.getSession().setAttribute("codex",codigo);
         if (exm.getCode().equals(codigo)) {
             if (exm.getStatusex().equals("1")) {
                 if(!(dao.finOpenExam(codigo,id)) && exm.getType_exam().equals("Abierta")){
