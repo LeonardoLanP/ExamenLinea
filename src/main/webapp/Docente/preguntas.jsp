@@ -27,7 +27,7 @@
 
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
-            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
+            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
             <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
@@ -139,26 +139,22 @@
 
     <script>
         $(document).ready(function() {
-            // Función para manejar el cambio en el textarea
             $(document).on("input", "textarea.pregunta", function() {
                 var $multipleDiv = $(this).closest(".multiple");
                 var $opcionesInputs = $multipleDiv.find("input.opcion");
                 var $btnOpcion = $multipleDiv.find(".boton-opcion label");
 
                 if ($(this).val().trim() === "") {
-                    // Si el textarea está vacío, deshabilitar y cambiar el color de los inputs y el botón
                     $opcionesInputs.prop("disabled", true);
                     $opcionesInputs.css("background-color", "#CCCCCC");
                     $btnOpcion.addClass("disabled");
                 } else {
-                    // Si el textarea contiene texto, habilitar y restaurar el color original de los inputs y el botón
                     $opcionesInputs.prop("disabled", false);
                     $opcionesInputs.css("background-color", "");
                     $btnOpcion.removeClass("disabled");
                 }
             });
 
-            // Llamar a la función una vez al inicio para aplicar el estado inicial del formulario
             $("textarea.pregunta").trigger("input");
         });
     </script>
@@ -264,7 +260,7 @@
 
             $(document).on("change", "textarea.pregunta, input.opcion", function() {
                 var id = $(this).data("id");
-                var answerId = $(this).data("answer-id"); // Obtenemos el answer_id
+                var answerId = $(this).data("answer-id");
                 var value = $(this).val();
                 sendDataToServer(id, answerId, value, this);
             });
@@ -313,7 +309,7 @@
 
         function verificarEstadoUsuario() {
             $.ajax({
-                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                url: '../admin/verificar-estado-usuario',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -327,8 +323,8 @@
                             confirmButtonColor: '#001256',
                         }).then(function() {
                             setTimeout(function() {
-                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
-                            }, 1000); // Espera 1 segundo antes de redirigir
+                                window.location.href = "../index.jsp";
+                            }, 1000);
                         });
                     }
                 },
@@ -355,11 +351,10 @@
                 return response;
             })
             .then(() => {
-                // Conexión exitosa, realizar acciones adicionales
             })
             .catch(error => {
                 console.error(error);
-                window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
+                window.location.href = '../coneccion.jsp';
             });
 
     </SCRIPT>

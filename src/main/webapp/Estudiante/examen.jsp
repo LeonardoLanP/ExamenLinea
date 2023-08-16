@@ -97,10 +97,9 @@
 					}
 				});
 			}
-				// Agrega aquí tus event listeners
 			$(document).on("change", "textarea.pregunta, input.opcion", function() {
 				var id = $(this).data("id");
-				var answerId = $(this).data("answer-id"); // Obtenemos el answer_id
+				var answerId = $(this).data("answer-id");
 				var value = $(this).val();
 				sendDataToServer(id, answerId, value, this);
 			});
@@ -205,7 +204,7 @@
 
 		function verificarEstadoUsuario() {
 			if (alertaMostrada) {
-				return; // Detener la verificación si ya se mostró una alerta
+				return;
 			}
 
 			$.ajax({
@@ -214,7 +213,7 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.usuarioActivo) {
-						alertaMostrada = true; // Marcar que se mostró la alerta
+						alertaMostrada = true;
 						Swal.fire({
 							icon: 'warning',
 							title: 'Tu cuenta ha sido desactivada',
@@ -238,7 +237,7 @@
 
 		function verificarEstadoExamen() {
 			if (alertaMostrada) {
-				return; // Detener la verificación si ya se mostró una alerta
+				return;
 			}
 
 			$.ajax({
@@ -247,7 +246,7 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.usuarioActivo) {
-						alertaMostrada = true; // Marcar que se mostró la alerta
+						alertaMostrada = true;
 						Swal.fire({
 							icon: 'warning',
 							title: 'El examen ha sido desactivado',

@@ -20,7 +20,6 @@
 
 <body>
 
-<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS -->
 <div class="overlay" id="overlay">
     <div class="pop-up" id="pop-up">
         <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
@@ -354,7 +353,6 @@
         const rol = document.querySelector('#rol').value;
         const matricula = document.querySelector('input[name="matricula"]').value;
 
-        // Validar nombre y apellidos
         const regexNombre = /^[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÑ][a-záéíóúüñ]*)*$/;
         if (!regexNombre.test(nombre) || !regexNombre.test(apellido1) || (apellido2 && !regexNombre.test(apellido2))) {
             Swal.fire({
@@ -368,7 +366,6 @@
             return false;
         }
 
-        // Validar CURP
         const regexCURP = /^[A-Za-z0-9]+$/;
         if (CURP.length !== 18  || !regexCURP.test(CURP)) {
             Swal.fire({
@@ -564,7 +561,7 @@
         })
         .catch(error => {
             console.error(error);
-            window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
+            window.location.href = '../coneccion.jsp';
         });
 
 </SCRIPT>

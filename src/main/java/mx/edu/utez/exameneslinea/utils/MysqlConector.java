@@ -6,13 +6,13 @@ import java.sql.SQLException;
 
 public class MysqlConector {
     final String DBNAME = "sugel",
-            USER = "root",
-            PASSWORD = "root",
+            USER = "admin",
+            PASSWORD = "Admin$321",
             TIMEZONE = "America/Mexico_City",
             USESSL = "false",
             PUBLICKEY = "true",
             DDLAUTO = "true",
-            HOST = "localhost";
+            HOST = "sugel-db.c0q9hqcvrnlq.us-east-1.rds.amazonaws.com";
 
     public Connection connect() {
         String dataSource = String.format(

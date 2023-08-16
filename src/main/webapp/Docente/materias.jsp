@@ -19,7 +19,7 @@
 	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
 	<div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
-            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
+            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
             <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
@@ -243,7 +243,7 @@
             checkbox.addEventListener('change', () => {
                 updatesubject(checkbox, materia);
             });
-            updateImageAndStyles(materia, checkbox.checked); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+            updateImageAndStyles(materia, checkbox.checked);
         });
 
         function updatesubject(checkbox, materiaDiv) {
@@ -278,7 +278,7 @@
                         data: { subid: subid, estado: estado },
                         success: function (data) {
                             console.log(data);
-                            updateImageAndStyles(materiaDiv, checkbox.checked); // Actualizar imagen y estilos solo si la acción es confirmada
+                            updateImageAndStyles(materiaDiv, checkbox.checked);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Cambios guardados',
@@ -396,7 +396,7 @@
 
             function verificarEstadoUsuario() {
             $.ajax({
-                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                url: '../admin/verificar-estado-usuario',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -410,8 +410,8 @@
                             timer: 5000,
                         }).then(function() {
                             setTimeout(function() {
-                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
-                            }, 1000); // Espera 1 segundo antes de redirigir
+                                window.location.href = "../index.jsp";
+                            }, 1000);
                         });
                     }
                 },

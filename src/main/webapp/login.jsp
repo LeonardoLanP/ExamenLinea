@@ -155,11 +155,10 @@
              return response;
          })
          .then(() => {
-             // Conexión exitosa, realizar acciones adicionales
          })
          .catch(error => {
              console.error(error);
-             window.location.href = 'coneccion.jsp'; // Cambia esto por la URL de tu página de error
+             window.location.href = 'coneccion.jsp';
          });
 
  </SCRIPT>

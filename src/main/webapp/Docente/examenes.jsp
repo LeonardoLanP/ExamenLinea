@@ -14,11 +14,10 @@
 </head>
 <body>
 
-	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
 
     <div class="overlay" id="overlay" >
         <div class="pop-up" id="pop-up">
-            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
+            <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
             <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
             <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
                 <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
@@ -201,7 +200,6 @@
 
         const examenes = document.querySelectorAll('.examenes');
 
-        // Función para cambiar la imagen y los estilos cuando el checkbox cambia de estado
         function updateImageAndStyles(checkbox) {
             const examenDiv = checkbox.closest('.examenes');
             const imagen = examenDiv.querySelector('.imagen img');
@@ -215,13 +213,12 @@
             }
         }
 
-        // Añadir un listener al evento 'change' del checkbox para cada div .examenes
         examenes.forEach((examen) => {
             const checkbox = examen.querySelector('input[type="checkbox"]');
             checkbox.addEventListener('change', () => {
                 updateExamStatus(checkbox);
             });
-            updateImageAndStyles(checkbox); // Ejecutar la función una vez para que los estilos e imagen iniciales sean correctos
+            updateImageAndStyles(checkbox);
         });
 
         function updateExamStatus(examID,grade) {
@@ -289,7 +286,7 @@
                                     });
                                     const NEWURL = nuevaURL + (nuevaURL.includes('?') ? '&' : '?') + 'primeraVez=true';
                                     document.cookie = 'alertaMostrada=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
-                                    window.location.href = NEWURL; // Redirigir a la nueva página
+                                    window.location.href = NEWURL;
 
                                 }
                             },
@@ -421,7 +418,7 @@
         }
             function verificarEstadoUsuario() {
             $.ajax({
-                url: '../admin/verificar-estado-usuario', // Ruta al servlet
+                url: '../admin/verificar-estado-usuario',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -435,8 +432,8 @@
                             confirmButtonColor: '#001256',
                         }).then(function() {
                             setTimeout(function() {
-                                window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
-                            }, 1000); // Espera 1 segundo antes de redirigir
+                                window.location.href = "../index.jsp";
+                            }, 1000);
                         });
                     }
                 },
@@ -462,11 +459,10 @@
                 return response;
             })
             .then(() => {
-                // Conexión exitosa, realizar acciones adicionales
             })
             .catch(error => {
                 console.error(error);
-                window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
+                window.location.href = '../coneccion.jsp';
             });
 
     </SCRIPT>

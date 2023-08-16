@@ -16,10 +16,9 @@
 </head>
 <body>
 
-	<!-- FORMULARIO PARA EL REGISTRO DE USUARIOS-->
     <div class="overlay" id="overlay" >
       <div class="pop-up" id="pop-up">
-        <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-person-heart"></i></a>
+        <a href="#" id="btn-cerrar" class="btn-cerrar"><i class="bi bi-x-lg"></i></a>
         <h2 id="nombreuser">Docente <%= ((Person) request.getSession().getAttribute("sesion")).getName() %></h2>
         <form action="../docente/actualizar-datos-docente" method="POST" id="formulario-modal" onsubmit="return validarFormulario()">
           <input type="hidden" name="referer" value="${pageContext.request.requestURI}">
@@ -126,7 +125,6 @@
       });
 
       function obtenerPreguntasYRespuestas(userId) {
-        // Realizar la petición AJAX al servlet usando jQuery
         $.ajax({
           type: 'POST',
           url: '../examen/respuestas-estudiantes',
@@ -153,83 +151,66 @@
           preguntasHTML += '<div class="pregunta">' + response[i].question + '<div class="respuesta">';
           preguntasHTML += '<div class="resp"></div><strong>' + response[i].answer + '</strong>';
           preguntasHTML += '</div></div>';
-          var examId = response[i].exam_id; // Obtener el exam_id del elemento actual
-          var idest = response[i].ques_id; // Obtener el exam_id del elemento actual
+          var examId = response[i].exam_id;
+          var idest = response[i].ques_id;
         }
 
         preguntasHTML += `<center><button id="modalBtn" data-answer-id="`+examId+`" data-estudiante-id="`+idest+`">Calificar</button></center>`;
         preguntasHTML += '</div>';
 
-        // Agregar el contenido al DOM
         $('.resumen').html(preguntasHTML);
 
-        // Llamar a la función para manejar los eventos del modal después de agregar el contenido al DOM
         manejarEventosModal();
       }
 
       function manejarEventosModal() {
-        // Obtener el botón de abrir la ventana modal
         const modalBtn = document.getElementById('modalBtn');
 
-        // Obtener la ventana modal
         const modal = document.getElementById('myModal');
 
-        // Obtener el botón de cerrar
+
         const closeBtn = document.getElementById('closeBtn');
 
-        // Función para abrir la ventana modal
         function openModal() {
           modal.style.display = 'block';
         }
 
-        // Función para cerrar la ventana modal
         function closeModal() {
           modal.style.display = 'none';
         }
 
-        // Evento al hacer clic en el botón de abrir la ventana modal
         modalBtn.addEventListener('click', openModal);
 
-        // Evento al hacer clic en el botón de cerrar
         closeBtn.addEventListener('click', closeModal);
 
-        // Evento al hacer clic fuera de la ventana modal para cerrarla
         window.addEventListener('click', (event) => {
           if (event.target === modal) {
             closeModal();
           }
         });
 
-        // Obtener el input y el mensaje emergente
         const input = document.querySelector('.modal-content input');
         const tooltip = document.querySelector('.tooltip');
 
-        // Función para mostrar el mensaje emergente
         function showTooltip() {
           tooltip.classList.add('show');
           tooltip.classList.remove('hide');
         }
 
-        // Función para ocultar el mensaje emergente
         function hideTooltip() {
           tooltip.classList.add('hide');
           tooltip.classList.remove('show');
         }
 
-        // Evento al pasar el cursor sobre el input
         input.addEventListener('mouseover', showTooltip);
 
-        // Evento al quitar el cursor del input
         input.addEventListener('mouseout', hideTooltip);
 
-        // Evento al escribir en el input
         input.addEventListener('input', hideTooltip);
 
         const closeButton = document.querySelector('.c');
 
-        // Agregamos un event listener al botón de cierre
         closeButton.addEventListener('click', () => {
-          // Ocultamos el div "resumen" cuando se hace clic en el botón de cierre
           examenContainer.style.display = 'none';
         });
 
@@ -237,14 +218,11 @@
     </script>
 
     <script type="text/javascript">
-  // Obtener todos los elementos con la clase "calif"
   const califElements = document.querySelectorAll('.calif');
 
-  // Iterar sobre cada elemento y cambiar el color de fondo según el texto
   califElements.forEach((califElement) => {
     const text = califElement.textContent.trim();
 
-    // Asignar el color de fondo correspondiente según el texto
     switch (text) {
       case 'AU':
         califElement.style.backgroundColor = '#203276';
@@ -271,38 +249,32 @@
 
   tdElements.forEach((tdElement) => {
     tdElement.addEventListener('click', () => {
-      // Mostramos el contenedor "examen" cuando se hace clic en un <td>
       examenContainer.style.display = 'block';
     });
   });
 
   $(document).ready(function() {
-  // Capturar el evento de envío del formulario
   $('#calificacionForm').submit(function(event) {
-    event.preventDefault(); // Evitar el envío del formulario por defecto
+    event.preventDefault();
 
-    // Obtener el valor de data-answer-id del botón "Calificar"
     var examenID = $('#modalBtn').data('answer-id');
     var estudianteid = $('#modalBtn').data('estudiante-id');
 
-    // Obtener el valor del campo de calificación del formulario
     var calificacion = $('#calificacion').val();
 
     console.log(examenID,estudianteid,calificacion)
-    // Almacenar el valor de data-answer-id en el campo oculto del formulario
     $('#examid').val(examenID);
     $('#estudentid').val(estudianteid);
 
 
-    // Realizar la petición Ajax
     $.ajax({
       type: 'POST',
       url: '../docente/califcar-alumno',
-      data: $('#calificacionForm').serialize(), // Enviar todo el formulario
+      data: $('#calificacionForm').serialize(),
       success: function(response) {
         console.log(response);
-        var estudianteId = estudianteid; // Asignar el ID del estudiante (el mismo que data-answer-id)
-        var nuevaCalificacion = response.nuevaCalificacion; // Obtener la calificación actualizada desde la respuesta del servidor
+        var estudianteId = estudianteid;
+        var nuevaCalificacion = response.nuevaCalificacion;
         var estudianteElement = $('#' + estudianteId);
         estudianteElement.find('.calif').text(nuevaCalificacion);
 
@@ -339,16 +311,14 @@
 
 
 
-  // Obtén los parámetros de la URL
+
   const params = new URLSearchParams(window.location.search);
   const codeex = params.get('codeex');
   const examenid = params.get('examenid');
   const grade = params.get('grade');
 
-  // Crea una clave única para identificar si la alerta ya se mostró para esta combinación de parámetros
   const storageKey = `alertaMostrada_${codeex}_${examenid}_${grade}`;
 
-  // Verifica si la alerta ya se mostró para esta combinación de parámetros
   const alertaMostrada = localStorage.getItem(storageKey);
 
   if (!alertaMostrada) {
@@ -360,7 +330,6 @@
       timer: 30000,
     });
 
-    // Almacena en el almacenamiento local que la alerta ya se mostró para esta combinación de parámetros
     localStorage.setItem(storageKey, 'true');
   }
 
@@ -437,7 +406,7 @@
 
       function verificarEstadoUsuario() {
         $.ajax({
-          url: '../admin/verificar-estado-usuario', // Ruta al servlet
+          url: '../admin/verificar-estado-usuario',
           method: 'GET',
           dataType: 'json',
           success: function(response) {
@@ -451,8 +420,8 @@
                 timer: 5000,
               }).then(function() {
                 setTimeout(function() {
-                  window.location.href = "../index.jsp"; // Redirige al usuario a la página de inicio
-                }, 1000); // Espera 1 segundo antes de redirigir
+                  window.location.href = "../index.jsp";
+                }, 1000);
               });
             }
           },
@@ -511,11 +480,11 @@
                 return response;
               })
               .then(() => {
-                // Conexión exitosa, realizar acciones adicionales
+
               })
               .catch(error => {
                 console.error(error);
-                window.location.href = '../coneccion.jsp'; // Cambia esto por la URL de tu página de error
+                window.location.href = '../coneccion.jsp';
               });
 
     </SCRIPT>

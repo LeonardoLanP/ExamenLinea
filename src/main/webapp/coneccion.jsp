@@ -68,7 +68,6 @@
                   window.location.href = 'coneccion.jsp';
               });
       }
-      // Seleccionar el botón
       const btnRegresar = document.getElementById('btn-reintentar');
 
       window.addEventListener('load', verificarConexion);

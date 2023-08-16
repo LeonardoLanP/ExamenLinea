@@ -8,7 +8,6 @@ var menuCheckbox = document.getElementById('btn-menu');
 
 btnAbrir.addEventListener('click', function () {
   overlay.classList.add('active');
-  // Cerrar el menú lateral al abrir el overlay
   menuCheckbox.checked = false;
 });
 
